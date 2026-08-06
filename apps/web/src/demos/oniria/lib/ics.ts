@@ -26,6 +26,38 @@ function toIcsUtcStamp(isoDate: string): string {
   return `${withoutMillis}Z`;
 }
 
+/**
+ * Dobra de linha do RFC 5545: nenhuma linha passa de 75 **octetos**, e a
+ * continuação começa com um espaço. Contamos em octetos (não em chars) porque
+ * o conteúdo é UTF-8 e tem acento — "ç" ocupa 2 bytes, e cortar no meio de um
+ * caractere multibyte corromperia o arquivo.
+ */
+function foldLine(line: string): string {
+  const encoder = new TextEncoder();
+  if (encoder.encode(line).length <= 75) return line;
+
+  const parts: string[] = [];
+  let current = '';
+  let currentBytes = 0;
+  // Limite menor nas continuações por causa do espaço inicial.
+  let limit = 75;
+
+  for (const char of line) {
+    const size = encoder.encode(char).length;
+    if (currentBytes + size > limit) {
+      parts.push(current);
+      current = '';
+      currentBytes = 0;
+      limit = 74;
+    }
+    current += char;
+    currentBytes += size;
+  }
+  if (current) parts.push(current);
+
+  return parts.map((part, index) => (index === 0 ? part : ` ${part}`)).join('\r\n');
+}
+
 export function buildIcs(event: CalendarEvent): string {
   const lines = [
     'BEGIN:VCALENDAR',
@@ -50,7 +82,7 @@ export function buildIcs(event: CalendarEvent): string {
     'END:VEVENT',
     'END:VCALENDAR',
   ];
-  return lines.join('\r\n') + '\r\n';
+  return lines.map(foldLine).join('\r\n') + '\r\n';
 }
 
 /** Dispara o download via Blob + object URL, revogando a URL depois. */

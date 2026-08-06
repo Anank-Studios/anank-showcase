@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { ensureGsap, gsap } from '../../lib/gsapClient';
+import { ensureGsap, gsap, ScrollTrigger } from '../../lib/gsapClient';
 import { useReducedMotion } from '../../lib/useReducedMotion';
 
 /**
@@ -81,6 +81,7 @@ export function OniriaTransitionProvider({ children }: { children: React.ReactNo
         gsap.to(pageRef.current, { opacity: 0, duration: 0.1 });
         void runViewTransition(commit).then(() => {
           gsap.fromTo(pageRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2 });
+          gsap.set(pageRef.current, { clearProps: 'opacity' });
           busyRef.current = false;
         });
         return;
@@ -92,6 +93,8 @@ export function OniriaTransitionProvider({ children }: { children: React.ReactNo
       if (overlay) overlay.style.pointerEvents = 'auto';
 
       const inTl = gsap.timeline();
+      // will-change só enquanto a transição roda — ver a nota no JSX abaixo.
+      inTl.set(pageRef.current, { willChange: 'transform, filter' });
       if (panels?.length) {
         inTl.set(panels, { yPercent: 100 });
         inTl.to(panels, { yPercent: 0, duration: 0.9, ease: 'power4.inOut', stagger: 0.06 }, 0);
@@ -106,6 +109,11 @@ export function OniriaTransitionProvider({ children }: { children: React.ReactNo
         const outTl = gsap.timeline({
           onComplete: () => {
             if (overlay) overlay.style.pointerEvents = 'none';
+            /* Limpa transform/filter/will-change: enquanto qualquer um deles
+               estiver no elemento, ele continua sendo containing block e o
+               `pin` do ScrollTrigger da página nova nasce quebrado. */
+            gsap.set(pageRef.current, { clearProps: 'transform,filter,willChange' });
+            ScrollTrigger.refresh();
             busyRef.current = false;
           },
         });
@@ -121,9 +129,15 @@ export function OniriaTransitionProvider({ children }: { children: React.ReactNo
 
   return (
     <TransitionContext.Provider value={{ navigate }}>
-      <div ref={pageRef} className="will-change-transform">
-        {children}
-      </div>
+      {/*
+        NADA de `will-change`, `transform` ou `filter` permanentes aqui.
+        Qualquer um deles cria um containing block, e todo `position: fixed`
+        descendente passa a se posicionar em relação a ESTE elemento em vez da
+        viewport — o que quebra o `pin` do ScrollTrigger (a seção de protocolos
+        ficava com `top: -5700px`, rolando para fora da tela).
+        As propriedades são aplicadas só durante a transição e limpas no fim.
+      */}
+      <div ref={pageRef}>{children}</div>
       <div
         ref={overlayRef}
         aria-hidden="true"

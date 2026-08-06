@@ -206,6 +206,30 @@
   font-weight: 500;
 }
 
+/**
+ * Skeleton shimmer do carregamento de horários da Oniria.
+ * A API tem latência artificial de 400–700ms para este estado ter função.
+ */
+@utility oniria-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--brand-surface) 0%,
+    color-mix(in srgb, var(--brand-surface) 70%, var(--brand-line)) 50%,
+    var(--brand-surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: oniria-shimmer 1.4s linear infinite;
+}
+
+@keyframes oniria-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 /** Esconde a barra de rolagem sem perder o scroll (carrosséis). */
 @utility no-scrollbar {
   scrollbar-width: none;

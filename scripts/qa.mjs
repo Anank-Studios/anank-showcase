@@ -99,16 +99,22 @@ for (const viewport of VIEWPORTS) {
          Rolamos em passos de meia viewport, esperamos os reveals, e voltamos
          ao topo para o screenshot sair com a página no estado inicial. */
       await page.evaluate(async () => {
-        const step = Math.floor(window.innerHeight / 2);
-        for (let y = 0; y < document.body.scrollHeight; y += step) {
+        /* Teto de passos: com `ScrollTrigger` + `pin` (a Oniria usa) a altura do
+           documento infla muito, e um passo por meia viewport levaria minutos.
+           40 passos cobrem qualquer página real deste projeto. */
+        const MAX_STEPS = 40;
+        const total = document.body.scrollHeight;
+        const step = Math.max(Math.floor(window.innerHeight / 2), Math.ceil(total / MAX_STEPS));
+
+        for (let y = 0; y < total; y += step) {
           window.scrollTo(0, y);
-          await new Promise((resolve) => setTimeout(resolve, 90));
+          await new Promise((resolve) => setTimeout(resolve, 60));
         }
         window.scrollTo(0, document.body.scrollHeight);
-        await new Promise((resolve) => setTimeout(resolve, 400));
+        await new Promise((resolve) => setTimeout(resolve, 300));
         window.scrollTo(0, 0);
       });
-      await page.waitForTimeout(900);
+      await page.waitForTimeout(700);
 
       overflow = await page.evaluate(() => {
         const el = document.documentElement;

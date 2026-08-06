@@ -1,11 +1,29 @@
-import { Scaffold } from '@/demos/_scaffold/Scaffold';
+import { getArticles, getDemo } from '@/shared/lib/api';
+import { OniriaFooter, OniriaNav } from './components/OniriaNav';
+import { SplitText } from './components/SplitText';
+import { ArticleList } from './components/ArticleList';
 
-/**
- * PONTO DE ENTRADA da demo — o orquestrador importa este componente em
- * `app/demo/...`. O nome e a assinatura NÃO podem mudar.
- *
- * Substitua o corpo pelo conteúdo real da demo. Ver specs/.
- */
 export async function OniriaDiario() {
-  return <Scaffold slug="oniria" page="/demo/oniria/diario" />;
+  const [demo, articles] = await Promise.all([getDemo('oniria'), getArticles('oniria')]);
+
+  return (
+    <div className="relative">
+      <OniriaNav />
+
+      <section className="px-5 pt-40 pb-16 md:px-10 md:pt-52 lg:px-14">
+        <div className="mx-auto max-w-[1400px]">
+          <p className="label-caps text-accent">Diário</p>
+          <SplitText
+            text="O que escrevemos entre um protocolo e outro."
+            as="h1"
+            className="mt-6 max-w-[18ch] font-display text-[clamp(2.25rem,9vw,6rem)] leading-[0.96]"
+          />
+        </div>
+      </section>
+
+      <ArticleList articles={articles} />
+
+      <OniriaFooter legalName={demo.legalName} cnpj={demo.cnpj} address={demo.address} />
+    </div>
+  );
 }
