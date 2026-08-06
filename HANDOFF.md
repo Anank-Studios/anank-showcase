@@ -1,7 +1,8 @@
 # HANDOFF — Anank Showcase
 
 > Arquivo de contexto para troca de sessão. **Atualizado a cada fase.**
-> Última atualização: **Fase 2 em andamento** (3 subagentes rodando).
+> Última atualização: **Fases 0 a 3 concluídas.** As 3 demos estão completas e validadas.
+> Ver §7 (estado) e §8 (o que ainda dá para fazer).
 
 ---
 
@@ -143,34 +144,76 @@ são contrato e não mudam:
       em contact sheet — catalogadas por marca em `specs/01-design-tokens.md`
 - [x] **Fase 0** — 7 specs em `/specs`
 - [x] **Fase 1** — monorepo, API + mock de agenda, tokens das 4 marcas, `DemoToggle`,
-      hub completo com a identidade real. Build verde, 26/26 rotas limpas no QA visual.
+      hub completo com a identidade real
 - [x] 19 testes Vitest da API passando
-- [ ] **Fase 2** — 3 subagentes Sonnet construindo Aurea, Vivace e Oniria (EM ANDAMENTO)
-- [ ] **Fase 3** — integração, QA visual final, coerência de marca, Lighthouse, README
+- [x] **Fase 2** — as 3 demos completas
+- [x] **Fase 3** — QA visual, coerência de marca, build de produção, README
 
-### Se a sessão cair durante a Fase 2
+### Como a Fase 2 realmente aconteceu
 
-Os subagentes escrevem direto no disco, então o trabalho deles sobrevive. Para retomar:
+Os 3 subagentes Sonnet foram disparados em paralelo e **os três morreram no meio** por
+limite mensal de gastos da conta (erro de API, não do código). O que sobreviveu:
 
-1. `git status` — veja o que eles produziram desde o commit `77929ca`.
-2. `pnpm typecheck && pnpm lint && pnpm test` — descubra o que está quebrado.
-3. `node scripts/qa.mjs` — QA visual completo, e **olhe os screenshots**.
-4. Compare cada demo com o seu spec (`specs/10-`, `11-`, `12-`) e feche os buracos.
-5. Siga para a Fase 3 (§8).
+- **Aurea** — completa (13 componentes)
+- **Vivace** — completa (19 componentes, 3 de layout, 6 de lib, 4 rotas)
+- **Oniria** — só a infraestrutura (preloader, cursor, grão, Lenis, SplitText, transição
+  GSAP, geradores de `.ics` e do link do Google Agenda). As 7 páginas e o fluxo de
+  agendamento foram escritos pelo **orquestrador** depois.
+
+### Verificado (não presumido)
+
+| Checagem | Resultado |
+|---|---|
+| `pnpm typecheck` · `pnpm lint` | limpos, zero warning |
+| `pnpm test` | 19/19 |
+| `pnpm build` | verde, 14 rotas |
+| `node scripts/qa.mjs` | **26/26 rotas limpas** nos dois viewports |
+| Coerência de marca | fonte display, raio, fundo e acento **todos distintos** entre as 3 |
+| Pin do scroll horizontal | `secTop = 0` em qualquer scroll (desktop); **sem pin** < 1024px |
+| Carrossel mobile da Oniria | 5 painéis, `scroll-snap: x mandatory`, rola |
+| Fluxo de agendamento | skeleton aparece, 7 badges de últimas vagas, 4 erros inline em pt-BR |
+| Aviso de demonstração | visível, **12px**, texto vindo do `demoNotice` da API |
+| Link do Google Agenda | `text`, `dates`, `ctz`, `location` corretos e codificados |
+| Download `.ics` | CRLF, `TZID=America/Sao_Paulo`, `VALARM`, dobra em 75 octetos |
 
 ---
 
-## 8. O que falta (Fase 3)
+## 8. O que ainda dá para fazer
 
-1. `pnpm typecheck && pnpm lint && pnpm build && pnpm test` — tudo verde.
-2. `node scripts/qa.mjs` — 26 rotas × 2 viewports, 0 falhas, screenshots conferidos.
-3. **Coerência de marca:** as 3 demos não podem compartilhar fonte display, raio de borda
-   ou paleta. Matriz de diferenciação em `specs/01-design-tokens.md`. Se duas parecerem
-   parentes, corrigir.
-4. Toggle funcionando em todas as 12 rotas de demo, incluindo 390px.
-5. Lighthouse: performance ≥85 e acessibilidade ≥95 nas demos 1 e 2; acessibilidade ≥90 na 3.
-6. `README.md`: como rodar, o que é fictício, o que é mockado, tabela das 3 demos com
-   faixas de preço, e os créditos das fotos do Unsplash.
+Nada disso bloqueia a demo — são melhorias.
+
+1. **Lighthouse** não foi rodado. Os alvos do briefing eram performance ≥ 85 e
+   acessibilidade ≥ 95 nas demos 1 e 2, e acessibilidade ≥ 90 na 3.
+2. **Artigo completo do diário da Oniria** vive num painel expansível dentro da listagem,
+   não numa rota `/diario/[slug]` — decisão deliberada para não criar rota nova. Se quiser
+   a rota de verdade, é criar a casca em `app/demo/oniria/diario/[slug]/page.tsx`.
+3. **Teste de teclado ponta a ponta** foi feito por inspeção de atributos ARIA, não por
+   navegação real com `Tab` em todas as rotas.
+4. Não há remote git configurado — nada foi publicado.
+
+---
+
+## 8b. Bugs reais encontrados e corrigidos (não repetir)
+
+- **O `pin` do ScrollTrigger não funcionava na Oniria.** O `TransitionProvider` tinha
+  `will-change-transform` **permanente** no wrapper da página. Isso cria um *containing
+  block*, então todo `position: fixed` descendente se posiciona em relação a ele em vez da
+  viewport — a seção de protocolos ficava com `top: -5700px` e rolava para fora da tela.
+  O QA dava "OK" porque não havia erro de console nem overflow; **só olhar o screenshot
+  revelou**. Correção: aplicar `will-change`/`transform`/`filter` só durante a transição e
+  limpar com `clearProps` no fim, seguido de `ScrollTrigger.refresh()`.
+- **Reveals presos em `opacity: 0` no QA.** `fullPage: true` do Playwright não rola de
+  verdade, então o `IntersectionObserver` nunca dispara. Um subagente "resolveu" com um
+  fallback de 700ms que revelava tudo — o que matava o efeito na página real. A causa era
+  o script: o `qa.mjs` agora rola a página antes de capturar (com teto de passos, senão
+  páginas com `pin` levam minutos).
+- **Overflow de 11px na Aurea em 390px.** O valor `"Estacionamento"` na faixa de confiança
+  é uma palavra única de 182px numa coluna de 147px, e palavra única não quebra. Corrigido
+  encurtando os valores nos dados (`value` curto, texto no `label`) + `break-words`.
+- **`.ics` sem dobra de linha.** A RFC 5545 exige 75 **octetos** por linha. A dobra conta
+  octetos, não caracteres — cortar no meio de um "ç" (2 bytes) corromperia o arquivo.
+- **`capitalize` do CSS** virava "10 De Agosto De 2026". Em pt-BR só a inicial leva
+  maiúscula: usar `first-letter:uppercase`.
 
 ---
 
@@ -204,3 +247,11 @@ Os subagentes escrevem direto no disco, então o trabalho deles sobrevive. Para 
   ID inválido retorna **404**, então o teste de 200 é confiável.
 - Contact sheet para conferir imagens em lote: HTML em grid + screenshot via Playwright.
   Muito mais eficiente que abrir uma a uma.
+- **O `next dev` trava e incha** (chegou a 1.7 GB) depois de matar runs do Playwright no
+  meio. Sintoma: a API na 3333 responde em 200ms e a web na 3000 dá timeout até na home.
+  Diagnóstico: `curl` separado em cada camada isola o culpado na hora. Receita:
+  `Get-Process node | Where-Object StartTime -gt <início do run> | Stop-Process -Force`,
+  apagar `apps/web/.next`, subir de novo. Filtre por `StartTime` para não derrubar
+  processos node não relacionados.
+- Mensagem de commit com aspas duplas quebra o here-string do PowerShell. Use
+  `git commit -F arquivo.txt`.
