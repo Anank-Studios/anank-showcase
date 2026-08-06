@@ -1,5 +1,5 @@
-import { Scaffold } from '@/demos/_scaffold/Scaffold';
+import { OniriaEquipe } from '@/demos/oniria/OniriaEquipe';
 
 export default function Page() {
-  return <Scaffold slug="oniria" page="/demo/oniria/equipe" />;
+  return <OniriaEquipe />;
 }

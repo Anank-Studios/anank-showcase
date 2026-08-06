@@ -1,5 +1,5 @@
-import { Scaffold } from '@/demos/_scaffold/Scaffold';
+import { VivaceServicos } from '@/demos/vivace/VivaceServicos';
 
 export default function Page() {
-  return <Scaffold slug="vivace" page="/demo/vivace/servicos" />;
+  return <VivaceServicos />;
 }

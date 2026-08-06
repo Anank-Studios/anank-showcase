@@ -1,5 +1,5 @@
-import { Scaffold } from '@/demos/_scaffold/Scaffold';
+import { AureaHome } from '@/demos/aurea/AureaHome';
 
 export default function Page() {
-  return <Scaffold slug="aurea" />;
+  return <AureaHome />;
 }
