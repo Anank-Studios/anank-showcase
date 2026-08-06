@@ -89,8 +89,26 @@ for (const viewport of VIEWPORTS) {
 
     try {
       await page.goto(`${BASE}${route.url}`, { waitUntil: 'networkidle', timeout: 45_000 });
-      // Deixa a sequência de entrada e os reveals terminarem.
-      await page.waitForTimeout(2200);
+      // Deixa a sequência de entrada terminar.
+      await page.waitForTimeout(1200);
+
+      /* Rola a página inteira antes de capturar.
+         `fullPage: true` NÃO rola de verdade, então o IntersectionObserver
+         nunca dispara e todo reveal `whileInView` ficaria preso em opacity 0 —
+         a captura mostraria seções em branco que na prática funcionam.
+         Rolamos em passos de meia viewport, esperamos os reveals, e voltamos
+         ao topo para o screenshot sair com a página no estado inicial. */
+      await page.evaluate(async () => {
+        const step = Math.floor(window.innerHeight / 2);
+        for (let y = 0; y < document.body.scrollHeight; y += step) {
+          window.scrollTo(0, y);
+          await new Promise((resolve) => setTimeout(resolve, 90));
+        }
+        window.scrollTo(0, document.body.scrollHeight);
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        window.scrollTo(0, 0);
+      });
+      await page.waitForTimeout(900);
 
       overflow = await page.evaluate(() => {
         const el = document.documentElement;

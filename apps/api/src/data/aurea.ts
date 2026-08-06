@@ -166,11 +166,14 @@ export const aurea: DemoData = {
       { label: 'Instagram', url: 'https://instagram.com/aurea.studio' },
       { label: 'WhatsApp', url: 'https://wa.me/5511970041188' },
     ],
+    /* `value` fica curto de propósito: a faixa de confiança é uma grade 2×2 em
+       390px, e uma palavra longa como "Estacionamento" não quebra — estourava
+       a coluna em 11px. O texto descritivo vai todo no `label`. */
     stats: [
       { value: '+2.400', label: 'clientes atendidos desde 2019' },
       { value: '4,9', label: 'no Google, em 312 avaliações' },
-      { value: 'Veganos', label: 'produtos livres de crueldade' },
-      { value: 'Estacionamento', label: 'no local, sem custo' },
+      { value: '100%', label: 'produtos veganos e livres de crueldade' },
+      { value: 'Grátis', label: 'estacionamento no local' },
     ],
     images: {
       hero: img('1562322140-8baeececf3df', 'Cabeleireira escovando o cabelo de uma cliente'),
