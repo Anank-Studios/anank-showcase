@@ -16,11 +16,17 @@
     "qa": "node scripts/qa.mjs"
   },
   "devDependencies": {
+    "chrome-launcher": "^1.2.1",
     "concurrently": "^9.1.2",
+    "lighthouse": "^13.4.1",
     "playwright": "^1.62.1",
     "typescript": "^5.9.2"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp", "unrs-resolver"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }

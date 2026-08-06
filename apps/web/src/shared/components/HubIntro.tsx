@@ -146,9 +146,15 @@ function DemoCard({
           : { duration: 0.7, delay: T.cards + index * T.cardStagger, ease: EASE }
       }
     >
+      {/*
+        Sem `aria-label` customizado de propósito. Um aria-label que não contém
+        o texto visível do link reprova em `label-content-name-mismatch` e
+        quebra o controle por voz: o usuário diz "abrir demo" e o comando não
+        casa com o nome acessível. O conteúdo do card já forma um nome bom —
+        número, categoria, marca, descrição e faixa de preço.
+      */}
       <Link
         href={`/demo/${demo.slug}`}
-        aria-label={`Abrir demonstração ${demo.index} — ${demo.brandName}, ${demo.category}`}
         className="group block overflow-hidden rounded-brand border border-line bg-surface transition-[transform,border-color,box-shadow] duration-300 hover:border-[color:var(--brand-accent)] hover:shadow-[0_18px_48px_-24px_var(--accent-glow)] motion-safe:hover:scale-[1.03]"
         style={{ viewTransitionName: `demo-card-${demo.slug}` }}
       >
