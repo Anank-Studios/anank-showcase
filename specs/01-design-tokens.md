@@ -36,30 +36,51 @@ Uso em componentes: `bg-bg text-ink border-line rounded-[--radius-brand] font-di
 
 ## 4.0 ANANK STUDIOS — o hub
 
-Estúdio de web design de alto padrão. Galeria de arte, não agência.
+**Identidade oficial, não inventada.** Extraída de `assets/css/shared.css` do repositório
+`github.com/Anank-Studios/site-anank` (clone local em `Desktop/Projetos Vibe/Site Anank Studios`).
+
+O site institucional da Anank é **escuro**. Este hub é a **mesma marca em modo claro**:
+Off-white de fundo, Black de tinta, Verde Anank de acento.
 
 ```css
 [data-brand="anank"] {
-  --brand-bg:       #F7F6F3;
+  --brand-bg:       #F7F7F7;   /* Off-white oficial */
   --brand-surface:  #FFFFFF;
-  --brand-ink:      #0E0E10;
-  --brand-muted:    #6B6B70;
-  --brand-accent:   #C6FF4F;   /* verde-limão elétrico — SÓ micro-detalhe */
-  --brand-accent-2: #E4E3DE;
-  --brand-line:     #DEDCD6;
-  --brand-radius:   2px;
-  --brand-font-display: var(--font-instrument-serif);
-  --brand-font-body:    var(--font-inter-tight);
+  --brand-ink:      #060B08;   /* Black oficial */
+  --brand-muted:    #5A6862;   /* ver nota de contraste abaixo */
+  --brand-accent:   #2FAE80;   /* Verde Anank */
+  --brand-accent-2: #1C3A2D;   /* Pinho */
+  --brand-line:     #E2E6E4;
+  --brand-radius:   20px;      /* --radius-card oficial */
+  --brand-font-display: var(--font-poppins);
+  --brand-font-body:    var(--font-poppins);
+  --brand-font-mono:    var(--font-jetbrains-mono);
+  --accent-fringe:  #54C99A;
+  --accent-glow:    rgb(47 174 128 / .25);
 }
 ```
 
-- **Display:** Instrument Serif (400, normal + italic)
-- **UI:** Inter Tight (400/500/600)
-- **Sensação:** preto sobre off-white, silencioso, muito respiro, tipografia gigante,
-  **uma única** cor de acento usada com avareza.
-- **Escala display (mobile-first):** `clamp(2.75rem, 13vw, 8.5rem)`, `line-height: 0.92`,
-  `letter-spacing: -0.03em`.
+- **Principal:** Poppins (300/400/500/600)
+- **Camada técnica:** JetBrains Mono (400/500/700) — numerais, rótulos, preços, metadados
+- **Símbolo:** estrela de oito pontas, em `apps/web/public/brand/anank-simbolo-*.svg`
+  e como componente `<AnankSymbol />` (usa `currentColor`)
+- **Raios oficiais:** panel 48px · card 20px · pill 999px · sm 8px
+- **Escala display (mobile-first):** `clamp(1.9rem, 7.4vw, 4.75rem)`, peso 300,
+  `text-transform: uppercase`, `letter-spacing` animando de `0.42em` a `0.14em` na entrada.
 - **Regra do acento:** no máximo **um** elemento acentuado por card. Nunca dois.
+
+### ⚠ Contraste — o Verde Anank NÃO serve como cor de texto em modo claro
+
+| Par | Razão | Veredito |
+|---|---|---|
+| `#2FAE80` sobre `#F7F7F7` | **2.6:1** | ✗ nunca para texto |
+| `#6E7B74` (tertiary oficial) sobre `#F7F7F7` | **4.1:1** | ✗ abaixo do mínimo |
+| `#5A6862` sobre `#F7F7F7` | **5.5:1** | ✔ é por isso que o muted foi escurecido |
+| `#1C3A2D` (Pinho) sobre `#F7F7F7` | **11.6:1** | ✔ use este para "texto verde" |
+
+Na prática: o Verde Anank entra como **preenchimento, filete, chip de fundo e underline**.
+Quando é preciso texto na cor da marca, use **Pinho**. É assim que o numeral do card funciona —
+chip com fundo `rgb(47 174 128 / .14)` e numeral em Pinho.
 
 ## 4.1 AUREA BEAUTY STUDIO — Demo 1 (Landing)
 
@@ -162,11 +183,12 @@ Diretora científica: Dra. Helena Kruger.
 
 | | Anank | Aurea | Vivace | Oniria |
 |---|---|---|---|---|
-| Display | Instrument Serif | Fraunces | DM Serif Display | Bodoni Moda |
-| Corpo | Inter Tight | Inter | Manrope | Inter Tight |
-| Raio | 2px | 24px | 8px | 0px |
-| Fundo | off-white | creme quente | bege frio | preto |
-| Acento | verde-limão | terracota | sage | bronze |
+| Display | Poppins (300) | Fraunces | DM Serif Display | Bodoni Moda |
+| Corpo | Poppins | Inter | Manrope | Inter Tight |
+| Técnica | JetBrains Mono | — | — | — |
+| Raio | 20px | 24px | 8px | 0px |
+| Fundo | off-white #F7F7F7 | creme quente | bege frio | preto |
+| Acento | Verde Anank | terracota | sage | bronze |
 | Profundidade | respiro | sombra suave | linha 1px | luz/contraste |
 | Grid | assimétrico | generoso | 12 col rígido | editorial assimétrico |
 | Ritmo | 1 entrada, depois quieto | fade curto 0.5s | stagger 0.08s | cinematográfico 0.9–1.1s |
@@ -180,7 +202,8 @@ Nenhuma célula pode se repetir entre Aurea, Vivace e Oniria.
 Em `app/layout.tsx`, via `next/font/google`, todas com `display: 'swap'` e `variable`:
 
 ```ts
-Instrument_Serif  → --font-instrument-serif   (400, 400 italic)
+Poppins           → --font-poppins            (300/400/500/600)   ← Anank
+JetBrains_Mono    → --font-jetbrains-mono     (400/500/700)       ← Anank, técnica
 Inter_Tight       → --font-inter-tight        (variable)
 Fraunces          → --font-fraunces           (variable, axes opsz/SOFT/WONK)
 Inter             → --font-inter              (variable)

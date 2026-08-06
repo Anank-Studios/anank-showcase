@@ -1,0 +1,238 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/* Ponte Tailwind v4: as utilities leem as vars de marca.               */
+/* Trocar [data-brand] troca o tema inteiro sem recompilar classes.     */
+/* ------------------------------------------------------------------ */
+
+@theme inline {
+  --color-bg: var(--brand-bg);
+  --color-surface: var(--brand-surface);
+  --color-ink: var(--brand-ink);
+  --color-muted: var(--brand-muted);
+  --color-accent: var(--brand-accent);
+  --color-accent-2: var(--brand-accent-2);
+  --color-line: var(--brand-line);
+
+  --radius-brand: var(--brand-radius);
+
+  --font-display: var(--brand-font-display);
+  --font-body: var(--brand-font-body);
+  --font-mono: var(--brand-font-mono);
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.0 ANANK STUDIOS — hub                                             */
+/* Identidade oficial, extraída de github.com/Anank-Studios/site-anank */
+/* (assets/css/shared.css). O site institucional é escuro; este hub é  */
+/* a MESMA marca em modo claro: Off-white de fundo, Black de tinta.    */
+/* ------------------------------------------------------------------ */
+
+:root,
+[data-brand='anank'] {
+  --brand-bg: #f7f7f7; /* Off-white oficial */
+  --brand-surface: #ffffff;
+  --brand-ink: #060b08; /* Black oficial */
+  /* Tertiary oficial (#6E7B74) dá 4.1:1 sobre o off-white — abaixo do mínimo.
+     Escurecido para 5.5:1 mantendo o mesmo matiz de pinho. */
+  --brand-muted: #5a6862;
+  --brand-accent: #2fae80; /* Verde Anank */
+  --brand-accent-2: #1c3a2d; /* Pinho */
+  --brand-line: #e2e6e4;
+  --brand-radius: 20px; /* --radius-card oficial */
+  --brand-font-display: var(--font-poppins), system-ui, sans-serif;
+  --brand-font-body: var(--font-poppins), system-ui, sans-serif;
+  --brand-font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --accent-fringe: #54c99a;
+  --accent-glow: rgb(47 174 128 / 0.25);
+
+  --display-size: clamp(2.25rem, 11vw, 7rem);
+  --display-leading: 0.95;
+  --display-tracking: -0.02em;
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.1 AUREA — quente, artesanal, r24                                  */
+/* ------------------------------------------------------------------ */
+
+[data-brand='aurea'] {
+  --brand-bg: #fbf7f2;
+  --brand-surface: #ffffff;
+  --brand-ink: #2a211c;
+  --brand-muted: #8a7a6e;
+  --brand-accent: #c4743f;
+  --brand-accent-2: #e8d5c4;
+  --brand-line: #eadfd2;
+  --brand-radius: 24px;
+  --brand-font-display: var(--font-fraunces), Georgia, serif;
+  --brand-font-body: var(--font-inter), system-ui, sans-serif;
+
+  --display-size: clamp(2.25rem, 9vw, 4.5rem);
+  --display-leading: 1.05;
+  --display-tracking: -0.02em;
+
+  --shadow-brand: 0 12px 32px -12px rgb(42 33 28 / 0.18);
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.2 VIVACE — clínica, botânica, r8, grid rígido                     */
+/* ------------------------------------------------------------------ */
+
+[data-brand='vivace'] {
+  --brand-bg: #f4f3ee;
+  --brand-surface: #ffffff;
+  --brand-ink: #1f2a24;
+  --brand-muted: #6e7a72;
+  --brand-accent: #5a7061;
+  --brand-accent-2: #b99a5b;
+  --brand-line: #dddcd3;
+  --brand-radius: 8px;
+  --brand-font-display: var(--font-dm-serif-display), Georgia, serif;
+  --brand-font-body: var(--font-manrope), system-ui, sans-serif;
+
+  --display-size: clamp(2rem, 7vw, 3.75rem);
+  --display-leading: 1.12;
+  --display-tracking: -0.01em;
+
+  --shadow-brand: 0 1px 2px rgb(31 42 36 / 0.04);
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.3 ONIRIA — escuro, editorial, r0                                  */
+/* ------------------------------------------------------------------ */
+
+[data-brand='oniria'] {
+  --brand-bg: #0a0a0b;
+  --brand-surface: #131315;
+  --brand-ink: #f2efe9;
+  --brand-muted: #85817a;
+  --brand-accent: #b08d57;
+  --brand-accent-2: #e5d9c3;
+  --brand-line: #26262a;
+  --brand-radius: 0px;
+  --brand-font-display: var(--font-bodoni-moda), 'Didot', Georgia, serif;
+  --brand-font-body: var(--font-inter-tight), system-ui, sans-serif;
+
+  --display-size: clamp(2.75rem, 15vw, 11rem);
+  --display-leading: 0.88;
+  --display-tracking: -0.04em;
+
+  --shadow-brand: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--brand-bg);
+    color: var(--brand-ink);
+    font-family: var(--brand-font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Mobile-first: nada pode vazar horizontalmente em 390px. */
+    overflow-x: hidden;
+  }
+
+  /* Cada escopo de marca pinta a si mesmo, não só o body. */
+  [data-brand] {
+    background-color: var(--brand-bg);
+    color: var(--brand-ink);
+    font-family: var(--brand-font-body);
+  }
+
+  ::selection {
+    background: var(--brand-accent);
+    color: var(--brand-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-ink);
+    outline-offset: 4px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--brand-font-display);
+    letter-spacing: var(--display-tracking);
+    line-height: var(--display-leading);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities compartilhadas                                            */
+/* ------------------------------------------------------------------ */
+
+@utility font-display {
+  font-family: var(--brand-font-display);
+}
+
+@utility font-body {
+  font-family: var(--brand-font-body);
+}
+
+/** Camada técnica da Anank — números, rótulos, metadados. */
+@utility font-mono-brand {
+  font-family: var(--brand-font-mono, ui-monospace, monospace);
+}
+
+@utility rounded-brand {
+  border-radius: var(--brand-radius);
+}
+
+@utility shadow-brand {
+  box-shadow: var(--shadow-brand, none);
+}
+
+@utility text-display {
+  font-family: var(--brand-font-display);
+  font-size: var(--display-size);
+  line-height: var(--display-leading);
+  letter-spacing: var(--display-tracking);
+}
+
+/** Rótulo em caixa alta — usado por Vivace e Oniria. */
+@utility label-caps {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+/** Esconde a barra de rolagem sem perder o scroll (carrosséis). */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* prefers-reduced-motion — rede de segurança global.                   */
+/* Cada demo AINDA deve tratar isso no seu próprio JS; isto é o piso.   */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

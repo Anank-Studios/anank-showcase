@@ -1,0 +1,26 @@
+{
+  "name": "anank-showcase",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c magenta,cyan \"pnpm --filter @anank/api dev\" \"pnpm --filter @anank/web dev\"",
+    "build": "pnpm --filter @anank/contracts build && pnpm --filter @anank/api build && pnpm --filter @anank/web build",
+    "start": "concurrently -n api,web -c magenta,cyan \"pnpm --filter @anank/api start\" \"pnpm --filter @anank/web start\"",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm --filter @anank/api test",
+    "qa": "node scripts/qa.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "playwright": "^1.62.1",
+    "typescript": "^5.9.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "sharp", "unrs-resolver"]
+  }
+}

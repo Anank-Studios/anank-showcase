@@ -5,6 +5,11 @@ Primeira impressão do estúdio. Silencioso, muito respiro, tipografia grande.
 
 Escopo: `[data-brand="anank"]`. Implementado pelo **orquestrador**.
 
+> **Identidade real, modo claro.** Poppins + JetBrains Mono, Off-white `#F7F7F7`,
+> Black `#060B08`, Verde Anank `#2FAE80`, Pinho `#1C3A2D`, raio 20px, e o símbolo
+> da estrela de oito pontas. Ver `specs/01-design-tokens.md` §4.0 — inclusive a
+> tabela de contraste que proíbe o Verde como cor de texto sobre claro.
+
 ---
 
 ## Wireframe — mobile (390px, base)
@@ -13,11 +18,11 @@ Escopo: `[data-brand="anank"]`. Implementado pelo **orquestrador**.
 ┌──────────────────────────────┐
 │                              │  ← 88px de respiro
 │                              │
-│   ANANK                      │  clamp(2.75rem,13vw,8.5rem)
-│   STUDIOS                    │  Instrument Serif, ls -0.03em
+│   ✦ ANANK STUDIOS             │  Poppins 300, uppercase
+│                              │  clamp(1.9rem,7.4vw,4.75rem)
 │   ────────────────────────   │  1px, cresce da esquerda
 │                              │
-│   Três níveis. Um padrão.    │  Inter Tight 500, 15px
+│   Três níveis. Um padrão.    │  Poppins 500, 15px
 │   Três demonstrações de      │  --muted, 14px, max 34ch
 │   sites para beleza e        │
 │   estética.                  │
@@ -26,8 +31,8 @@ Escopo: `[data-brand="anank"]`. Implementado pelo **orquestrador**.
 │  │ ░░░ mini-mockup ░░░░░░ │  │  thumbnail vivo, 4:3
 │  │ ░░ Aurea ░░░░░░░░░░░░░ │  │
 │  ├────────────────────────┤  │
-│  │ 01              Landing│  │  01 em --accent
-│  │ Aurea Beauty Studio    │  │  Instrument Serif 26px
+│  │ 01              Landing│  │  chip Verde + numeral Pinho
+│  │ Aurea Beauty Studio    │  │  Poppins 500, 1.4rem
 │  │ Salão de bairro que    │  │  --muted 13px
 │  │ não parece de bairro.  │  │
 │  │ R$ 1.500–2.500     →   │  │
@@ -49,7 +54,7 @@ Escopo: `[data-brand="anank"]`. Implementado pelo **orquestrador**.
 ┌────────────────────────────────────────────────────────────────────────┐
 │                                                                        │
 │                                                                        │  ← 15vh
-│   ANANK STUDIOS                                                        │  8.5rem
+│   ✦ ANANK STUDIOS                                                      │  4.75rem
 │   ──────────────────────────────────────────────────────────────────   │
 │                                          Três níveis. Um padrão.       │  ← subtítulo à direita
 │                                          Três demonstrações de sites   │
@@ -81,8 +86,9 @@ Sob `prefers-reduced-motion: reduce`, **tudo** vira um único fade de 200ms sem 
 
 | t | Elemento | Animação |
 |---|---|---|
-| 0.00s | tela | fundo `--paper` (#F7F6F3) vazio |
-| 0.15s | wordmark **ANANK STUDIOS** | `opacity 0→1`, `filter: blur(12px)→blur(0)`, `y: 16→0`, `letter-spacing: 0.4em→0.12em`. Duração 0.9s. |
+| 0.00s | tela | fundo Off-white `#F7F7F7` vazio |
+| 0.10s | símbolo ✦ | `opacity 0→1`, `scale 0.6→1`, `rotate -35°→0`. Duração 1.0s. |
+| 0.15s | wordmark **ANANK STUDIOS** | `opacity 0→1`, `filter: blur(12px)→blur(0)`, `y: 16→0`, `letter-spacing: 0.42em→0.14em`. Duração 0.9s. |
 | 0.70s | régua de 1px | `scaleX: 0→1`, `transform-origin: left`. Duração 0.7s. |
 | 0.90s | subtítulo + descrição | `opacity 0→1`, `y: 12→0`. Duração 0.6s. |
 | 1.10s | 3 cards | stagger de **90ms**, `opacity 0→1`, `y: 24→0`. Duração 0.7s cada. |
@@ -130,14 +136,17 @@ que é exatamente o argumento comercial.
 - Card: `scale: 1.03`, 300ms.
 - Imagem interna: `scale: 1.08` com `translateX` de 6px (pan leve), 600ms.
 - Bloco *"Abrir demo →"*: entra deslizando da direita (`x: 8→0`, `opacity 0→1`), 250ms.
-- Underline do nome da marca: `scaleX 0→1` na cor `--accent` da **Anank** (verde-limão).
+- Underline do nome da marca: `scaleX 0→1` no Verde Anank `#2FAE80` (preenchimento, não texto).
 - Nenhuma sombra. A elevação é sugerida por escala e pela borda que escurece.
 
 ### Uso do acento Anank
 
-**Exatamente um** elemento acentuado por card: o número (`01`/`02`/`03`).
-No hover, o underline do nome também usa o acento — mas aí o número volta a `--ink`.
-Nunca dois elementos em verde-limão ao mesmo tempo.
+**Exatamente um** elemento acentuado por card: o número (`01`/`02`/`03`), renderizado como
+um **chip** com fundo `rgb(47 174 128 / .14)` e o numeral em **Pinho** `#1C3A2D`
+(JetBrains Mono, bold). O Verde puro não pode ser cor de texto sobre o off-white — 2.6:1.
+
+No hover, o underline do nome da marca usa o Verde Anank como preenchimento, que é um uso
+válido. O símbolo ✦ do cabeçalho é o único outro elemento em Verde na página.
 
 ---
 
@@ -187,9 +196,9 @@ Os tokens de cada marca vêm no payload e alimentam o thumbnail vivo via `style`
 - Foco visível: `outline: 2px solid var(--brand-ink); outline-offset: 4px`.
   **Não** remover outline sem substituto.
 - `aria-label` do link: `"Abrir demonstração 01 — Aurea Beauty Studio, Landing Page"`.
-- Contraste: `--muted` #6B6B70 sobre #F7F6F3 = 5.4:1 ✔. O acento verde-limão **nunca** é usado
-  como cor de texto sobre o fundo claro (contraste insuficiente) — só como fundo, borda ou
-  filete decorativo.
+- Contraste: `--muted` #5A6862 sobre #F7F7F7 = **5.5:1** ✔.
+  O Verde Anank #2FAE80 dá **2.6:1** e por isso **nunca** é cor de texto — só fundo, borda,
+  chip ou filete. Texto na cor da marca usa **Pinho** #1C3A2D (11.6:1).
 - Ordem de tabulação natural: wordmark → card 01 → 02 → 03 → rodapé.
 
 ---
@@ -200,7 +209,9 @@ Os tokens de cada marca vêm no payload e alimentam o thumbnail vivo via `style`
 - [ ] `prefers-reduced-motion: reduce` reduz tudo a um fade de 200ms.
 - [ ] Os 3 thumbnails usam a **paleta e a fonte display reais** de cada marca, e são
       visivelmente distintos em raio de borda.
-- [ ] Máximo 1 elemento em verde-limão por card por vez.
+- [ ] Máximo 1 elemento acentuado por card (o chip do número).
+- [ ] Nenhum texto em Verde Anank puro sobre o fundo claro.
+- [ ] Símbolo ✦ oficial presente no cabeçalho, em Verde Anank.
 - [ ] Card inteiro clicável com `view-transition-name` único.
 - [ ] Navegação por teclado completa, foco sempre visível.
 - [ ] Screenshot em **390×844** e **1440×900** sem overflow horizontal e sem console error.
