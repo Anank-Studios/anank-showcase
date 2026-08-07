@@ -1,12 +1,18 @@
-﻿node_modules/
+node_modules/
 .next/
 dist/
 .turbo/
-.tmp/
-*.log
-.env*.local
+*.tsbuildinfo
+
+# Variáveis de ambiente. `.env*.local` sozinho NÃO cobre um `.env` puro —
+# por isso a regra ampla, com exceção explícita para o exemplo versionado.
+.env
+.env.*
+!.env.example
+
+# Saída de ferramenta: screenshots do QA, relatórios e scratch.
+qa/
 playwright-report/
 test-results/
-qa/
-*.tsbuildinfo
-qa/
+.tmp/
+*.log
