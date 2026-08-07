@@ -180,16 +180,49 @@ limite mensal de gastos da conta (erro de API, não do código). O que sobrevive
 
 ## 8. O que ainda dá para fazer
 
-Nada disso bloqueia a demo — são melhorias.
+### Acessibilidade — medida, e onde parou
 
-1. **Lighthouse** não foi rodado. Os alvos do briefing eram performance ≥ 85 e
-   acessibilidade ≥ 95 nas demos 1 e 2, e acessibilidade ≥ 90 na 3.
-2. **Artigo completo do diário da Oniria** vive num painel expansível dentro da listagem,
-   não numa rota `/diario/[slug]` — decisão deliberada para não criar rota nova. Se quiser
-   a rota de verdade, é criar a casca em `app/demo/oniria/diario/[slug]/page.tsx`.
-3. **Teste de teclado ponta a ponta** foi feito por inspeção de atributos ARIA, não por
-   navegação real com `Tab` em todas as rotas.
-4. Não há remote git configurado — nada foi publicado.
+Dois scripts fazem o gate. **Ambos precisam do `pnpm dev` rodando.**
+
+```bash
+node scripts/lh.mjs /demo/aurea            # a11y, boas práticas, SEO
+node scripts/lh.mjs --perf /demo/aurea     # inclui performance (só contra build de produção)
+node scripts/keyboard.mjs /demo/aurea      # percorre a página com Tab
+```
+
+> ⚠ Rode-os pelo **PowerShell**, não pelo Git Bash: o Bash no Windows converte o
+> argumento `/demo/aurea` em caminho (`C:/Program Files/...`) e o Lighthouse
+> devolve `INVALID_URL`.
+
+Pontuações medidas contra o dev server:
+
+| Rota | Acessibilidade |
+|---|---|
+| `/` (hub) | **100** |
+| `/demo/aurea` | **100** |
+| `/demo/vivace` | **100** |
+| `/demo/vivace/sobre` | **100** |
+| `/demo/vivace/contato` | 97 |
+| `/demo/vivace/servicos` | 95 |
+| Rotas da Oniria | **não medidas** |
+
+**Pendente:**
+
+1. **Medir as 8 rotas da Oniria** (meta ≥ 90) e corrigir o que aparecer. Atenção: o fundo é
+   preto e o `--brand-muted` é `#85817A` — se reprovar em contraste, **não clareie o fundo**,
+   ajuste o texto.
+2. **Reconferir `/vivace/contato` e `/vivace/servicos`** — as últimas correções do toggle e
+   do `heading-order` ainda não foram remedidas nessas duas.
+3. **Performance nunca foi medida.** A meta do briefing era ≥ 85. Tem que ser contra
+   `pnpm build && pnpm start`, nunca contra o dev server.
+4. **`node scripts/keyboard.mjs`** só rodou no hub (limpo). Falta rodar nas 12 rotas de demo
+   e conferir à mão os pontos que o script não pega: menu mobile da Aurea e da Vivace,
+   carrosséis (o foco em card fora da área visível), lightbox da `/sobre`, o pin da Oniria e
+   o fluxo de agendamento (foco ao trocar de etapa e ao chegar na tela de sucesso).
+
+### Outros
+
+5. Não há remote git configurado — nada foi publicado.
 
 ---
 
@@ -214,6 +247,14 @@ Nada disso bloqueia a demo — são melhorias.
   octetos, não caracteres — cortar no meio de um "ç" (2 bytes) corromperia o arquivo.
 - **`capitalize` do CSS** virava "10 De Agosto De 2026". Em pt-BR só a inicial leva
   maiúscula: usar `first-letter:uppercase`.
+- **O `DemoToggle` derrubava a nota de acessibilidade das 12 rotas de demo de uma vez.**
+  Dois motivos: o `role="tablist"` continha o link de volta e o divisor (`aria-required-children`
+  só aceita filhos `role="tab"`), e os rótulos usavam `opacity` sobre um fundo translúcido —
+  o que faz o contraste **depender da página atrás**, passando na Oniria (escura) e reprovando
+  na Aurea e na Vivace (claras). Lição: em componente flutuante sobre fundo variável, use cor
+  explícita e fundo quase opaco, nunca `opacity`.
+- **Fade de opacidade reprova contraste de forma intermitente.** O rótulo de dica fazia
+  `opacity 0→1` em 350ms; a auditoria às vezes amostrava no meio. Animar só `y` resolve.
 
 ---
 
