@@ -65,8 +65,10 @@
   --brand-accent-2: #e8d5c4;
   --brand-line: #eadfd2;
   --brand-radius: 24px;
-  --brand-font-display: var(--font-fraunces), Georgia, serif;
-  --brand-font-body: var(--font-inter), system-ui, sans-serif;
+  /* Grotesca expressiva e levemente imperfeita — nada de serifa "boutique"
+     genérica. É o que separa a Aurea das outras duas à primeira vista. */
+  --brand-font-display: var(--font-bricolage), system-ui, sans-serif;
+  --brand-font-body: var(--font-karla), system-ui, sans-serif;
 
   --display-size: clamp(2.25rem, 9vw, 4.5rem);
   --display-leading: 1.05;
@@ -88,7 +90,9 @@
   --brand-accent-2: #b99a5b;
   --brand-line: #dddcd3;
   --brand-radius: 8px;
-  --brand-font-display: var(--font-dm-serif-display), Georgia, serif;
+  /* Serifa editorial de BAIXO contraste: lê como jornal clínico, o oposto
+     da didone da Oniria. */
+  --brand-font-display: var(--font-newsreader), Georgia, serif;
   --brand-font-body: var(--font-manrope), system-ui, sans-serif;
 
   --display-size: clamp(2rem, 7vw, 3.75rem);
@@ -111,8 +115,9 @@
   --brand-accent-2: #e5d9c3;
   --brand-line: #26262a;
   --brand-radius: 0px;
+  /* Didone de contraste extremo + neutra silenciosa no corpo. */
   --brand-font-display: var(--font-bodoni-moda), 'Didot', Georgia, serif;
-  --brand-font-body: var(--font-inter-tight), system-ui, sans-serif;
+  --brand-font-body: var(--font-geist), system-ui, sans-serif;
 
   --display-size: clamp(2.75rem, 15vw, 11rem);
   --display-leading: 0.88;

@@ -144,7 +144,7 @@ export const aurea: DemoData = {
       accentAlt: '#E8D5C4',
       line: '#EADFD2',
       radius: '24px',
-      fontDisplay: 'var(--font-fraunces)',
+      fontDisplay: 'var(--font-bricolage)',
     },
     thumbnail: img(
       '1562322140-8baeececf3df',
@@ -172,11 +172,13 @@ export const aurea: DemoData = {
     ],
     /* `value` fica curto de propósito: a faixa de confiança é uma grade 2×2 em
        390px, e uma palavra longa como "Estacionamento" não quebra — estourava
-       a coluna em 11px. O texto descritivo vai todo no `label`. */
+       a coluna em 11px. O texto descritivo vai todo no `label`.
+       O terceiro item era "100%" — número redondo de marketing que ninguém
+       verifica. Trocado por uma contagem real da prateleira do salão. */
     stats: [
       { value: '+2.400', label: 'clientes atendidos desde 2019' },
       { value: '4,9', label: 'no Google, em 312 avaliações' },
-      { value: '100%', label: 'produtos veganos e livres de crueldade' },
+      { value: '23', label: 'marcas veganas na prateleira, zero crueldade' },
       { value: 'Grátis', label: 'estacionamento no local' },
     ],
     images: {

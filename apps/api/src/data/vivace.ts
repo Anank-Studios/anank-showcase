@@ -432,7 +432,7 @@ export const vivace: DemoData = {
       accentAlt: '#B99A5B',
       line: '#DDDCD3',
       radius: '8px',
-      fontDisplay: 'var(--font-dm-serif-display)',
+      fontDisplay: 'var(--font-newsreader)',
     },
     thumbnail: img('1648775507324-b48dd3791fa5', 'Sala clara e minimalista da clínica Vivace', 800),
     legalName: 'Vivace Estética Avançada Ltda.',

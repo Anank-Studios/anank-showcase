@@ -1,21 +1,33 @@
 import type { Metadata, Viewport } from 'next';
 import {
   Bodoni_Moda,
-  DM_Serif_Display,
-  Fraunces,
-  Inter,
-  Inter_Tight,
+  Bricolage_Grotesque,
+  Geist,
   JetBrains_Mono,
+  Karla,
   Manrope,
+  Newsreader,
   Poppins,
 } from 'next/font/google';
 import '@/styles/globals.css';
 
-/* Uma única passada de fontes para as 4 marcas. Cada escopo [data-brand]
-   escolhe quais variáveis usar — ver src/styles/globals.css. */
+/*
+  Uma única passada de fontes para as 4 marcas. Cada escopo [data-brand]
+  escolhe quais variáveis usar — ver src/styles/globals.css.
 
-/* Anank Studios — tipografia oficial da marca (site-anank):
-   Poppins como principal, JetBrains Mono para a camada técnica. */
+  As três demos usam CATEGORIAS TIPOGRÁFICAS DIFERENTES, não três serifas
+  parecidas. Antes eram Fraunces + DM Serif Display + Bodoni Moda: todas
+  serifas, e por isso as marcas pareciam parentes.
+
+    Aurea   → grotesca expressiva (Bricolage) + humanista (Karla)
+    Vivace  → serifa editorial de baixo contraste (Newsreader) + geométrica (Manrope)
+    Oniria  → didone de contraste extremo (Bodoni Moda) + neutra (Geist)
+
+  `Inter` foi removida do projeto: é a fonte-padrão de todo site gerado por IA
+  e entrega o jogo na primeira olhada.
+*/
+
+/* ---- Anank Studios — tipografia oficial da marca (repo site-anank) ---- */
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600'],
@@ -30,30 +42,24 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 });
 
-const interTight = Inter_Tight({
+/* ---- Aurea ---- */
+const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
-  variable: '--font-inter-tight',
+  variable: '--font-bricolage',
   display: 'swap',
 });
 
-const fraunces = Fraunces({
+const karla = Karla({
+  subsets: ['latin'],
+  variable: '--font-karla',
+  display: 'swap',
+});
+
+/* ---- Vivace ---- */
+const newsreader = Newsreader({
   subsets: ['latin'],
   style: ['normal', 'italic'],
-  variable: '--font-fraunces',
-  display: 'swap',
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const dmSerifDisplay = DM_Serif_Display({
-  subsets: ['latin'],
-  weight: ['400'],
-  style: ['normal', 'italic'],
-  variable: '--font-dm-serif-display',
+  variable: '--font-newsreader',
   display: 'swap',
 });
 
@@ -63,6 +69,7 @@ const manrope = Manrope({
   display: 'swap',
 });
 
+/* ---- Oniria ---- */
 const bodoniModa = Bodoni_Moda({
   subsets: ['latin'],
   style: ['normal', 'italic'],
@@ -70,19 +77,25 @@ const bodoniModa = Bodoni_Moda({
   display: 'swap',
 });
 
+const geist = Geist({
+  subsets: ['latin'],
+  variable: '--font-geist',
+  display: 'swap',
+});
+
 const fontVars = [
   poppins.variable,
   jetbrainsMono.variable,
-  interTight.variable,
-  fraunces.variable,
-  inter.variable,
-  dmSerifDisplay.variable,
+  bricolage.variable,
+  karla.variable,
+  newsreader.variable,
   manrope.variable,
   bodoniModa.variable,
+  geist.variable,
 ].join(' ');
 
 export const metadata: Metadata = {
-  title: 'Anank Studios — Três níveis. Um padrão.',
+  title: 'Anank Studios',
   description:
     'Três demonstrações de sites para beleza e estética, do essencial bem-feito ao que se espera de uma marca de luxo. Portfólio da Anank Studios.',
 };
