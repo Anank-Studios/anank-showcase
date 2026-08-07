@@ -126,9 +126,21 @@ export function SplitText({
   }, [text, trigger, active, reduced, delay, stagger, duration, start]);
 
   const Tag = as as 'p';
+  /* <h1-3> suportam `aria-label` nativamente (papel "heading"). Os demais
+     (`p`, `span`, `blockquote`) resolvem para o papel ARIA "generic", que
+     PROÍBE `aria-label` — daí o `role="text"` para lhes dar um papel que
+     aceite o nome. Não é um papel ARIA oficial, mas é o padrão adotado por
+     leitores de tela (VoiceOver) e ferramentas de split-text justamente para
+     este caso: nomear o texto completo sem herdar semântica indevida. */
+  const needsTextRole = as !== 'h1' && as !== 'h2' && as !== 'h3';
 
   return (
-    <Tag ref={ref as React.Ref<HTMLParagraphElement>} aria-label={text} className={cn(className)}>
+    <Tag
+      ref={ref as React.Ref<HTMLParagraphElement>}
+      role={needsTextRole ? 'text' : undefined}
+      aria-label={text}
+      className={cn(className)}
+    >
       {text}
     </Tag>
   );

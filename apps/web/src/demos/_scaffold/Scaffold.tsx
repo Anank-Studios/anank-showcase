@@ -21,9 +21,7 @@ export async function Scaffold({ slug, page }: { slug: DemoSlug; page?: string }
 
         <h1 className="mt-4 text-display">{demo.brandName}</h1>
 
-        <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-muted">
-          {demo.description}
-        </p>
+        <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-muted">{demo.description}</p>
 
         <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-6 text-sm md:grid-cols-4">
           <div>

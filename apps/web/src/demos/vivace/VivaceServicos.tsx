@@ -15,10 +15,10 @@ export async function VivaceServicos() {
         <p className="label-caps text-accent">Serviços</p>
         <h1 className="text-display mt-3">Tratamentos com protocolo, não com promessa.</h1>
         <div className="mt-6 border-t border-line pt-6">
-          <p className="max-w-[62ch] text-base leading-relaxed text-muted">
-            Os doze protocolos abaixo cobrem estética facial, corporal e depilação a laser. Cada
-            um começa com avaliação — o número de sessões e o valor final dependem do seu caso, não
-            de tabela fechada.
+          <p className="max-w-[62ch] text-base leading-relaxed text-[#636e67]">
+            Os doze protocolos abaixo cobrem estética facial, corporal e depilação a laser. Cada um
+            começa com avaliação — o número de sessões e o valor final dependem do seu caso, não de
+            tabela fechada.
           </p>
         </div>
 

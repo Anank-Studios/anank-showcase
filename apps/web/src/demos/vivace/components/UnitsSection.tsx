@@ -32,11 +32,13 @@ export function UnitsSection({ images }: { images: Record<string, ImageRef> }) {
                 </div>
                 <h3 className="text-display mt-5 text-[22px]">
                   {unit.city}
-                  {unit.matriz ? <span className="ml-2 text-sm text-muted">(matriz)</span> : null}
+                  {unit.matriz ? (
+                    <span className="ml-2 text-sm text-[#636e67]">(matriz)</span>
+                  ) : null}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{unit.address}</p>
-                <p className="mt-1 text-sm text-muted">{unit.phone}</p>
-                <p className="mt-1 text-sm text-muted">{unit.hours}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[#636e67]">{unit.address}</p>
+                <p className="mt-1 text-sm text-[#636e67]">{unit.phone}</p>
+                <p className="mt-1 text-sm text-[#636e67]">{unit.hours}</p>
                 <Link
                   href="/demo/vivace/contato"
                   className="mt-4 inline-block text-sm font-medium text-accent hover:underline"

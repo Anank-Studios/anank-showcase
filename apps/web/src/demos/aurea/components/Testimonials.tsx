@@ -9,7 +9,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
     <section className="bg-surface py-20 lg:py-28">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-14">
         <Reveal>
-          <p className="label-caps text-accent">Depoimentos</p>
+          <p className="label-caps text-[#9d5d32]">Depoimentos</p>
           <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] text-ink md:text-[2.5rem]">
             Quem já sentou na cadeira
           </h2>
@@ -41,7 +41,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
                   </div>
                   <div>
                     <p className="text-sm font-medium text-ink">{testimonial.name}</p>
-                    <p className="text-[13px] text-muted">{testimonial.service}</p>
+                    <p className="text-[13px] text-[#75685e]">{testimonial.service}</p>
                   </div>
                 </div>
               </article>

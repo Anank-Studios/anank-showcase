@@ -60,7 +60,9 @@ export function TeamPortrait({ photo, alt }: { photo: ImageRef; alt: string }) {
       <div
         aria-hidden="true"
         className="absolute inset-0 transition-[clip-path] duration-300 ease-out"
-        style={{ clipPath: `circle(${hover ? RADIUS : 0}px at ${pos.x}px ${pos.y}px)` }}
+        style={{
+          clipPath: `circle(${hover ? RADIUS : 0}px at ${pos.x}px ${pos.y}px)`,
+        }}
       >
         <Image
           src={photo.url}

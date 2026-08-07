@@ -23,46 +23,48 @@ export async function OniriaManifesto() {
     <div className="relative">
       <OniriaNav />
 
-      <section className="px-5 pt-40 pb-20 md:px-10 md:pt-52 lg:px-14">
-        <div className="mx-auto max-w-[1400px]">
-          <p className="label-caps text-accent">Manifesto</p>
-          <SplitText
-            text="A pele tem memória."
-            as="h1"
-            className="mt-6 max-w-[12ch] font-display text-[clamp(2.5rem,13vw,9rem)] leading-[0.9] tracking-[-0.04em]"
+      <main>
+        <section className="px-5 pt-40 pb-20 md:px-10 md:pt-52 lg:px-14">
+          <div className="mx-auto max-w-[1400px]">
+            <p className="label-caps text-accent">Manifesto</p>
+            <SplitText
+              text="A pele tem memória."
+              as="h1"
+              className="mt-6 max-w-[12ch] font-display text-[clamp(2.5rem,13vw,9rem)] leading-[0.9] tracking-[-0.04em]"
+            />
+          </div>
+        </section>
+
+        <section className="px-5 pb-28 md:px-10 lg:px-14">
+          <div className="mx-auto max-w-[62ch] space-y-10">
+            {PARAGRAPHS.map((paragraph, index) => (
+              <SplitText
+                key={paragraph}
+                text={paragraph}
+                as="p"
+                className={
+                  index >= PARAGRAPHS.length - 2
+                    ? 'font-display text-[clamp(1.5rem,4.5vw,2.75rem)] leading-[1.14]'
+                    : 'text-base leading-[1.75] text-muted md:text-lg'
+                }
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Única imagem, no fim, em largura total e baixa opacidade. */}
+        <div className="relative aspect-[21/9] w-full opacity-45">
+          <Image
+            src={(demo.images.manifesto ?? demo.thumbnail).url}
+            alt={(demo.images.manifesto ?? demo.thumbnail).alt}
+            fill
+            sizes="100vw"
+            placeholder="blur"
+            blurDataURL={BLUR.oniria}
+            className="object-cover"
           />
         </div>
-      </section>
-
-      <section className="px-5 pb-28 md:px-10 lg:px-14">
-        <div className="mx-auto max-w-[62ch] space-y-10">
-          {PARAGRAPHS.map((paragraph, index) => (
-            <SplitText
-              key={paragraph}
-              text={paragraph}
-              as="p"
-              className={
-                index >= PARAGRAPHS.length - 2
-                  ? 'font-display text-[clamp(1.5rem,4.5vw,2.75rem)] leading-[1.14]'
-                  : 'text-base leading-[1.75] text-muted md:text-lg'
-              }
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Única imagem, no fim, em largura total e baixa opacidade. */}
-      <div className="relative aspect-[21/9] w-full opacity-45">
-        <Image
-          src={(demo.images.manifesto ?? demo.thumbnail).url}
-          alt={(demo.images.manifesto ?? demo.thumbnail).alt}
-          fill
-          sizes="100vw"
-          placeholder="blur"
-          blurDataURL={BLUR.oniria}
-          className="object-cover"
-        />
-      </div>
+      </main>
 
       <OniriaFooter legalName={demo.legalName} cnpj={demo.cnpj} address={demo.address} />
     </div>

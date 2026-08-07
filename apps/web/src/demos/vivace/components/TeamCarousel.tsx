@@ -95,9 +95,9 @@ export function TeamCarousel({ team }: { team: TeamMember[] }) {
                 />
               </div>
               <h3 className="text-display mt-4 text-[19px]">{member.name}</h3>
-              <p className="mt-1 text-sm text-muted">{member.role}</p>
+              <p className="mt-1 text-sm text-[#636e67]">{member.role}</p>
               {member.registry ? (
-                <p className="label-caps mt-1 text-[10px] text-muted">{member.registry}</p>
+                <p className="label-caps mt-1 text-[10px] text-[#636e67]">{member.registry}</p>
               ) : null}
             </article>
           ))}

@@ -22,7 +22,12 @@ const services: Service[] = [
     sessions: '1 sessão, com manutenção a cada 60 dias',
     interval: '60 dias',
     recovery: 'vermelhidão por até 24h',
-    indications: ['Pele oleosa', 'Comedões abertos e fechados', 'Acne grau I e II', 'Textura irregular'],
+    indications: [
+      'Pele oleosa',
+      'Comedões abertos e fechados',
+      'Acne grau I e II',
+      'Textura irregular',
+    ],
     contraindications: [
       'Acne grau III ou IV em fase inflamatória',
       'Uso de isotretinoína nos últimos 6 meses',
@@ -88,14 +93,22 @@ const services: Service[] = [
     sessions: '3 sessões',
     interval: '30 dias',
     recovery: 'pequenas pápulas por 24h',
-    indications: ['Pele desidratada', 'Perda de viço', 'Rugas finas periorbitais', 'Pescoço e colo'],
+    indications: [
+      'Pele desidratada',
+      'Perda de viço',
+      'Rugas finas periorbitais',
+      'Pescoço e colo',
+    ],
     contraindications: [
       'Gestação e lactação',
       'Doença autoimune em atividade',
       'Alergia conhecida ao ácido hialurônico',
       'Infecção ativa na área',
     ],
-    image: img('1616394584738-fc6e612e71b9', 'Cliente durante tratamento facial com máscara branca'),
+    image: img(
+      '1616394584738-fc6e612e71b9',
+      'Cliente durante tratamento facial com máscara branca'
+    ),
   },
   {
     id: 'drenagem',
@@ -110,7 +123,12 @@ const services: Service[] = [
     sessions: '10 sessões',
     interval: '2 a 3 vezes por semana',
     recovery: 'nenhuma',
-    indications: ['Retenção hídrica', 'Pós-operatório liberado pelo cirurgião', 'Pernas pesadas', 'Gestação (com liberação)'],
+    indications: [
+      'Retenção hídrica',
+      'Pós-operatório liberado pelo cirurgião',
+      'Pernas pesadas',
+      'Gestação (com liberação)',
+    ],
     contraindications: [
       'Trombose venosa profunda',
       'Insuficiência cardíaca descompensada',
@@ -124,7 +142,8 @@ const services: Service[] = [
     slug: 'criolipolise',
     name: 'Criolipólise',
     category: 'Corporal',
-    summary: 'Resfriamento controlado da gordura localizada, com aplicador dimensionado na avaliação.',
+    summary:
+      'Resfriamento controlado da gordura localizada, com aplicador dimensionado na avaliação.',
     description:
       'O adipócito é sensível ao frio e sofre apoptose sem dano à pele. Resultado visível a partir de 60 dias. Não substitui dieta nem exercício, e a avaliação define se você é candidata.',
     durationMin: 90,
@@ -155,7 +174,12 @@ const services: Service[] = [
     interval: '2 vezes por semana',
     recovery: 'hematomas leves possíveis',
     indications: ['Gordura localizada', 'Celulite grau I e II', 'Flacidez leve'],
-    contraindications: ['Varizes calibrosas na área', 'Gestação', 'Trombose', 'Pele com lesão ativa'],
+    contraindications: [
+      'Varizes calibrosas na área',
+      'Gestação',
+      'Trombose',
+      'Pele com lesão ativa',
+    ],
     image: img('1519823551278-64ac92734fb1', 'Massagem corporal com manobras firmes'),
   },
   {
@@ -238,7 +262,12 @@ const services: Service[] = [
     interval: '30 a 45 dias',
     recovery: 'vermelhidão por algumas horas',
     indications: ['Foliculite', 'Pelos encravados', 'Hiperpigmentação por depilação'],
-    contraindications: ['Gestação', 'Infecção ativa na área', 'Bronzeamento recente', 'Uso de isotretinoína'],
+    contraindications: [
+      'Gestação',
+      'Infecção ativa na área',
+      'Bronzeamento recente',
+      'Uso de isotretinoína',
+    ],
     image: img('1742367539759-6e4fc2e39209', 'Interior claro e minimalista da clínica'),
   },
   {
@@ -441,14 +470,23 @@ export const vivace: DemoData = {
       avaliacao: img('1552693673-1bf958298935', 'Avaliação facial antes do procedimento'),
       protocolo: img('1595871151608-bc7abd1caca3', 'Sala de tratamento com maca preparada'),
       equipamento: img('1551076826-72190fff02d3', 'Equipamento com registro Anvisa'),
-      acompanhamento: img('1570172619644-dfd03ed5d881', 'Registro fotográfico padronizado do tratamento'),
+      acompanhamento: img(
+        '1570172619644-dfd03ed5d881',
+        'Registro fotográfico padronizado do tratamento'
+      ),
       espera: img('1731514721772-329626f84c8b', 'Sala de espera clara da clínica'),
       produtos: img('1540555700478-4be289fbecef', 'Frasco de produto com toalha e flores'),
       serum: img('1515377905703-c4788e51af15', 'Conta-gotas de sérum sobre a bancada'),
       pele: img('1629684027309-92e2cc2de5ed', 'Retrato de pele luminosa após tratamento'),
       detalhe: img('1643684391140-c5056cfd3436', 'Close de pele durante avaliação'),
-      mascaraBranca: img('1616394584738-fc6e612e71b9', 'Cliente relaxada durante máscara facial branca'),
-      aparelhoMetalico: img('1761718209852-54ca4210183e', 'Aparelho facial metálico em uso na sala de tratamento'),
+      mascaraBranca: img(
+        '1616394584738-fc6e612e71b9',
+        'Cliente relaxada durante máscara facial branca'
+      ),
+      aparelhoMetalico: img(
+        '1761718209852-54ca4210183e',
+        'Aparelho facial metálico em uso na sala de tratamento'
+      ),
       massagemOleo: img('1696841212541-449ca29397cc', 'Massagem corporal com óleo'),
       drenagemCostas: img('1741522509438-a120c0bb5e88', 'Drenagem manual nas costas'),
     },

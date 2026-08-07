@@ -16,7 +16,7 @@ export async function VivaceContato() {
         <p className="label-caps text-accent">Contato</p>
         <h1 className="text-display mt-3">Agende sua avaliação.</h1>
         <div className="mt-6 max-w-[62ch] border-t border-line pt-6">
-          <p className="text-base leading-relaxed text-muted">
+          <p className="text-base leading-relaxed text-[#636e67]">
             Escolha a unidade mais próxima e conte o que você quer resolver. Respondemos por
             telefone, e-mail ou WhatsApp — normalmente no mesmo dia útil.
           </p>
@@ -36,21 +36,28 @@ export async function VivaceContato() {
               <div key={unit.slug}>
                 <p className="text-display text-[19px]">
                   {unit.city}
-                  {unit.matriz ? <span className="ml-2 text-sm text-muted">(matriz)</span> : null}
+                  {unit.matriz ? (
+                    <span className="ml-2 text-sm text-[#636e67]">(matriz)</span>
+                  ) : null}
                 </p>
-                <p className="mt-2 text-sm text-muted">{unit.address}</p>
+                <p className="mt-2 text-sm text-[#636e67]">{unit.address}</p>
                 <p className="mt-2 text-sm text-ink">{unit.phone}</p>
                 <p className="text-sm text-ink">
-                  <a href={`https://wa.me/${unit.whatsapp}`} target="_blank" rel="noreferrer" className="hover:text-accent">
+                  <a
+                    href={`https://wa.me/${unit.whatsapp}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-accent"
+                  >
                     WhatsApp
                   </a>
                 </p>
-                <p className="mt-2 text-sm text-muted">{unit.hours}</p>
+                <p className="mt-2 text-sm text-[#636e67]">{unit.hours}</p>
               </div>
             ))}
           </div>
 
-          <p className="mt-10 border-t border-line pt-6 text-sm text-muted">
+          <p className="mt-10 border-t border-line pt-6 text-sm text-[#636e67]">
             E-mail geral:{' '}
             <a href={`mailto:${demo.email}`} className="text-ink hover:text-accent">
               {demo.email}

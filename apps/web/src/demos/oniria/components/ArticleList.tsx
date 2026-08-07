@@ -1,12 +1,10 @@
-'use client';
-
-import { useState } from 'react';
 import Image from 'next/image';
 import type { Article } from '@anank/contracts';
+import { OniriaLink } from './transition/OniriaLink';
 import { BLUR } from '@/shared/lib/blur';
 import { cn } from '@/shared/lib/cn';
 
-function formatDate(iso: string): string {
+function formatarData(iso: string): string {
   return new Date(`${iso}T12:00:00-03:00`).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
@@ -16,36 +14,25 @@ function formatDate(iso: string): string {
 
 /**
  * Listagem editorial: o primeiro artigo em destaque, os outros cinco em duas
- * colunas. Apenas o primeiro tem `body` — os demais declaram abertamente que
- * fazem parte da demonstração, em vez de fingir um texto que não existe.
+ * colunas.
  *
- * O artigo completo abre em um painel expansível aqui mesmo, para não exigir
- * uma rota `/diario/[slug]` (que está fora do escopo desta demo).
+ * Cada card leva para `/diario/[slug]` através do `OniriaLink`, que dispara a
+ * transição cinematográfica — coerente com o resto da demo. (Antes o texto
+ * abria num painel expansível aqui mesmo, porque a rota ainda não existia.)
  */
 export function ArticleList({ articles }: { articles: Article[] }) {
-  const [openId, setOpenId] = useState<string | null>(null);
   const [featured, ...rest] = articles;
-
   if (!featured) return null;
 
   return (
     <section className="px-5 pb-28 md:px-10 lg:px-14">
       <div className="mx-auto max-w-[1400px]">
-        <ArticleCard
-          article={featured}
-          featured
-          open={openId === featured.id}
-          onToggle={() => setOpenId(openId === featured.id ? null : featured.id)}
-        />
+        <ArticleCard article={featured} featured />
 
         <ul className="mt-16 grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2">
           {rest.map((article) => (
             <li key={article.id}>
-              <ArticleCard
-                article={article}
-                open={openId === article.id}
-                onToggle={() => setOpenId(openId === article.id ? null : article.id)}
-              />
+              <ArticleCard article={article} />
             </li>
           ))}
         </ul>
@@ -54,29 +41,13 @@ export function ArticleList({ articles }: { articles: Article[] }) {
   );
 }
 
-function ArticleCard({
-  article,
-  featured = false,
-  open,
-  onToggle,
-}: {
-  article: Article;
-  featured?: boolean;
-  open: boolean;
-  onToggle: () => void;
-}) {
-  const hasBody = Boolean(article.body?.length);
-  const panelId = `artigo-${article.id}`;
-
+function ArticleCard({ article, featured = false }: { article: Article; featured?: boolean }) {
   return (
     <article>
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls={panelId}
-        data-cursor="LER"
-        className="group block w-full text-left"
+      <OniriaLink
+        href={`/demo/oniria/diario/${article.slug}`}
+        cursorLabel="LER"
+        className="group block"
       >
         <div
           className={cn(
@@ -96,8 +67,9 @@ function ArticleCard({
         </div>
 
         <p className="label-caps mt-5 text-muted">
-          {formatDate(article.publishedAt)} · {article.readingMin} min de leitura
+          {formatarData(article.publishedAt)} · {article.readingMin} min de leitura
         </p>
+
         <h2
           className={cn(
             'mt-3 font-display leading-tight',
@@ -106,39 +78,15 @@ function ArticleCard({
         >
           {article.title}
         </h2>
+
         <p className="mt-3 max-w-[56ch] text-sm leading-relaxed text-muted md:text-base">
           {article.subtitle}
         </p>
-        <span className="label-caps mt-4 inline-block border-b border-accent pb-0.5 text-accent-2">
-          {open ? 'Fechar' : hasBody ? 'Ler o texto' : 'Sobre este texto'}
-        </span>
-      </button>
 
-      <div
-        id={panelId}
-        role="region"
-        className={cn(
-          'grid transition-[grid-template-rows] duration-500 ease-out',
-          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-        )}
-      >
-        <div className="overflow-hidden">
-          {hasBody ? (
-            <div className="max-w-[62ch] space-y-6 pt-8">
-              {article.body!.map((paragraph) => (
-                <p key={paragraph.slice(0, 32)} className="leading-[1.75] text-muted">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          ) : (
-            <p className="max-w-[52ch] border-l border-accent pt-8 pl-5 text-sm leading-relaxed text-muted">
-              Este texto faz parte da demonstração e não foi escrito por completo. Apenas
-              “{`A memória da pele`}” está publicado na íntegra.
-            </p>
-          )}
-        </div>
-      </div>
+        <span className="label-caps mt-4 inline-block border-b border-accent pb-0.5 text-accent-2">
+          Ler
+        </span>
+      </OniriaLink>
     </article>
   );
 }

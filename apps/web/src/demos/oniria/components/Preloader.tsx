@@ -22,7 +22,11 @@ export function Preloader({ onDone }: { onDone: () => void }) {
 
     if (reduced) {
       const timer = window.setTimeout(() => {
-        gsap.to(root, { opacity: 0, duration: 0.2, onComplete: () => onDoneRef.current() });
+        gsap.to(root, {
+          opacity: 0,
+          duration: 0.2,
+          onComplete: () => onDoneRef.current(),
+        });
       }, 300);
       return () => window.clearTimeout(timer);
     }

@@ -144,7 +144,7 @@ export function BeforeAfterSlider({
           </svg>
         </div>
       </div>
-      <figcaption className="mt-3 text-sm text-muted">{title}</figcaption>
+      <figcaption className="mt-3 text-sm text-[#75685e]">{title}</figcaption>
     </figure>
   );
 }

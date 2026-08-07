@@ -22,8 +22,18 @@ const services: Service[] = [
     sessions: '3 sessões',
     interval: '45 dias',
     recovery: '48h de vermelhidão leve',
-    indications: ['Flacidez de terço médio', 'Perda de densidade', 'Sulco nasogeniano', 'Contorno mandibular'],
-    contraindications: ['Gestação e lactação', 'Doença autoimune em atividade', 'Infecção ativa na área', 'Uso de anticoagulante sem liberação'],
+    indications: [
+      'Flacidez de terço médio',
+      'Perda de densidade',
+      'Sulco nasogeniano',
+      'Contorno mandibular',
+    ],
+    contraindications: [
+      'Gestação e lactação',
+      'Doença autoimune em atividade',
+      'Infecção ativa na área',
+      'Uso de anticoagulante sem liberação',
+    ],
     image: img('1629684027309-92e2cc2de5ed', 'Retrato de pele luminosa em luz editorial'),
     acts: [
       {
@@ -43,10 +53,24 @@ const services: Service[] = [
       },
     ],
     faq: [
-      { question: 'Dói?', answer: 'Com o anestésico tópico, a sensação é de pressão. O desconforto maior costuma ser no dia seguinte, e cede sozinho.' },
-      { question: 'Quando posso voltar ao trabalho?', answer: 'No mesmo dia. A vermelhidão some em até 48 horas e é discreta.' },
-      { question: 'Quanto tempo dura?', answer: 'De 18 a 24 meses, dependendo do metabolismo e do protocolo de manutenção.' },
-      { question: 'Preciso das três sessões?', answer: 'Na maioria dos casos, sim. Reavaliamos na segunda e, se o resultado já for suficiente, dizemos.' },
+      {
+        question: 'Dói?',
+        answer:
+          'Com o anestésico tópico, a sensação é de pressão. O desconforto maior costuma ser no dia seguinte, e cede sozinho.',
+      },
+      {
+        question: 'Quando posso voltar ao trabalho?',
+        answer: 'No mesmo dia. A vermelhidão some em até 48 horas e é discreta.',
+      },
+      {
+        question: 'Quanto tempo dura?',
+        answer: 'De 18 a 24 meses, dependendo do metabolismo e do protocolo de manutenção.',
+      },
+      {
+        question: 'Preciso das três sessões?',
+        answer:
+          'Na maioria dos casos, sim. Reavaliamos na segunda e, se o resultado já for suficiente, dizemos.',
+      },
     ],
   },
   {
@@ -63,7 +87,12 @@ const services: Service[] = [
     interval: 'anual',
     recovery: 'sem downtime',
     indications: ['Flacidez de SMAS', 'Contorno mandibular', 'Papada', 'Sobrancelha caída'],
-    contraindications: ['Gestação', 'Implante metálico na área', 'Doença autoimune em atividade', 'Ferida aberta na área'],
+    contraindications: [
+      'Gestação',
+      'Implante metálico na área',
+      'Doença autoimune em atividade',
+      'Ferida aberta na área',
+    ],
     image: img('1777262080995-da4a45f51af8', 'Macro de cílios e pele em luz dramática'),
     acts: [
       {
@@ -83,10 +112,25 @@ const services: Service[] = [
       },
     ],
     faq: [
-      { question: 'É o mesmo que radiofrequência?', answer: 'Não. A radiofrequência aquece a derme; o microfocado entrega energia no SMAS, a camada que sustenta o rosto.' },
-      { question: 'Substitui a cirurgia?', answer: 'Não substitui. Adia, em alguns casos, e melhora o contorno em outros. Quem tem indicação cirúrgica é informado.' },
-      { question: 'Posso repetir antes de um ano?', answer: 'Não recomendamos. O tecido precisa desse tempo para completar a resposta.' },
-      { question: 'Dói?', answer: 'É desconfortável em pontos ósseos. Fazemos pausas e ajustamos a energia conforme a sua tolerância.' },
+      {
+        question: 'É o mesmo que radiofrequência?',
+        answer:
+          'Não. A radiofrequência aquece a derme; o microfocado entrega energia no SMAS, a camada que sustenta o rosto.',
+      },
+      {
+        question: 'Substitui a cirurgia?',
+        answer:
+          'Não substitui. Adia, em alguns casos, e melhora o contorno em outros. Quem tem indicação cirúrgica é informado.',
+      },
+      {
+        question: 'Posso repetir antes de um ano?',
+        answer: 'Não recomendamos. O tecido precisa desse tempo para completar a resposta.',
+      },
+      {
+        question: 'Dói?',
+        answer:
+          'É desconfortável em pontos ósseos. Fazemos pausas e ajustamos a energia conforme a sua tolerância.',
+      },
     ],
   },
   {
@@ -103,7 +147,12 @@ const services: Service[] = [
     interval: '30 dias',
     recovery: '5 a 7 dias de edema',
     indications: ['Perda de volume malar', 'Contorno mandibular', 'Sulcos', 'Assimetria leve'],
-    contraindications: ['Gestação e lactação', 'Doença autoimune em atividade', 'Infecção ativa', 'Expectativa incompatível com a anatomia'],
+    contraindications: [
+      'Gestação e lactação',
+      'Doença autoimune em atividade',
+      'Infecção ativa',
+      'Expectativa incompatível com a anatomia',
+    ],
     image: img('1588683301867-c442a9ed1389', 'Macro de olho e cílios com luz dourada'),
     acts: [
       {
@@ -123,10 +172,24 @@ const services: Service[] = [
       },
     ],
     faq: [
-      { question: 'Vou ficar com cara de artificial?', answer: 'Não, se o volume respeitar a estrutura. Aplicamos em duas etapas justamente para não passar do ponto.' },
-      { question: 'Quanto tempo dura?', answer: 'De 12 a 18 meses, conforme o produto e a região.' },
-      { question: 'Dá para reverter?', answer: 'Sim, no caso do ácido hialurônico, com hialuronidase.' },
-      { question: 'Por que duas sessões?', answer: 'Porque o edema da primeira mascara o resultado real. A segunda ajusta o que sobrou.' },
+      {
+        question: 'Vou ficar com cara de artificial?',
+        answer:
+          'Não, se o volume respeitar a estrutura. Aplicamos em duas etapas justamente para não passar do ponto.',
+      },
+      {
+        question: 'Quanto tempo dura?',
+        answer: 'De 12 a 18 meses, conforme o produto e a região.',
+      },
+      {
+        question: 'Dá para reverter?',
+        answer: 'Sim, no caso do ácido hialurônico, com hialuronidase.',
+      },
+      {
+        question: 'Por que duas sessões?',
+        answer:
+          'Porque o edema da primeira mascara o resultado real. A segunda ajusta o que sobrou.',
+      },
     ],
   },
   {
@@ -142,8 +205,18 @@ const services: Service[] = [
     sessions: '6 sessões',
     interval: '15 dias',
     recovery: 'nenhuma',
-    indications: ['Pele desidratada', 'Perda de barreira cutânea', 'Opacidade', 'Estresse oxidativo'],
-    contraindications: ['Alergia a algum ativo do protocolo', 'Dermatite em atividade', 'Gestação sem liberação', 'Uso de ácido em fase de descamação'],
+    indications: [
+      'Pele desidratada',
+      'Perda de barreira cutânea',
+      'Opacidade',
+      'Estresse oxidativo',
+    ],
+    contraindications: [
+      'Alergia a algum ativo do protocolo',
+      'Dermatite em atividade',
+      'Gestação sem liberação',
+      'Uso de ácido em fase de descamação',
+    ],
     image: img('1765323337815-1b1c1a47cdaa', 'Interior escuro com luz quente e discreta'),
     acts: [
       {
@@ -163,10 +236,22 @@ const services: Service[] = [
       },
     ],
     faq: [
-      { question: 'Posso fazer junto com outro protocolo?', answer: 'Sim. O Nocturne costuma ser combinado com o Aurora nos intervalos.' },
-      { question: 'Preciso mudar minha rotina de casa?', answer: 'Provavelmente sim, e quase sempre para menos produtos.' },
-      { question: 'Serve para pele oleosa?', answer: 'Serve. Oleosidade excessiva costuma ser resposta a barreira comprometida.' },
-      { question: 'Seis sessões é o mínimo?', answer: 'É o protocolo completo. Efeito perceptível costuma vir na terceira.' },
+      {
+        question: 'Posso fazer junto com outro protocolo?',
+        answer: 'Sim. O Nocturne costuma ser combinado com o Aurora nos intervalos.',
+      },
+      {
+        question: 'Preciso mudar minha rotina de casa?',
+        answer: 'Provavelmente sim, e quase sempre para menos produtos.',
+      },
+      {
+        question: 'Serve para pele oleosa?',
+        answer: 'Serve. Oleosidade excessiva costuma ser resposta a barreira comprometida.',
+      },
+      {
+        question: 'Seis sessões é o mínimo?',
+        answer: 'É o protocolo completo. Efeito perceptível costuma vir na terceira.',
+      },
     ],
   },
   {
@@ -182,7 +267,12 @@ const services: Service[] = [
     sessions: 'conforme indicação',
     recovery: 'nenhuma',
     indications: ['Pós-bioestimulador', 'Pós-microfocado', 'Pós-harmonização', 'Edema persistente'],
-    contraindications: ['Infecção ativa no local', 'Suspeita de complicação vascular', 'Febre', 'Sem liberação do profissional que aplicou'],
+    contraindications: [
+      'Infecção ativa no local',
+      'Suspeita de complicação vascular',
+      'Febre',
+      'Sem liberação do profissional que aplicou',
+    ],
     image: img('1544717304-a2db4a7b16ee', 'Repouso em sala de recuperação com toalha branca'),
     acts: [
       {
@@ -202,10 +292,23 @@ const services: Service[] = [
       },
     ],
     faq: [
-      { question: 'É obrigatório?', answer: 'Não. É recomendado depois do Vórtice e do Meridiano.' },
-      { question: 'Posso fazer se me tratei em outro lugar?', answer: 'Sim, desde que traga a informação do que foi aplicado e a liberação de quem aplicou.' },
-      { question: 'Quantas sessões?', answer: 'Normalmente duas. Casos com edema persistente podem precisar de quatro.' },
-      { question: 'Acelera o resultado?', answer: 'Não acelera o colágeno. Acelera a resolução do edema, que é outra coisa.' },
+      {
+        question: 'É obrigatório?',
+        answer: 'Não. É recomendado depois do Vórtice e do Meridiano.',
+      },
+      {
+        question: 'Posso fazer se me tratei em outro lugar?',
+        answer:
+          'Sim, desde que traga a informação do que foi aplicado e a liberação de quem aplicou.',
+      },
+      {
+        question: 'Quantas sessões?',
+        answer: 'Normalmente duas. Casos com edema persistente podem precisar de quatro.',
+      },
+      {
+        question: 'Acelera o resultado?',
+        answer: 'Não acelera o colágeno. Acelera a resolução do edema, que é outra coisa.',
+      },
     ],
   },
 ];
@@ -215,7 +318,11 @@ const practitioners: Practitioner[] = [
     id: 'helena-kruger',
     name: 'Dra. Helena Kruger',
     title: 'Diretora científica · Dermatologista',
-    photo: img('1540172777610-b15b605dd68d', 'Retrato em preto e branco da Dra. Helena Kruger', 900),
+    photo: img(
+      '1540172777610-b15b605dd68d',
+      'Retrato em preto e branco da Dra. Helena Kruger',
+      900
+    ),
     bio: 'Dermatologista, diretora científica da ONIRIA. Conduz os protocolos Aurora e Vórtice e assina o desenho de cada plano.',
     availabilityNote: 'Agenda concorrida — costuma abrir com três semanas. Não atende aos sábados.',
   },
@@ -223,7 +330,11 @@ const practitioners: Practitioner[] = [
     id: 'marina-aveline',
     name: 'Dra. Marina Aveline',
     title: 'Dermatologista',
-    photo: img('1620122303020-87ec826cf70d', 'Retrato em preto e branco da Dra. Marina Aveline', 900),
+    photo: img(
+      '1620122303020-87ec826cf70d',
+      'Retrato em preto e branco da Dra. Marina Aveline',
+      900
+    ),
     bio: 'Dermatologista com foco em regeneração e pós-procedimento. Conduz os protocolos Nocturne e Sereno.',
     availabilityNote: 'Agenda mais aberta. Atende também aos sábados pela manhã.',
   },
@@ -244,7 +355,11 @@ const team: TeamMember[] = [
     role: 'Diretora científica',
     registry: 'CRM-SP 118.402 · RQE 41.882',
     bio: 'Dermatologista, membro da Sociedade Brasileira de Dermatologia. Fundou a ONIRIA em 2018 depois de doze anos em consultório.',
-    photo: img('1540172777610-b15b605dd68d', 'Retrato em preto e branco da Dra. Helena Kruger', 900),
+    photo: img(
+      '1540172777610-b15b605dd68d',
+      'Retrato em preto e branco da Dra. Helena Kruger',
+      900
+    ),
   },
   {
     id: 'marina-aveline',
@@ -252,7 +367,11 @@ const team: TeamMember[] = [
     role: 'Dermatologista',
     registry: 'CRM-SP 142.907 · RQE 58.114',
     bio: 'Especialista em barreira cutânea e regeneração. Responsável pelos protocolos Nocturne e Sereno.',
-    photo: img('1620122303020-87ec826cf70d', 'Retrato em preto e branco da Dra. Marina Aveline', 900),
+    photo: img(
+      '1620122303020-87ec826cf70d',
+      'Retrato em preto e branco da Dra. Marina Aveline',
+      900
+    ),
   },
   {
     id: 'iara-benet',
@@ -293,7 +412,8 @@ const testimonials: Testimonial[] = [
     id: 'vera',
     name: 'Vera Lucchesi',
     service: 'Protocolo Vórtice',
-    quote: 'Me explicaram o que o aparelho não faz antes de explicar o que ele faz. Isso me convenceu.',
+    quote:
+      'Me explicaram o que o aparelho não faz antes de explicar o que ele faz. Isso me convenceu.',
     rating: 5,
     avatar: img('1504275490777-45f30792f13f', 'Retrato em preto e branco de Vera Lucchesi', 200),
     city: 'São Paulo',
@@ -302,7 +422,8 @@ const testimonials: Testimonial[] = [
     id: 'antonio',
     name: 'Antônio Sanchez',
     service: 'Protocolo Aurora',
-    quote: 'Três sessões, três reavaliações, nenhum upsell. Saí com menos produtos em casa do que entrei.',
+    quote:
+      'Três sessões, três reavaliações, nenhum upsell. Saí com menos produtos em casa do que entrei.',
     rating: 5,
     avatar: img('1518611540400-6b85a0704342', 'Retrato em preto e branco de Antônio Sanchez', 200),
     city: 'São Paulo',
@@ -320,7 +441,8 @@ const testimonials: Testimonial[] = [
     id: 'clara',
     name: 'Clara Vasconcellos',
     service: 'Protocolo Nocturne',
-    quote: 'A pele parou de reagir a tudo. Foi a primeira vez em anos que eu não precisei de corretivo.',
+    quote:
+      'A pele parou de reagir a tudo. Foi a primeira vez em anos que eu não precisei de corretivo.',
     rating: 5,
     avatar: img('1548207775-a7676e36f20a', 'Retrato em preto e branco de Clara Vasconcellos', 200),
     city: 'São Paulo',
@@ -414,7 +536,11 @@ export const oniria: DemoData = {
       radius: '0px',
       fontDisplay: 'var(--font-bodoni-moda)',
     },
-    thumbnail: img('1574015974293-817f0ebebb74', 'Retrato editorial em preto e branco com cabelo em movimento', 800),
+    thumbnail: img(
+      '1574015974293-817f0ebebb74',
+      'Retrato editorial em preto e branco com cabelo em movimento',
+      800
+    ),
     legalName: 'Oniria Instituto de Longevidade da Pele Ltda.',
     cnpj: '52.914.660/0001-08',
     city: 'São Paulo',

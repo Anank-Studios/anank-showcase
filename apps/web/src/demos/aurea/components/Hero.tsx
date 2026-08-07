@@ -10,7 +10,11 @@ export function Hero({ demo }: { demo: Demo }) {
   const wa = whatsappLink(demo.whatsapp, 'Oi! Vim pelo site do Aurea e quero agendar um horário.');
 
   return (
-    <section id="topo" className="mx-auto max-w-[1400px] px-6 pt-10 pb-16 md:px-10 lg:px-14 lg:py-24">
+    <section
+      id="topo"
+      tabIndex={-1}
+      className="mx-auto max-w-[1400px] px-6 pt-10 pb-16 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink md:px-10 lg:px-14 lg:py-24"
+    >
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
           <Reveal>
@@ -20,7 +24,7 @@ export function Hero({ demo }: { demo: Demo }) {
           </Reveal>
 
           <Reveal delay={0.06}>
-            <p className="mt-6 max-w-[46ch] text-base leading-relaxed text-muted">
+            <p className="mt-6 max-w-[46ch] text-base leading-relaxed text-[#75685e]">
               Corte, cor e cuidado feitos com calma, na Vila Madalena. Sem pressa, sem fórmula
               pronta.
             </p>
@@ -32,7 +36,7 @@ export function Hero({ demo }: { demo: Demo }) {
                 href={wa}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-brand bg-accent px-6 py-3.5 text-center text-sm font-medium text-bg transition-[transform,box-shadow] duration-250 hover:-translate-y-0.5 hover:shadow-brand"
+                className="inline-flex items-center justify-center rounded-brand bg-[#9d5d32] px-6 py-3.5 text-center text-sm font-medium text-bg transition-[transform,box-shadow] duration-250 hover:-translate-y-0.5 hover:shadow-brand"
               >
                 Agendar no WhatsApp
               </a>

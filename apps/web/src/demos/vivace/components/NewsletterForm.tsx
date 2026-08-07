@@ -80,7 +80,7 @@ export function NewsletterForm() {
           placeholder="Nome"
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? `${nameId}-error` : undefined}
-          className="w-full rounded-brand border border-line bg-transparent px-3 py-2 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
+          className="w-full rounded-brand border border-line bg-transparent px-3 py-2 text-sm placeholder:text-[#636e67] focus:border-accent focus:outline-none"
         />
         {errors.name ? (
           <p id={`${nameId}-error`} className="mt-1 text-xs text-[#B3492F]">
@@ -102,7 +102,7 @@ export function NewsletterForm() {
           placeholder="E-mail"
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? `${emailId}-error` : undefined}
-          className="w-full rounded-brand border border-line bg-transparent px-3 py-2 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
+          className="w-full rounded-brand border border-line bg-transparent px-3 py-2 text-sm placeholder:text-[#636e67] focus:border-accent focus:outline-none"
         />
         {errors.email ? (
           <p id={`${emailId}-error`} className="mt-1 text-xs text-[#B3492F]">
@@ -124,7 +124,7 @@ export function NewsletterForm() {
           placeholder="Telefone com DDD"
           aria-invalid={Boolean(errors.phone)}
           aria-describedby={errors.phone ? `${phoneId}-error` : undefined}
-          className="w-full rounded-brand border border-line bg-transparent px-3 py-2 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
+          className="w-full rounded-brand border border-line bg-transparent px-3 py-2 text-sm placeholder:text-[#636e67] focus:border-accent focus:outline-none"
         />
         {errors.phone ? (
           <p id={`${phoneId}-error`} className="mt-1 text-xs text-[#B3492F]">

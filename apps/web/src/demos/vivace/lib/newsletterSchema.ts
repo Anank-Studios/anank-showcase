@@ -7,7 +7,10 @@ export const newsletterSchema = z.object({
     .trim()
     .min(2, 'Informe seu nome completo.')
     .max(120, 'Nome muito longo.'),
-  email: z.string({ required_error: 'Informe seu e-mail.' }).trim().email('Informe um e-mail válido.'),
+  email: z
+    .string({ required_error: 'Informe seu e-mail.' })
+    .trim()
+    .email('Informe um e-mail válido.'),
   phone: z
     .string({ required_error: 'Informe um telefone.' })
     .transform((value) => value.replace(/\D/g, ''))

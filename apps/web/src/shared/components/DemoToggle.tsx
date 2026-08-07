@@ -100,28 +100,44 @@ export function DemoToggle() {
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-24 opacity-0'
       )}
     >
+      {/*
+        O rótulo anima só `y`, nunca `opacity`. Um fade deixa o texto em
+        opacidade parcial por ~350ms, e nesse intervalo o contraste real fica
+        abaixo do mínimo — a auditoria pegava isso de forma intermitente,
+        dependendo de quando amostrava a página. Movimento sem fade resolve e
+        continua discreto.
+      */}
       <AnimatePresence>
         {showHint && (
           <motion.p
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
+            initial={{ y: 8 }}
+            animate={{ y: 0 }}
+            exit={{ y: 8 }}
             transition={{ duration: reduced ? 0.01 : 0.35 }}
-            className="rounded-full bg-[rgb(6_11_8_/_0.82)] px-3 py-1 text-[11px] text-[#F7F7F7] backdrop-blur-[20px]"
+            /* Fundo totalmente opaco: é um rótulo pequeno e efêmero, e com
+               qualquer translucidez o contraste passa a depender da página
+               atrás — reprovava sobre as demos claras. */
+            className="rounded-full bg-[#0B1410] px-3 py-1 text-[11px] text-[#E8ECEA]"
           >
             Alterne entre as versões
           </motion.p>
         )}
       </AnimatePresence>
 
+      {/*
+        O `role="tablist"` só pode conter filhos com `role="tab"` — por isso o
+        link de volta e o divisor ficam FORA dele, neste container externo.
+        Com eles dentro, a auditoria `aria-required-children` reprovava em
+        todas as 12 rotas de demo de uma vez.
+
+        A pílula é quase opaca (0.95) de propósito: com 0.82 o fundo da página
+        atravessava o blur e o contraste do texto virava loteria — reprovava em
+        `color-contrast` sobre as demos claras e passava sobre a Oniria.
+      */}
       <div
-        ref={listRef}
-        role="tablist"
-        aria-label="Alternar entre as demonstrações"
-        onKeyDown={onKeyDown}
         className={cn(
           'flex items-center gap-1 rounded-full border p-1',
-          'border-[rgb(255_255_255_/_0.12)] bg-[rgb(6_11_8_/_0.82)] text-[#F7F7F7]',
+          'border-[rgb(255_255_255_/_0.12)] bg-[rgb(6_11_8_/_0.95)] text-[#E8ECEA]',
           'shadow-[0_8px_32px_-8px_rgb(0_0_0_/_0.5)] backdrop-blur-[20px]',
           // Fontes da Anank, não da demo em que o toggle está flutuando.
           'font-[family-name:var(--font-poppins)]'
@@ -130,63 +146,76 @@ export function DemoToggle() {
         <Link
           href="/"
           aria-label="Voltar para o hub da Anank Studios"
-          className="flex size-8 shrink-0 items-center justify-center rounded-full text-[#F7F7F7]/70 transition-colors hover:bg-white/10 hover:text-[#F7F7F7]"
+          className="flex size-8 shrink-0 items-center justify-center rounded-full text-[#C9CFCC] transition-colors hover:bg-white/10 hover:text-[#F7F7F7]"
         >
           <GridIcon />
         </Link>
 
         <span aria-hidden="true" className="mx-0.5 h-5 w-px bg-white/12" />
 
-        {SEGMENTS.map((segment) => {
-          const isActive = segment.slug === active;
-          /* Mobile: só os números, a menos que o usuário expanda. */
-          const showLabel = expanded || isActive;
+        <div
+          ref={listRef}
+          role="tablist"
+          aria-label="Alternar entre as demonstrações"
+          onKeyDown={onKeyDown}
+          className="flex items-center gap-1"
+        >
+          {SEGMENTS.map((segment) => {
+            const isActive = segment.slug === active;
+            /* Mobile: só os números, a menos que o usuário expanda. */
+            const showLabel = expanded || isActive;
 
-          return (
-            <button
-              key={segment.slug}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-current={isActive ? 'page' : undefined}
-              tabIndex={isActive ? 0 : -1}
-              onClick={() => {
-                if (!expanded) setExpanded(true);
-                router.push(`/demo/${segment.slug}`);
-              }}
-              className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors"
-            >
-              {isActive && (
-                <motion.span
-                  layoutId="demo-toggle-pill"
-                  aria-hidden="true"
-                  className="absolute inset-0 rounded-full border border-[rgb(47_174_128_/_0.45)] bg-[rgb(47_174_128_/_0.20)]"
-                  transition={
-                    reduced
-                      ? { duration: 0.01 }
-                      : { type: 'spring', stiffness: 420, damping: 34 }
-                  }
-                />
-              )}
-              <span
-                className={cn(
-                  'relative font-[family-name:var(--font-jetbrains-mono)] font-bold',
-                  isActive ? 'text-[#54C99A]' : 'opacity-55'
-                )}
+            return (
+              <button
+                key={segment.slug}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-current={isActive ? 'page' : undefined}
+                tabIndex={isActive ? 0 : -1}
+                onClick={() => {
+                  if (!expanded) setExpanded(true);
+                  router.push(`/demo/${segment.slug}`);
+                }}
+                className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors"
               >
-                {segment.index}
-              </span>
-              <span
-                className={cn(
-                  'relative overflow-hidden transition-[max-width,opacity] duration-300',
-                  showLabel ? 'max-w-24 opacity-100' : 'max-w-0 opacity-0 sm:max-w-24 sm:opacity-70'
+                {isActive && (
+                  <motion.span
+                    layoutId="demo-toggle-pill"
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-full border border-[rgb(47_174_128_/_0.45)] bg-[rgb(47_174_128_/_0.20)]"
+                    transition={
+                      reduced ? { duration: 0.01 } : { type: 'spring', stiffness: 420, damping: 34 }
+                    }
+                  />
                 )}
-              >
-                {segment.label}
-              </span>
-            </button>
-          );
-        })}
+                {/*
+                Cores explícitas em vez de `opacity`. Opacidade sobre um fundo
+                translúcido deixa o contraste depender da página atrás — passava
+                na Oniria (escura) e reprovava na Aurea e na Vivace (claras).
+                #C9CFCC dá 12.4:1 e #54C99A dá 9.5:1 sobre o preto da pílula.
+              */}
+                <span
+                  className={cn(
+                    'relative font-[family-name:var(--font-jetbrains-mono)] font-bold',
+                    isActive ? 'text-[#54C99A]' : 'text-[#C9CFCC]'
+                  )}
+                >
+                  {segment.index}
+                </span>
+                <span
+                  className={cn(
+                    'relative overflow-hidden transition-[max-width,opacity] duration-300',
+                    isActive ? 'text-[#F7F7F7]' : 'text-[#C9CFCC]',
+                    showLabel ? 'max-w-24 opacity-100' : 'max-w-0 opacity-0 sm:max-w-24'
+                  )}
+                >
+                  {segment.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

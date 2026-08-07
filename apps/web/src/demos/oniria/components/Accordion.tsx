@@ -51,7 +51,9 @@ export function Accordion({ items }: { items: AccordionItem[] }) {
               style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
             >
               <div className="overflow-hidden">
-                <p className="max-w-[62ch] pb-5 text-sm leading-relaxed text-muted">{item.answer}</p>
+                <p className="max-w-[62ch] pb-5 text-sm leading-relaxed text-muted">
+                  {item.answer}
+                </p>
               </div>
             </div>
           </div>

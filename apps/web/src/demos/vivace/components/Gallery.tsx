@@ -21,14 +21,16 @@ export function Gallery({ images }: { images: ImageRef[] }) {
   };
 
   const close = () => {
-    const index = openIndex;
     setOpenIndex(null);
-    if (index !== null) thumbRefs.current[index]?.focus();
-    else lastFocused.current?.focus();
+    // Sempre devolve o foco ao thumbnail que ABRIU a galeria — não ao
+    // thumbnail da imagem atual, que pode ter mudado por navegação com as
+    // setas enquanto o lightbox estava aberto.
+    lastFocused.current?.focus();
   };
 
   const next = () => setOpenIndex((i) => (i === null ? i : (i + 1) % images.length));
-  const prev = () => setOpenIndex((i) => (i === null ? i : (i - 1 + images.length) % images.length));
+  const prev = () =>
+    setOpenIndex((i) => (i === null ? i : (i - 1 + images.length) % images.length));
 
   useEffect(() => {
     if (openIndex === null) return;

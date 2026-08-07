@@ -125,7 +125,7 @@ export function ContactForm({
     return (
       <div role="status" className="rounded-brand border border-line bg-surface p-8">
         <p className="text-display text-[22px]">Recebemos sua mensagem.</p>
-        <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-muted">
+        <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-[#636e67]">
           Nossa equipe da unidade {selectedUnit?.city} entra em contato para confirmar sua
           avaliação. Demonstração — nenhum lead foi armazenado de fato.
         </p>
@@ -137,7 +137,7 @@ export function ContactForm({
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
       <form ref={formRef} onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         <div>
-          <label htmlFor={ids.name} className="label-caps text-muted">
+          <label htmlFor={ids.name} className="label-caps text-[#636e67]">
             Nome
           </label>
           <input
@@ -158,7 +158,7 @@ export function ContactForm({
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div>
-            <label htmlFor={ids.email} className="label-caps text-muted">
+            <label htmlFor={ids.email} className="label-caps text-[#636e67]">
               E-mail
             </label>
             <input
@@ -179,7 +179,7 @@ export function ContactForm({
           </div>
 
           <div>
-            <label htmlFor={ids.phone} className="label-caps text-muted">
+            <label htmlFor={ids.phone} className="label-caps text-[#636e67]">
               Telefone
             </label>
             <input
@@ -203,7 +203,7 @@ export function ContactForm({
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div>
-            <label htmlFor={ids.unit} className="label-caps text-muted">
+            <label htmlFor={ids.unit} className="label-caps text-[#636e67]">
               Unidade
             </label>
             <select
@@ -229,7 +229,7 @@ export function ContactForm({
           </div>
 
           <div>
-            <label htmlFor={ids.interest} className="label-caps text-muted">
+            <label htmlFor={ids.interest} className="label-caps text-[#636e67]">
               Serviço de interesse
             </label>
             <select
@@ -257,7 +257,7 @@ export function ContactForm({
         </div>
 
         <div>
-          <label htmlFor={ids.message} className="label-caps text-muted">
+          <label htmlFor={ids.message} className="label-caps text-[#636e67]">
             Mensagem (opcional)
           </label>
           <textarea
@@ -278,7 +278,7 @@ export function ContactForm({
         </div>
 
         <div>
-          <label htmlFor={ids.consent} className="flex items-start gap-3 text-sm text-muted">
+          <label htmlFor={ids.consent} className="flex items-start gap-3 text-sm text-[#636e67]">
             <input
               id={ids.consent}
               name="consent"
@@ -290,8 +290,7 @@ export function ContactForm({
               className="mt-0.5 h-4 w-4 shrink-0 accent-[color:var(--brand-accent)]"
             />
             <span>
-              Concordo com o uso dos meus dados para contato sobre esta avaliação, conforme a
-              LGPD.
+              Concordo com o uso dos meus dados para contato sobre esta avaliação, conforme a LGPD.
             </span>
           </label>
           {errors.consent ? (
@@ -334,11 +333,13 @@ export function ContactForm({
         <div className="mt-6 flex flex-col gap-2 border-t border-line pt-6 text-sm">
           <p className="text-display text-[20px]">
             {selectedUnit?.city}
-            {selectedUnit?.matriz ? <span className="ml-2 text-sm text-muted">(matriz)</span> : null}
+            {selectedUnit?.matriz ? (
+              <span className="ml-2 text-sm text-[#636e67]">(matriz)</span>
+            ) : null}
           </p>
-          <p className="text-muted">{selectedUnit?.address}</p>
-          <p className="text-muted">{selectedUnit?.phone}</p>
-          <p className="text-muted">{selectedUnit?.hours}</p>
+          <p className="text-[#636e67]">{selectedUnit?.address}</p>
+          <p className="text-[#636e67]">{selectedUnit?.phone}</p>
+          <p className="text-[#636e67]">{selectedUnit?.hours}</p>
           {selectedUnit ? (
             <a
               href={`https://wa.me/${selectedUnit.whatsapp}`}

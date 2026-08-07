@@ -32,7 +32,7 @@ export async function VivaceSobre() {
         <p className="label-caps text-accent">Sobre a Vivace</p>
         <h1 className="text-display mt-3">Doze anos de método, três unidades no Sul.</h1>
         <div className="mt-6 max-w-[62ch] border-t border-line pt-6">
-          <p className="text-base leading-relaxed text-muted">
+          <p className="text-base leading-relaxed text-[#636e67]">
             A Vivace nasceu em Curitiba em {demo.since}, de um consultório de dermatologia que
             decidiu escrever, e não só falar, cada protocolo. Hoje são três unidades, oito
             especialistas e um padrão fotográfico que acompanha cada paciente do início ao fim do
@@ -59,7 +59,7 @@ export async function VivaceSobre() {
       <section className="border-t border-line py-16 md:py-20">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-14">
           <h2 className="text-display text-[28px]">A estrutura</h2>
-          <p className="mt-3 max-w-[56ch] text-sm text-muted">
+          <p className="mt-3 max-w-[56ch] text-sm text-[#636e67]">
             Um retrato das três unidades e do dia a dia de atendimento. Clique em qualquer imagem
             para ampliar.
           </p>

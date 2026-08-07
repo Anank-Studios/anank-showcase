@@ -6,11 +6,7 @@ import { z } from 'zod';
  * forma; isto existe para dar erro imediato sob o campo, sem round-trip.
  */
 export const bookingFormSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, 'Informe seu nome completo.')
-    .max(120, 'Nome muito longo.'),
+  name: z.string().trim().min(2, 'Informe seu nome completo.').max(120, 'Nome muito longo.'),
   email: z.string().trim().email('Informe um e-mail válido.'),
   phone: z
     .string()

@@ -25,7 +25,13 @@ export function ServicesFilterGrid({ services }: { services: Service[] }) {
     if (match) setCategory(match);
   }, []);
 
-  const filtered = category === 'Todos' ? services : services.filter((s) => s.category === category);
+  const filtered =
+    category === 'Todos' ? services : services.filter((s) => s.category === category);
+
+  const resultsMessage =
+    category === 'Todos'
+      ? `Mostrando todos os ${filtered.length} serviços.`
+      : `${filtered.length} serviço${filtered.length === 1 ? '' : 's'} em ${category}.`;
 
   return (
     <div>
@@ -48,7 +54,14 @@ export function ServicesFilterGrid({ services }: { services: Service[] }) {
         ))}
       </div>
 
-      <motion.div layout={!reduced} className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div aria-live="polite" className="sr-only">
+        {resultsMessage}
+      </div>
+
+      <motion.div
+        layout={!reduced}
+        className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
         <AnimatePresence mode="popLayout" initial={false}>
           {filtered.map((service) => (
             <ServiceAccordionCard key={service.id} service={service} animated={!reduced} />
@@ -57,7 +70,7 @@ export function ServicesFilterGrid({ services }: { services: Service[] }) {
       </motion.div>
 
       {filtered.length === 0 ? (
-        <p className="mt-10 text-sm text-muted">Nenhum serviço nessa categoria no momento.</p>
+        <p className="mt-10 text-sm text-[#636e67]">Nenhum serviço nessa categoria no momento.</p>
       ) : null}
     </div>
   );

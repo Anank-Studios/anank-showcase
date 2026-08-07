@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { Service } from '@anank/contracts';
 import { ApiError, createLead } from '@/shared/lib/api';
 import { formatPhoneBR } from '../lib/format';
@@ -9,6 +9,10 @@ import { CheckIcon, SpinnerIcon } from './icons';
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
 const NO_PREFERENCE = 'Ainda não sei';
+
+/* Ordem de exibição dos campos — usada para achar o primeiro inválido
+   depois de um 422 e mandar o foco pra lá. */
+const FIELD_ORDER = ['name', 'phone'] as const;
 
 /**
  * Único formulário da demo. `POST /api/leads` com `source: 'contato'`.
@@ -24,6 +28,16 @@ export function ContactForm({ services }: { services: Service[] }) {
   const nameId = useId();
   const phoneId = useId();
   const interestId = useId();
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const fieldRefs = { name: nameRef, phone: phoneRef };
+
+  useEffect(() => {
+    const firstInvalid = FIELD_ORDER.find((field) => fieldErrors[field]);
+    if (firstInvalid) fieldRefs[firstInvalid].current?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fieldErrors]);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,6 +83,7 @@ export function ContactForm({ services }: { services: Service[] }) {
           Nome
         </label>
         <input
+          ref={nameRef}
           id={nameId}
           name="name"
           type="text"
@@ -92,6 +107,7 @@ export function ContactForm({ services }: { services: Service[] }) {
           Telefone
         </label>
         <input
+          ref={phoneRef}
           id={phoneId}
           name="phone"
           type="tel"
@@ -142,7 +158,7 @@ export function ContactForm({ services }: { services: Service[] }) {
       <button
         type="submit"
         disabled={disabled}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-brand bg-accent px-6 py-3.5 text-sm font-medium text-bg transition-[transform,box-shadow] duration-250 hover:-translate-y-0.5 hover:shadow-brand disabled:pointer-events-none disabled:opacity-70"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-brand bg-[#9d5d32] px-6 py-3.5 text-sm font-medium text-bg transition-[transform,box-shadow] duration-250 hover:-translate-y-0.5 hover:shadow-brand disabled:pointer-events-none disabled:opacity-70"
       >
         {status === 'loading' && <SpinnerIcon className="size-4 animate-spin" />}
         {status === 'loading' ? 'Enviando…' : status === 'error' ? 'Tentar de novo' : 'Enviar'}

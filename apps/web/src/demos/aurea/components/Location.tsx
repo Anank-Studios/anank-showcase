@@ -12,14 +12,15 @@ export function Location({ demo, services }: { demo: Demo; services: Service[] }
   return (
     <section
       id="contato"
-      className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 lg:px-14 lg:py-28"
+      tabIndex={-1}
+      className="mx-auto max-w-[1400px] px-6 py-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink md:px-10 lg:px-14 lg:py-28"
     >
       <Reveal>
-        <p className="label-caps text-accent">Contato</p>
+        <p className="label-caps text-[#9d5d32]">Contato</p>
         <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] text-ink md:text-[2.5rem]">
           Onde estamos
         </h2>
-        <p className="mt-3 max-w-[46ch] text-base text-muted">
+        <p className="mt-3 max-w-[46ch] text-base text-[#75685e]">
           Vila Madalena, perto do metrô. Estacionamento no local, sem custo.
         </p>
       </Reveal>
@@ -42,14 +43,14 @@ export function Location({ demo, services }: { demo: Demo; services: Service[] }
               </span>
             </div>
           </div>
-          <p className="mt-3 text-sm text-muted">Rua Harmonia, 742 · Vila Madalena</p>
+          <p className="mt-3 text-sm text-[#75685e]">Rua Harmonia, 742 · Vila Madalena</p>
         </Reveal>
 
         <Reveal delay={0.12} className="space-y-10">
           <div>
             <h3 className="font-display text-xl text-ink">Endereço e horários</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{demo.address}</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted">
+            <p className="mt-2 text-sm leading-relaxed text-[#75685e]">{demo.address}</p>
+            <p className="mt-1 text-sm leading-relaxed text-[#75685e]">
               <a href={`tel:${demo.phone.replace(/\D/g, '')}`} className="hover:text-accent">
                 {demo.phone}
               </a>
@@ -58,7 +59,7 @@ export function Location({ demo, services }: { demo: Demo; services: Service[] }
             <dl className="mt-5 divide-y divide-line border-y border-line text-sm">
               {demo.hours.map((hour) => (
                 <div key={hour.day} className="flex items-center justify-between py-2.5">
-                  <dt className="text-muted">{hour.day}</dt>
+                  <dt className="text-[#75685e]">{hour.day}</dt>
                   <dd className="font-medium text-ink">{hour.open}</dd>
                 </div>
               ))}
@@ -67,7 +68,7 @@ export function Location({ demo, services }: { demo: Demo; services: Service[] }
 
           <div>
             <h3 className="font-display text-xl text-ink">Fale com a gente</h3>
-            <p className="mt-2 text-sm text-muted">
+            <p className="mt-2 text-sm text-[#75685e]">
               Deixa seu contato que a Bruna responde pessoalmente.
             </p>
             <div className="mt-6">

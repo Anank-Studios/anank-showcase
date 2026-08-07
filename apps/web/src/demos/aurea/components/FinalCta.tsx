@@ -20,7 +20,7 @@ export function FinalCta({ demo }: { demo: Demo }) {
             href={wa}
             target="_blank"
             rel="noreferrer"
-            className="mt-8 inline-flex items-center justify-center rounded-brand bg-bg px-8 py-4 text-sm font-medium text-accent transition-transform duration-250 hover:-translate-y-0.5"
+            className="mt-8 inline-flex items-center justify-center rounded-brand bg-bg px-8 py-4 text-sm font-medium text-[#9d5d32] transition-transform duration-250 hover:-translate-y-0.5"
           >
             Chamar no WhatsApp
           </a>

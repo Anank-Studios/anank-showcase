@@ -42,7 +42,11 @@ export function DifferentialsSection({ images }: { images: Record<string, ImageR
           const reversed = i % 2 === 1;
 
           return (
-            <RevealItem key={item.key} index={i} className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
+            <RevealItem
+              key={item.key}
+              index={i}
+              className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8"
+            >
               <div
                 className={cn(
                   'relative aspect-[4/3] overflow-hidden rounded-brand bg-line lg:col-span-6',
@@ -61,7 +65,7 @@ export function DifferentialsSection({ images }: { images: Record<string, ImageR
               </div>
               <div className={cn('mt-6 lg:col-span-6 lg:mt-0', reversed && 'lg:order-1')}>
                 <h3 className="text-display text-[26px]">{item.title}</h3>
-                <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-muted">
+                <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-[#636e67]">
                   {item.body}
                 </p>
                 <CredentialBadge className="mt-6">{item.badge}</CredentialBadge>

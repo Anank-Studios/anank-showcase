@@ -175,7 +175,11 @@ export function BookingFlow({
             aria-current={index === step ? 'step' : undefined}
             className={cn(
               'label-caps',
-              index === step ? 'text-accent-2' : index < step ? 'text-muted' : 'text-muted opacity-45'
+              index === step
+                ? 'text-accent-2'
+                : index < step
+                  ? 'text-muted'
+                  : 'text-muted opacity-45'
             )}
           >
             {String(index + 1).padStart(2, '0')} {label}
@@ -190,7 +194,10 @@ export function BookingFlow({
             initial={reduced ? { opacity: 0 } : { opacity: 0, x: direction * 40 }}
             animate={{ opacity: 1, x: 0 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, x: direction * -40 }}
-            transition={{ duration: reduced ? 0.15 : 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{
+              duration: reduced ? 0.15 : 0.4,
+              ease: [0.16, 1, 0.3, 1],
+            }}
           >
             {step === 0 ? (
               <StepProtocol services={services} value={protocolId} onChange={setProtocolId} />
@@ -402,7 +409,13 @@ function StepConfirm({
   submitError,
   onSubmit,
 }: {
-  form: { name: string; email: string; phone: string; firstVisit: boolean | null; notes: string };
+  form: {
+    name: string;
+    email: string;
+    phone: string;
+    firstVisit: boolean | null;
+    notes: string;
+  };
   setForm: React.Dispatch<React.SetStateAction<typeof form>>;
   errors: BookingFormErrors;
   protocol: Service | null;

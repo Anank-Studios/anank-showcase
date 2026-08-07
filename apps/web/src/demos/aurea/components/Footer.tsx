@@ -37,10 +37,10 @@ export function Footer({ demo }: { demo: Demo }) {
           </div>
         </div>
 
-        <p className="mt-6 text-[13px] leading-relaxed text-muted">
+        <p className="mt-6 text-[13px] leading-relaxed text-[#75685e]">
           CNPJ {demo.cnpj} (fictício) · © {year} Aurea Beauty Studio
         </p>
-        <p className="mt-2 text-[11px] leading-relaxed text-muted">
+        <p className="mt-2 text-[11px] leading-relaxed text-[#75685e]">
           Empresa, endereço, CNPJ e depoimentos são fictícios. Demonstração criada pela Anank
           Studios.
         </p>

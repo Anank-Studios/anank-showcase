@@ -51,13 +51,15 @@ export function ServiceAccordionCard({
 
       <div className="p-6">
         <p className="label-caps text-accent">{service.category}</p>
-        <h3 className="text-display mt-2 text-[22px]">{service.name}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted">{service.summary}</p>
+        {/* h2, não h3: os cards são o conteúdo de primeiro nível sob o h1 da
+            página, e pular de h1 para h3 reprova em `heading-order`. */}
+        <h2 className="text-display mt-2 text-[22px]">{service.name}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-[#636e67]">{service.summary}</p>
 
         <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
           <div>
             <p className="text-sm font-medium text-ink">{formatPriceFrom(service.priceFrom)}</p>
-            <p className="text-xs text-muted">{service.durationMin} min</p>
+            <p className="text-xs text-[#636e67]">{service.durationMin} min</p>
           </div>
           <button
             type="button"
@@ -81,24 +83,24 @@ export function ServiceAccordionCard({
             style={{ overflow: 'hidden' }}
           >
             <div className="mt-4 flex flex-col gap-4 border-t border-line pt-4 text-sm">
-              <p className="leading-relaxed text-muted">{service.description}</p>
+              <p className="leading-relaxed text-[#636e67]">{service.description}</p>
 
               <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {service.sessions ? (
                   <div>
-                    <dt className="label-caps text-muted">Sessões</dt>
+                    <dt className="label-caps text-[#636e67]">Sessões</dt>
                     <dd className="mt-1">{service.sessions}</dd>
                   </div>
                 ) : null}
                 {service.interval ? (
                   <div>
-                    <dt className="label-caps text-muted">Intervalo</dt>
+                    <dt className="label-caps text-[#636e67]">Intervalo</dt>
                     <dd className="mt-1">{service.interval}</dd>
                   </div>
                 ) : null}
                 {service.recovery ? (
                   <div>
-                    <dt className="label-caps text-muted">Recuperação</dt>
+                    <dt className="label-caps text-[#636e67]">Recuperação</dt>
                     <dd className="mt-1">{service.recovery}</dd>
                   </div>
                 ) : null}
@@ -106,10 +108,10 @@ export function ServiceAccordionCard({
 
               {service.indications?.length ? (
                 <div>
-                  <p className="label-caps text-muted">Indicado para</p>
+                  <p className="label-caps text-[#636e67]">Indicado para</p>
                   <ul className="mt-2 flex flex-col gap-1">
                     {service.indications.map((item) => (
-                      <li key={item} className="text-muted">
+                      <li key={item} className="text-[#636e67]">
                         · {item}
                       </li>
                     ))}
@@ -122,7 +124,7 @@ export function ServiceAccordionCard({
                   <p className="label-caps text-[#B3492F]">Contraindicações</p>
                   <ul className="mt-2 flex flex-col gap-1">
                     {service.contraindications.map((item) => (
-                      <li key={item} className="text-muted">
+                      <li key={item} className="text-[#636e67]">
                         · {item}
                       </li>
                     ))}

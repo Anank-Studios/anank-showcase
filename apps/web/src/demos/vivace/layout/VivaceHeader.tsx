@@ -109,14 +109,19 @@ export function VivaceHeader() {
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 md:px-10 lg:px-14">
         <Link href="/demo/vivace" className="flex flex-col leading-none">
           <span className="text-display text-[24px]">VIVACE</span>
-          <span className="label-caps mt-0.5 text-[9px] tracking-[.2em] text-muted">
+          <span className="label-caps mt-0.5 text-[9px] tracking-[.2em] text-[#636e67]">
             ESTÉTICA AVANÇADA
           </span>
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm md:flex" aria-label="Navegação principal">
           {NAV_LINKS.map((link) => (
-            <NavLink key={link.href} href={link.href} label={link.label} active={isActive(link.href)} />
+            <NavLink
+              key={link.href}
+              href={link.href}
+              label={link.label}
+              active={isActive(link.href)}
+            />
           ))}
         </nav>
 

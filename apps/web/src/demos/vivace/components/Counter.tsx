@@ -45,7 +45,7 @@ export function Counter({ value, label }: { value: string; label: string }) {
       <p className="text-display" style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)' }}>
         {nf.format(display)}
       </p>
-      <p className="label-caps mt-2 text-muted">{label}</p>
+      <p className="label-caps mt-2 text-[#636e67]">{label}</p>
     </div>
   );
 }

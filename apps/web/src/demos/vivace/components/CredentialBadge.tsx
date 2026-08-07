@@ -4,7 +4,13 @@ import { cn } from '@/shared/lib/cn';
  * Selo de credencial — identidade obrigatória da Vivace.
  * Borda 1px accent-2 (dourado fosco), caixa alta, letter-spacing largo.
  */
-export function CredentialBadge({ children, className }: { children: React.ReactNode; className?: string }) {
+export function CredentialBadge({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <span
       className={cn(

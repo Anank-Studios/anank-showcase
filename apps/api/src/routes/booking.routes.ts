@@ -7,7 +7,12 @@ import {
   isSlotAvailable,
 } from '../services/availability.js';
 import { availabilityLatency, sleep } from '../services/calendar.mock.js';
-import { availabilityQuerySchema, bookingSchema, monthQuerySchema, toDetails } from '../schemas/index.js';
+import {
+  availabilityQuerySchema,
+  bookingSchema,
+  monthQuerySchema,
+  toDetails,
+} from '../schemas/index.js';
 import { fail, ok } from '../lib/envelope.js';
 
 export async function bookingRoutes(app: FastifyInstance): Promise<void> {
@@ -48,11 +53,13 @@ export async function bookingRoutes(app: FastifyInstance): Promise<void> {
 
     const input = parsed.data;
     if (!isSlotAvailable(input.date, input.time, input.practitionerId, input.protocolId)) {
-      return reply.code(422).send(
-        fail('VALIDATION_ERROR', 'Este horário acabou de ser ocupado. Escolha outro.', [
-          { field: 'time', message: 'Este horário acabou de ser ocupado. Escolha outro.' },
-        ])
-      );
+      return reply
+        .code(422)
+        .send(
+          fail('VALIDATION_ERROR', 'Este horário acabou de ser ocupado. Escolha outro.', [
+            { field: 'time', message: 'Este horário acabou de ser ocupado. Escolha outro.' },
+          ])
+        );
     }
 
     // Gerado em memória e devolvido. Nada é persistido.

@@ -80,8 +80,8 @@ export function BookingSuccess({ event, protocol }: { event: CalendarEvent; prot
         Está marcado.
       </h1>
       <p className="mt-4 max-w-[48ch] text-muted">
-        Enviamos os detalhes por e-mail. Se precisar remarcar, responda a mensagem — quem
-        responde é a Olívia, não um robô.
+        Enviamos os detalhes por e-mail. Se precisar remarcar, responda a mensagem — quem responde é
+        a Olívia, não um robô.
       </p>
 
       {/* Card no estilo de evento do Google Calendar ------------------- */}

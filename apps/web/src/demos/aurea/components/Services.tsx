@@ -5,13 +5,17 @@ import { SERVICE_ICONS, ScissorsIcon } from './icons';
 /** Seis serviços vindos de `GET /api/demos/aurea/services`. */
 export function Services({ services }: { services: Service[] }) {
   return (
-    <section id="servicos" className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 lg:px-14 lg:py-28">
+    <section
+      id="servicos"
+      tabIndex={-1}
+      className="mx-auto max-w-[1400px] px-6 py-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink md:px-10 lg:px-14 lg:py-28"
+    >
       <Reveal>
-        <p className="label-caps text-accent">Serviços</p>
+        <p className="label-caps text-[#9d5d32]">Serviços</p>
         <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] text-ink md:text-[2.5rem]">
           O que fazemos
         </h2>
-        <p className="mt-3 max-w-[46ch] text-base text-muted">
+        <p className="mt-3 max-w-[46ch] text-base text-[#75685e]">
           Seis serviços. Nenhum no piloto automático.
         </p>
       </Reveal>
@@ -24,7 +28,7 @@ export function Services({ services }: { services: Service[] }) {
               <article className="group h-full rounded-brand border border-line bg-surface p-7 shadow-none transition-[transform,border-color,box-shadow] duration-250 hover:-translate-y-1 hover:border-accent hover:shadow-brand">
                 <Icon className="size-6 text-accent" />
                 <h3 className="font-display mt-5 text-xl text-ink">{service.name}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-muted">{service.summary}</p>
+                <p className="mt-2.5 text-sm leading-relaxed text-[#75685e]">{service.summary}</p>
                 <p className="mt-6 text-[13px] font-medium text-ink">
                   {service.durationMin} min · a partir de{' '}
                   {service.priceFrom.toLocaleString('pt-BR', {

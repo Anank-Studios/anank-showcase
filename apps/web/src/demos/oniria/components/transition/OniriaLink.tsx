@@ -23,7 +23,8 @@ export function OniriaLink({ href, cursorLabel, onClick, children, ...rest }: On
     onClick?.(event);
     if (event.defaultPrevented) return;
 
-    const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+    const modified =
+      event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
     if (modified) return;
 
     event.preventDefault();

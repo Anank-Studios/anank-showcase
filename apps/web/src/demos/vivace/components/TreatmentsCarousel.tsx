@@ -151,8 +151,8 @@ export function TreatmentsCarousel({ services }: { services: Service[] }) {
                 />
               </div>
               <h3 className="text-display mt-4 text-[22px]">{service.name}</h3>
-              <p className="label-caps mt-1 text-muted">{service.durationMin} min</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{service.summary}</p>
+              <p className="label-caps mt-1 text-[#636e67]">{service.durationMin} min</p>
+              <p className="mt-2 text-sm leading-relaxed text-[#636e67]">{service.summary}</p>
               <Link
                 href={`/demo/vivace/servicos#${service.slug}`}
                 className="mt-3 inline-block text-sm font-medium text-accent hover:underline"
@@ -164,7 +164,12 @@ export function TreatmentsCarousel({ services }: { services: Service[] }) {
         </div>
 
         <div className="mt-6 hidden items-center justify-between md:flex">
-          <div className="flex gap-2">
+          {/*
+            O ponto continua com 8px, mas o botão tem 24×24 de área clicável.
+            Um alvo de toque de 8px reprova em `target-size` e é péssimo no
+            dedo — o ponto é a decoração, não o alvo.
+          */}
+          <div className="flex">
             {services.map((service, i) => (
               <button
                 key={service.id}
@@ -172,10 +177,15 @@ export function TreatmentsCarousel({ services }: { services: Service[] }) {
                 aria-label={`Ir para o slide ${i + 1}`}
                 aria-current={i === index}
                 onClick={() => goTo(i)}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  i === index ? 'bg-accent' : 'bg-line'
-                }`}
-              />
+                className="flex size-6 items-center justify-center"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`block size-2 rounded-full transition-colors ${
+                    i === index ? 'bg-accent' : 'bg-line'
+                  }`}
+                />
+              </button>
             ))}
           </div>
 

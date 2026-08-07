@@ -12,14 +12,15 @@ export function Transformations({ demo }: { demo: Demo }) {
   return (
     <section
       id="transformacoes"
-      className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 lg:px-14 lg:py-28"
+      tabIndex={-1}
+      className="mx-auto max-w-[1400px] px-6 py-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink md:px-10 lg:px-14 lg:py-28"
     >
       <Reveal>
-        <p className="label-caps text-accent">Transformações</p>
+        <p className="label-caps text-[#9d5d32]">Transformações</p>
         <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] text-ink md:text-[2.5rem]">
           Antes &amp; depois
         </h2>
-        <p className="mt-3 max-w-[46ch] text-base text-muted">
+        <p className="mt-3 max-w-[46ch] text-base text-[#75685e]">
           Sem filtro, sem retoque. Arraste para ver.
         </p>
       </Reveal>

@@ -117,11 +117,8 @@ export const getArticles = (slug: DemoSlug) => request<Article[]>(`/api/demos/${
 
 export const getPractitioners = () => request<Practitioner[]>('/api/booking/practitioners');
 
-export const getMonth = (params: {
-  month: string;
-  practitionerId?: string;
-  protocolId?: string;
-}) => request<MonthResponse>(`/api/booking/month${query(params)}`);
+export const getMonth = (params: { month: string; practitionerId?: string; protocolId?: string }) =>
+  request<MonthResponse>(`/api/booking/month${query(params)}`);
 
 export const getAvailability = (params: {
   date: string;

@@ -67,7 +67,15 @@ export function OniriaNav() {
 }
 
 /** Rodapé mínimo, com o aviso obrigatório de demonstração. */
-export function OniriaFooter({ legalName, cnpj, address }: { legalName: string; cnpj: string; address: string }) {
+export function OniriaFooter({
+  legalName,
+  cnpj,
+  address,
+}: {
+  legalName: string;
+  cnpj: string;
+  address: string;
+}) {
   return (
     <footer className="border-t border-line px-5 py-12 md:px-10 lg:px-14">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">

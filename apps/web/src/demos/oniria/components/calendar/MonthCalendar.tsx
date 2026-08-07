@@ -130,7 +130,7 @@ export function MonthCalendar({
                   disabled ? `${formatDayNumber(day.date)} — ${reason ?? 'sem vaga'}` : undefined
                 }
                 title={disabled ? reason : undefined}
-                tabIndex={isSelected || (focusedIndex === index) ? 0 : -1}
+                tabIndex={isSelected || focusedIndex === index ? 0 : -1}
                 onClick={() => !disabled && onSelect(day.date)}
                 data-cursor={disabled ? undefined : 'AGENDAR'}
                 className={cn(

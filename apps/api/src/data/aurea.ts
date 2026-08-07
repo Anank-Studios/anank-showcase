@@ -146,7 +146,11 @@ export const aurea: DemoData = {
       radius: '24px',
       fontDisplay: 'var(--font-fraunces)',
     },
-    thumbnail: img('1562322140-8baeececf3df', 'Cabeleireira escovando o cabelo de uma cliente', 800),
+    thumbnail: img(
+      '1562322140-8baeececf3df',
+      'Cabeleireira escovando o cabelo de uma cliente',
+      800
+    ),
     legalName: 'Aurea Studio de Beleza Ltda.',
     cnpj: '41.702.883/0001-64',
     city: 'São Paulo',
@@ -187,7 +191,10 @@ export const aurea: DemoData = {
       antes2: img('1617391654484-2894196c2cc9', 'Cabelo com papel alumínio durante a coloração'),
       depois2: img('1470259078422-826894b933aa', 'Cabelo colorido em movimento depois do processo'),
       antes3: img('1707979577466-2d6109c68a45', 'Cabelo durante a aplicação de coloração'),
-      depois3: img('1712213396688-c6f2d536671f', 'Cabelo finalizado depois do corte e reconstrução'),
+      depois3: img(
+        '1712213396688-c6f2d536671f',
+        'Cabelo finalizado depois do corte e reconstrução'
+      ),
     },
   },
   services,

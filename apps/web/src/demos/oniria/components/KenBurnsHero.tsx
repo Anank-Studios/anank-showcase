@@ -44,7 +44,10 @@ export function KenBurnsHero({ image }: { image: ImageRef }) {
   return (
     <section ref={sectionRef} className="relative h-[92svh] min-h-[520px] w-full overflow-hidden">
       <div
-        className={cn('absolute inset-0', !reduced && 'transition-[clip-path] duration-900 ease-out')}
+        className={cn(
+          'absolute inset-0',
+          !reduced && 'transition-[clip-path] duration-900 ease-out'
+        )}
         style={{ clipPath: open ? 'inset(0%)' : 'inset(12%)' }}
       >
         <div
@@ -62,7 +65,10 @@ export function KenBurnsHero({ image }: { image: ImageRef }) {
             sizes="100vw"
             placeholder="blur"
             blurDataURL={BLUR.oniria}
-            className={cn('object-cover', !reduced && 'motion-safe:animate-[oniria-kenburns_18s_ease-in-out_infinite_alternate]')}
+            className={cn(
+              'object-cover',
+              !reduced && 'motion-safe:animate-[oniria-kenburns_18s_ease-in-out_infinite_alternate]'
+            )}
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-[rgb(10_10_11_/_0.35)] via-transparent to-[rgb(10_10_11_/_0.85)]" />

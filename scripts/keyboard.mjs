@@ -70,7 +70,8 @@ for (const route of routes) {
         hasOutline,
         hasShadow,
         hasBorder,
-        visible: rect.width > 0 && rect.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none',
+        visible:
+          rect.width > 0 && rect.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none',
         onScreen: rect.bottom > -200 && rect.top < window.innerHeight + 200,
         ariaHidden: el.closest('[aria-hidden="true"]') !== null,
       };
@@ -93,7 +94,8 @@ for (const route of routes) {
     }
 
     const issues = [];
-    if (!info.hasOutline && !info.hasShadow && !info.hasBorder) issues.push('sem indicador de foco');
+    if (!info.hasOutline && !info.hasShadow && !info.hasBorder)
+      issues.push('sem indicador de foco');
     if (!info.visible) issues.push('elemento invisivel recebeu foco');
     if (!info.onScreen) issues.push('foco fora da tela (nao rolou ate ele)');
     if (info.ariaHidden) issues.push('elemento focavel dentro de aria-hidden');
@@ -101,7 +103,9 @@ for (const route of routes) {
 
     if (issues.length) {
       problems += 1;
-      console.log(`  PROBLEMA <${info.tag}${info.type ? `[${info.type}]` : ''}> "${info.label || '(sem texto)'}"`);
+      console.log(
+        `  PROBLEMA <${info.tag}${info.type ? `[${info.type}]` : ''}> "${info.label || '(sem texto)'}"`
+      );
       console.log(`     ${info.cls}`);
       for (const issue of issues) console.log(`     - ${issue}`);
     }
@@ -112,5 +116,7 @@ for (const route of routes) {
 }
 
 await browser.close();
-console.log(`\n${problems === 0 ? 'Navegacao por teclado sem problemas.' : `${problems} problema(s) de teclado.`}`);
+console.log(
+  `\n${problems === 0 ? 'Navegacao por teclado sem problemas.' : `${problems} problema(s) de teclado.`}`
+);
 process.exit(problems > 0 ? 1 : 0);

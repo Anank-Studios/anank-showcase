@@ -10,18 +10,20 @@ export async function OniriaDiario() {
     <div className="relative">
       <OniriaNav />
 
-      <section className="px-5 pt-40 pb-16 md:px-10 md:pt-52 lg:px-14">
-        <div className="mx-auto max-w-[1400px]">
-          <p className="label-caps text-accent">Diário</p>
-          <SplitText
-            text="O que escrevemos entre um protocolo e outro."
-            as="h1"
-            className="mt-6 max-w-[18ch] font-display text-[clamp(2.25rem,9vw,6rem)] leading-[0.96]"
-          />
-        </div>
-      </section>
+      <main>
+        <section className="px-5 pt-40 pb-16 md:px-10 md:pt-52 lg:px-14">
+          <div className="mx-auto max-w-[1400px]">
+            <p className="label-caps text-accent">Diário</p>
+            <SplitText
+              text="O que escrevemos entre um protocolo e outro."
+              as="h1"
+              className="mt-6 max-w-[18ch] font-display text-[clamp(2.25rem,9vw,6rem)] leading-[0.96]"
+            />
+          </div>
+        </section>
 
-      <ArticleList articles={articles} />
+        <ArticleList articles={articles} />
+      </main>
 
       <OniriaFooter legalName={demo.legalName} cnpj={demo.cnpj} address={demo.address} />
     </div>

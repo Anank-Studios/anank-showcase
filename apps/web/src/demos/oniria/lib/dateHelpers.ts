@@ -18,7 +18,7 @@ export function monthKey(date: Date): string {
 
 export function monthLabel(monthISO: string): string {
   const date = new Date(`${monthISO}-01T12:00:00`);
-  return format(date, 'MMMM \'de\' yyyy', { locale: ptBR });
+  return format(date, "MMMM 'de' yyyy", { locale: ptBR });
 }
 
 export function shiftMonth(monthISO: string, delta: number): string {

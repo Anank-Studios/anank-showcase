@@ -41,11 +41,7 @@ const VIEWPORTS = [
 ];
 
 /** Ruído conhecido do dev server do Next — não é defeito da página. */
-const IGNORED = [
-  /Download the React DevTools/i,
-  /\[Fast Refresh\]/i,
-  /react-devtools/i,
-];
+const IGNORED = [/Download the React DevTools/i, /\[Fast Refresh\]/i, /react-devtools/i];
 
 const filter = process.argv.slice(2);
 const routes = filter.length ? ROUTES.filter((r) => filter.includes(r.group)) : ROUTES;

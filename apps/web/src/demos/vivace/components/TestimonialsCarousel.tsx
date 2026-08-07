@@ -76,7 +76,7 @@ export function TestimonialsCarousel({ testimonials }: { testimonials: Testimoni
               </span>
               <span className="text-left text-sm">
                 <span className="block text-ink">{current.name}</span>
-                <span className="block text-muted">
+                <span className="block text-[#636e67]">
                   {current.city ? `${current.city} · ` : ''}
                   {current.service}
                 </span>

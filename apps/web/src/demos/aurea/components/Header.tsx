@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Demo } from '@anank/contracts';
 import { cn } from '@/shared/lib/cn';
 import { whatsappLink } from '../lib/format';
@@ -21,6 +21,9 @@ const LINKS = [
 export function Header({ demo }: { demo: Demo }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -35,6 +38,51 @@ export function Header({ demo }: { demo: Demo }) {
     return () => {
       document.body.style.overflow = '';
     };
+  }, [menuOpen]);
+
+  /* Foco do menu mobile: entra no primeiro link ao abrir, fica preso lá
+     enquanto aberto (Tab/Shift+Tab não escapam), Esc fecha, e o foco volta
+     para o botão de alternar ao fechar por qualquer via. Fora disso o painel
+     é `inert` — os links de dentro não entram no tab order quando fechado. */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const panel = menuPanelRef.current;
+    if (!panel) return;
+
+    const getFocusable = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+
+    getFocusable()[0]?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMenuOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const items = getFocusable();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen && wasOpenRef.current) {
+      menuButtonRef.current?.focus();
+    }
+    wasOpenRef.current = menuOpen;
   }, [menuOpen]);
 
   const [firstName, ...rest] = demo.brandName.split(' ');
@@ -54,7 +102,7 @@ export function Header({ demo }: { demo: Demo }) {
         <a href="#topo" className="flex flex-col leading-none">
           <span className="font-display text-[22px] font-medium text-ink">{firstName}</span>
           <span
-            className="mt-0.5 text-[9px] font-medium text-muted"
+            className="mt-0.5 text-[9px] font-medium text-[#75685e]"
             style={{ letterSpacing: '.22em' }}
           >
             {suffix}
@@ -79,7 +127,7 @@ export function Header({ demo }: { demo: Demo }) {
             href={wa}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-brand bg-accent px-5 py-2.5 text-sm font-medium text-bg transition-[transform,box-shadow] duration-250 hover:-translate-y-0.5 hover:shadow-brand"
+            className="inline-flex items-center gap-2 rounded-brand bg-[#9d5d32] px-5 py-2.5 text-sm font-medium text-bg transition-[transform,box-shadow] duration-250 hover:-translate-y-0.5 hover:shadow-brand"
           >
             <WhatsappIcon className="size-4" />
             Agendar no WhatsApp
@@ -87,6 +135,7 @@ export function Header({ demo }: { demo: Demo }) {
         </div>
 
         <button
+          ref={menuButtonRef}
           type="button"
           aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={menuOpen}
@@ -100,6 +149,8 @@ export function Header({ demo }: { demo: Demo }) {
 
       <div
         id="menu-mobile-aurea"
+        ref={menuPanelRef}
+        inert={!menuOpen}
         className={cn(
           'fixed inset-0 top-16 z-30 bg-bg transition-[opacity,transform] duration-250 lg:hidden',
           menuOpen
@@ -126,7 +177,7 @@ export function Header({ demo }: { demo: Demo }) {
             target="_blank"
             rel="noreferrer"
             onClick={() => setMenuOpen(false)}
-            className="mt-4 inline-flex w-fit items-center gap-2 rounded-brand bg-accent px-6 py-3.5 text-base font-medium text-bg"
+            className="mt-4 inline-flex w-fit items-center gap-2 rounded-brand bg-[#9d5d32] px-6 py-3.5 text-base font-medium text-bg"
           >
             <WhatsappIcon className="size-5" />
             Agendar no WhatsApp

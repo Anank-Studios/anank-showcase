@@ -99,7 +99,11 @@ export function OniriaTransitionProvider({ children }: { children: React.ReactNo
         inTl.set(panels, { yPercent: 100 });
         inTl.to(panels, { yPercent: 0, duration: 0.9, ease: 'power4.inOut', stagger: 0.06 }, 0);
       }
-      inTl.to(pageRef.current, { scale: 0.96, filter: 'blur(8px)', duration: 0.5, ease: 'power2.out' }, 0);
+      inTl.to(
+        pageRef.current,
+        { scale: 0.96, filter: 'blur(8px)', duration: 0.5, ease: 'power2.out' },
+        0
+      );
 
       const panelsCovered = new Promise<void>((resolve) => {
         inTl.eventCallback('onComplete', () => resolve());
@@ -112,14 +116,25 @@ export function OniriaTransitionProvider({ children }: { children: React.ReactNo
             /* Limpa transform/filter/will-change: enquanto qualquer um deles
                estiver no elemento, ele continua sendo containing block e o
                `pin` do ScrollTrigger da página nova nasce quebrado. */
-            gsap.set(pageRef.current, { clearProps: 'transform,filter,willChange' });
+            gsap.set(pageRef.current, {
+              clearProps: 'transform,filter,willChange',
+            });
             ScrollTrigger.refresh();
             busyRef.current = false;
           },
         });
         outTl.set(pageRef.current, { scale: 1.04, filter: 'blur(0px)' });
         if (panels?.length) {
-          outTl.to(panels, { yPercent: -100, duration: 0.7, ease: 'power4.inOut', stagger: 0.04 }, 0);
+          outTl.to(
+            panels,
+            {
+              yPercent: -100,
+              duration: 0.7,
+              ease: 'power4.inOut',
+              stagger: 0.04,
+            },
+            0
+          );
         }
         outTl.to(pageRef.current, { scale: 1, duration: 0.7, ease: 'power4.inOut' }, 0);
       });

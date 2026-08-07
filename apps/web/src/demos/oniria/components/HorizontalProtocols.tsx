@@ -86,9 +86,9 @@ export function HorizontalProtocols({ services }: { services: Service[] }) {
               </div>
               <div className="relative flex h-full flex-col justify-end p-6 sm:p-10">
                 <span className="font-display text-3xl text-accent">{ROMAN[index] ?? ''}</span>
-                <h3 className="font-display text-[clamp(2rem,6vw,4.5rem)] leading-[0.95]">
+                <h2 className="font-display text-[clamp(2rem,6vw,4.5rem)] leading-[0.95]">
                   {service.name}
-                </h3>
+                </h2>
                 <p className="mt-3 max-w-md text-sm text-ink/80">{service.summary}</p>
               </div>
             </OniriaLink>
