@@ -50,6 +50,7 @@
   --display-size: clamp(2.25rem, 11vw, 7rem);
   --display-leading: 0.95;
   --display-tracking: -0.02em;
+  --display-weight: 500;
 }
 
 /* ------------------------------------------------------------------ */
@@ -73,6 +74,8 @@
   --display-size: clamp(2.25rem, 9vw, 4.5rem);
   --display-leading: 1.05;
   --display-tracking: -0.02em;
+  /* Bricolage sem peso fica anônima — é no bold que ela ganha caráter. */
+  --display-weight: 700;
 
   --shadow-brand: 0 12px 32px -12px rgb(42 33 28 / 0.18);
 }
@@ -98,6 +101,8 @@
   --display-size: clamp(2rem, 7vw, 3.75rem);
   --display-leading: 1.12;
   --display-tracking: -0.01em;
+  /* Serifa editorial: peso normal é o correto, bold vira jornal popular. */
+  --display-weight: 400;
 
   --shadow-brand: 0 1px 2px rgb(31 42 36 / 0.04);
 }
@@ -122,6 +127,8 @@
   --display-size: clamp(2.75rem, 15vw, 11rem);
   --display-leading: 0.88;
   --display-tracking: -0.04em;
+  /* Didone: o contraste vem do desenho da letra, não do peso. */
+  --display-weight: 400;
 
   --shadow-brand: none;
 }
@@ -162,10 +169,17 @@
     outline-offset: 4px;
   }
 
+  /*
+    O preflight do Tailwind v4 zera `font-weight` de h1..h6 para `inherit`.
+    Sem declarar o peso aqui, todo título do projeto herdava o peso do CORPO —
+    a Bricolage da Aurea saía fina e sem caráter. Uma classe utilitária de peso
+    no componente continua ganhando desta regra, como deve ser.
+  */
   h1,
   h2,
   h3 {
     font-family: var(--brand-font-display);
+    font-weight: var(--display-weight, 500);
     letter-spacing: var(--display-tracking);
     line-height: var(--display-leading);
   }
@@ -198,6 +212,7 @@
 
 @utility text-display {
   font-family: var(--brand-font-display);
+  font-weight: var(--display-weight, 500);
   font-size: var(--display-size);
   line-height: var(--display-leading);
   letter-spacing: var(--display-tracking);

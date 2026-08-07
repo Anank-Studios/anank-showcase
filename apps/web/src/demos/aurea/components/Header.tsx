@@ -100,7 +100,9 @@ export function Header({ demo }: { demo: Demo }) {
     >
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 md:px-10 lg:h-20 lg:px-14">
         <a href="#topo" className="flex flex-col leading-none">
-          <span className="font-display text-[22px] font-medium text-ink">{firstName}</span>
+          <span className="font-display text-[22px] font-bold tracking-tight text-ink">
+            {firstName}
+          </span>
           <span
             className="mt-0.5 text-[9px] font-medium text-[#75685e]"
             style={{ letterSpacing: '.22em' }}
@@ -167,7 +169,7 @@ export function Header({ demo }: { demo: Demo }) {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-display text-[2.25rem] font-medium text-ink"
+              className="font-display text-[2.25rem] font-bold tracking-tight text-ink"
             >
               {link.label}
             </a>

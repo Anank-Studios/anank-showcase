@@ -18,7 +18,13 @@ export function Hero({ demo }: { demo: Demo }) {
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
           <Reveal>
-            <h1 className="text-display max-w-[14ch] text-ink">
+            <p
+              className="text-[13px] font-medium text-[#9d5d32] uppercase"
+              style={{ letterSpacing: '.18em' }}
+            >
+              Vila Madalena · desde 2019
+            </p>
+            <h1 className="text-display mt-4 max-w-[13ch] font-bold text-ink">
               Seu cabelo merece um tempo bem gasto.
             </h1>
           </Reveal>

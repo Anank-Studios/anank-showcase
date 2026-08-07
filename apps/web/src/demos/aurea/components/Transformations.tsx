@@ -2,10 +2,10 @@ import type { Demo } from '@anank/contracts';
 import { Reveal } from './Reveal';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 
-const PAIRS: { before: string; after: string; title: string }[] = [
-  { before: 'antes1', after: 'depois1', title: 'Mechas em 3 sessões' },
-  { before: 'antes2', after: 'depois2', title: 'Coloração fantasia' },
-  { before: 'antes3', after: 'depois3', title: 'Corte e reconstrução' },
+const PAIRS: { before: string; after: string; title: string; offset: string }[] = [
+  { before: 'antes1', after: 'depois1', title: 'Mechas em 3 sessões', offset: '' },
+  { before: 'antes2', after: 'depois2', title: 'Coloração fantasia', offset: 'lg:mt-12' },
+  { before: 'antes3', after: 'depois3', title: 'Corte e reconstrução', offset: 'lg:mt-5' },
 ];
 
 export function Transformations({ demo }: { demo: Demo }) {
@@ -17,7 +17,7 @@ export function Transformations({ demo }: { demo: Demo }) {
     >
       <Reveal>
         <p className="label-caps text-[#9d5d32]">Transformações</p>
-        <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] text-ink md:text-[2.5rem]">
+        <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] font-bold text-ink md:text-[2.5rem]">
           Antes &amp; depois
         </h2>
         <p className="mt-3 max-w-[46ch] text-base text-[#75685e]">
@@ -31,7 +31,7 @@ export function Transformations({ demo }: { demo: Demo }) {
           const after = demo.images[pair.after];
           if (!before || !after) return null;
           return (
-            <Reveal key={pair.title} delay={index * 0.06}>
+            <Reveal key={pair.title} delay={index * 0.06} className={pair.offset}>
               <BeforeAfterSlider before={before} after={after} title={pair.title} />
             </Reveal>
           );

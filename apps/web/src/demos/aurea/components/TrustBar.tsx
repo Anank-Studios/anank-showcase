@@ -14,8 +14,10 @@ export function TrustBar({ stats }: { stats: Stat[] }) {
           >
             {/* `break-words` é a rede de segurança: mesmo que um valor longo
                 volte aos dados, ele quebra em vez de estourar a coluna. */}
-            <p className="font-display text-2xl break-words text-ink md:text-3xl">{stat.value}</p>
-            <p className="mt-1.5 text-[13px] leading-snug text-[#75685e]">{stat.label}</p>
+            <p className="font-display text-[1.75rem] font-bold tracking-tight break-words text-ink tabular-nums md:text-4xl">
+              {stat.value}
+            </p>
+            <p className="mt-2 text-[13px] leading-snug text-[#75685e]">{stat.label}</p>
           </Reveal>
         ))}
       </div>

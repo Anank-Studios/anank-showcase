@@ -31,7 +31,7 @@ export function About({ demo }: { demo: Demo }) {
         <div>
           <Reveal delay={0.06}>
             <p className="label-caps text-[#9d5d32]">Sobre</p>
-            <h2 className="text-display mt-3 text-[2rem] text-ink md:text-[2.5rem]">
+            <h2 className="text-display mt-3 text-[2rem] font-bold text-ink md:text-[2.5rem]">
               Oi, eu sou a Bruna.
             </h2>
           </Reveal>

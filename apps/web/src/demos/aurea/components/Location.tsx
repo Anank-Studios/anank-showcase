@@ -17,7 +17,7 @@ export function Location({ demo, services }: { demo: Demo; services: Service[] }
     >
       <Reveal>
         <p className="label-caps text-[#9d5d32]">Contato</p>
-        <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] text-ink md:text-[2.5rem]">
+        <h2 className="text-display mt-3 max-w-[18ch] text-[2rem] font-bold text-ink md:text-[2.5rem]">
           Onde estamos
         </h2>
         <p className="mt-3 max-w-[46ch] text-base text-[#75685e]">
@@ -48,7 +48,7 @@ export function Location({ demo, services }: { demo: Demo; services: Service[] }
 
         <Reveal delay={0.12} className="space-y-10">
           <div>
-            <h3 className="font-display text-xl text-ink">Endereço e horários</h3>
+            <h3 className="font-display text-xl font-semibold text-ink">Endereço e horários</h3>
             <p className="mt-2 text-sm leading-relaxed text-[#75685e]">{demo.address}</p>
             <p className="mt-1 text-sm leading-relaxed text-[#75685e]">
               <a href={`tel:${demo.phone.replace(/\D/g, '')}`} className="hover:text-accent">
@@ -67,7 +67,7 @@ export function Location({ demo, services }: { demo: Demo; services: Service[] }
           </div>
 
           <div>
-            <h3 className="font-display text-xl text-ink">Fale com a gente</h3>
+            <h3 className="font-display text-xl font-semibold text-ink">Fale com a gente</h3>
             <p className="mt-2 text-sm text-[#75685e]">
               Deixa seu contato que a Bruna responde pessoalmente.
             </p>
