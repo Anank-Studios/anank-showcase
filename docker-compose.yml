@@ -1,0 +1,91 @@
+# Anank Showcase — deploy na VPS Anank Studios (Docker Compose + Traefik + Cloudflare Tunnel).
+# Padrão idêntico aos demais serviços da VPS:
+#  - Roteamento por Traefik na rede externa `traefik-public` (sem expor portas no host).
+#  - O front e a API ficam no MESMO host público: tudo em `/api` vai para o Fastify,
+#    o resto vai para o Next. Mesma origem => sem CORS, sem preflight no navegador.
+#  - Na renderização no servidor o Next fala direto com `http://api:3333` pela rede
+#    interna (API_INTERNAL_URL) — não sai para a internet para voltar.
+#
+# Host público no .env da raiz (não versionado):
+#   SHOWCASE_HOST=demo.anankstudios.com.br
+# O projeto não tem banco, autenticação nem chave de terceiros: não há segredo aqui.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: anank-showcase-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3333"
+      # Só vale para chamadas cross-origin; em produção o navegador usa a mesma
+      # origem. Fica declarado para o caso de alguém abrir a API de fora.
+      WEB_ORIGIN: https://${SHOWCASE_HOST}
+    networks:
+      - showcase_internal
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      # O container está em DUAS redes; sem isto o Traefik pode escolher o IP da
+      # rede interna, que ele não alcança. Mesmo label dos demais serviços da VPS.
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.anank-showcase-api.rule=Host(`${SHOWCASE_HOST}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.anank-showcase-api.entrypoints=web"
+      # Prioridade explícita: o Traefik ordena por tamanho da regra, mas não
+      # queremos depender disso para o /api não cair no Next.
+      - "traefik.http.routers.anank-showcase-api.priority=100"
+      - "traefik.http.services.anank-showcase-api.loadbalancer.server.port=3333"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3333/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256m
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        # Vazio de propósito: o bundle do navegador usa caminho relativo.
+        NEXT_PUBLIC_API_URL: ""
+    container_name: anank-showcase-web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      API_INTERNAL_URL: http://api:3333
+    networks:
+      - showcase_internal
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.anank-showcase-web.rule=Host(`${SHOWCASE_HOST}`)"
+      - "traefik.http.routers.anank-showcase-web.entrypoints=web"
+      - "traefik.http.routers.anank-showcase-web.priority=1"
+      - "traefik.http.services.anank-showcase-web.loadbalancer.server.port=3000"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 768m
+
+networks:
+  showcase_internal:
+    driver: bridge
+  traefik-public:
+    external: true   # criada pelo Traefik da VPS

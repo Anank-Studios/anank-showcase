@@ -23,7 +23,23 @@ import type {
   Testimonial,
 } from '@anank/contracts';
 
+/**
+ * Base pública da API — inlinada no bundle em build-time, é a que o navegador usa.
+ * Em produção fica vazia: a API mora no mesmo host, sob `/api` (ver docker-compose.yml),
+ * então o caminho relativo já resolve e não há CORS nem preflight.
+ */
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333';
+
+/**
+ * Base usada durante a renderização no servidor. `fetch` no Node não aceita caminho
+ * relativo, e mandar o SSR sair pra internet e voltar pelo Cloudflare seria absurdo:
+ * no container o front fala direto com a API pela rede interna (`http://api:3333`).
+ * Lida em tempo de execução, não de build.
+ */
+function baseUrl(): string {
+  if (typeof window !== 'undefined') return API_URL;
+  return process.env.API_INTERNAL_URL ?? API_URL;
+}
 
 export class ApiError extends Error {
   readonly code: string;
@@ -53,7 +69,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
 
   try {
-    response = await fetch(`${API_URL}${path}`, {
+    response = await fetch(`${baseUrl()}${path}`, {
       ...init,
       cache: 'no-store',
       headers: {

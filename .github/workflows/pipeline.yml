@@ -1,0 +1,165 @@
+name: Pipeline
+
+# Pipeline único CI + Security + Deploy, no mesmo padrão dos outros projetos da VPS.
+# O deploy só roda se TODOS os gates bloqueantes passarem. O gate é garantido pelo
+# próprio engine do Actions via `needs:` — não depende de `if:` frágil.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', '.gitignore', 'LICENSE', 'specs/**']
+  pull_request:
+    branches: [main]
+    paths-ignore: ['**.md', '.gitignore', 'LICENSE', 'specs/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  # ───────────────────────── CI ─────────────────────────
+  # Um job só para os três workspaces: o monorepo é pequeno e o pnpm install
+  # (a parte cara) seria pago de novo a cada job paralelo.
+  ci:
+    name: CI · typecheck + lint + testes + build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # `contracts` precisa estar compilado antes: api e web importam os TIPOS
+      # de @anank/contracts, e o typecheck falha sem o dist/.
+      - name: Build contracts
+        run: pnpm --filter @anank/contracts build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Testes (Vitest)
+        run: pnpm test
+
+      - name: Build (api + web)
+        run: pnpm --filter @anank/api build && pnpm --filter @anank/web build
+
+  # ─────────────────────── Security ───────────────────────
+  secret-scan:
+    name: Sec · Segredos (Gitleaks) — BLOQUEIA
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
+
+  node-security:
+    name: Sec · Dependências (pnpm audit) — informativo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: pnpm audit (high+) — informativo
+        continue-on-error: true
+        run: pnpm audit --audit-level=high
+
+  # ─────────────── Verificação das imagens Docker ───────────────
+  # Builda as duas imagens no runner ANTES de tocar na VPS. Se um Dockerfile
+  # quebrou, o deploy nem começa — em vez de derrubar o site no meio do build.
+  docker-build:
+    name: CI · Build das imagens Docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build da API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: false
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,scope=api,mode=max
+      - name: Build do front
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: false
+          build-args: NEXT_PUBLIC_API_URL=
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,scope=web,mode=max
+
+  # ──────────────────────── Deploy ────────────────────────
+  # GATE: só inicia se ci, secret-scan e docker-build terminarem com SUCESSO.
+  # Qualquer falha = deploy SKIPPED pelo engine. `node-security` fica fora do
+  # needs por ser informativo.
+  deploy:
+    name: Deploy na VPS
+    runs-on: ubuntu-latest
+    needs: [ci, secret-scan, docker-build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 30m
+          script_stop: true
+          script: |
+            cd /home/automysolucoes/anank-showcase
+            git fetch origin main
+            git reset --hard origin/main
+            docker compose build
+            docker compose up -d
+
+            # Health check ponta a ponta pelo Traefik, com o Host público:
+            # é exatamente o caminho que o visitante percorre. Com retry, porque
+            # o Next leva alguns segundos para ficar pronto.
+            HOST=$(grep '^SHOWCASE_HOST=' .env | cut -d= -f2)
+            ok=0
+            for i in $(seq 1 30); do
+              api=$(curl -s -o /dev/null -w '%{http_code}' -H "Host: $HOST" http://localhost/api/health)
+              web=$(curl -s -o /dev/null -w '%{http_code}' -H "Host: $HOST" http://localhost/)
+              if [ "$api" = "200" ] && [ "$web" = "200" ]; then ok=1; break; fi
+              sleep 3
+            done
+            if [ "$ok" != "1" ]; then
+              echo "Health check falhou (api=$api web=$web)"
+              docker compose logs --tail=50
+              exit 1
+            fi
+
+            # Camadas órfãs dos builds anteriores. Sem `-a`: só o que ficou sem tag,
+            # para não apagar imagem de outro projeto parado na VPS.
+            docker image prune -f
+            echo "Deploy anank-showcase concluído com sucesso"
