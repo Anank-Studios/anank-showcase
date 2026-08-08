@@ -54,6 +54,42 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* 4.0-dark ANANK STUDIOS — o mesmo hub no escuro                      */
+/*                                                                     */
+/* Este é o tema PADRÃO: o site institucional da Anank é escuro, e o   */
+/* claro é que é a adaptação. Vale só para o hub — as três demos têm   */
+/* identidade fixa, e poder trocar o tema delas destruiria justamente  */
+/* o argumento de que são marcas diferentes.                           */
+/*                                                                     */
+/* O `:has()` não é enfeite. `data-theme` mora no <html>, que é ancestral */
+/* de TODAS as rotas — inclusive das demos. Sem o `:has()`, o <body> das  */
+/* páginas de demo herdaria o fundo Black da Anank, e a Aurea creme       */
+/* apareceria com borda preta no overscroll. Com ele, os tokens escuros   */
+/* só existem quando o hub está de fato na tela.                         */
+/* ------------------------------------------------------------------ */
+
+html[data-theme='dark']:has([data-brand='anank']),
+html[data-theme='dark'] [data-brand='anank'] {
+  --brand-bg: #060b08; /* Black oficial */
+  --brand-surface: #0c1611; /* bg-mid oficial */
+  --brand-ink: #f7f7f7; /* Off-white — 18.9:1 */
+  /* text-secondary oficial, 9.1:1. O tertiary (#6E7B74) dá 4.4:1 sobre o
+     Black: marginal demais para texto pequeno, por isso não é usado. */
+  --brand-muted: #a7b3ac;
+  --brand-accent: #2fae80; /* Verde Anank — 6.8:1, aqui PODE ser texto */
+  /*
+    A inversão que não pode ser esquecida: no claro o Verde dá só 2.6:1, e por
+    isso `--brand-accent-2` é o Pinho escuro, usado nos numerais. No escuro o
+    Pinho seria invisível — accent-2 troca de papel e vira o fringe (9.3:1).
+    Sem esta troca, os numerais 01/02/03 somem.
+  */
+  --brand-accent-2: #54c99a; /* accent-fringe oficial */
+  --brand-line: #1b2a22;
+
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------------ */
 /* 4.1 AUREA — quente, artesanal, r24                                  */
 /* ------------------------------------------------------------------ */
 

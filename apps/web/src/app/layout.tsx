@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { cookies } from 'next/headers';
 import {
   Bodoni_Moda,
   Bricolage_Grotesque,
@@ -9,6 +10,7 @@ import {
   Newsreader,
   Poppins,
 } from 'next/font/google';
+import { parseTheme, THEME_COOKIE } from '@/shared/lib/theme';
 import '@/styles/globals.css';
 
 /*
@@ -100,15 +102,38 @@ export const metadata: Metadata = {
     'Três demonstrações de sites para beleza e estética, do essencial bem-feito ao que se espera de uma marca de luxo. Portfólio da Anank Studios.',
 };
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: '#F7F7F7',
-};
+/**
+ * `themeColor` acompanha o tema escolhido. Fixo em off-white, a barra do
+ * navegador no celular sairia clara com o hub escuro atrás — a emenda mais
+ * visível que existe no mobile.
+ *
+ * Não dá para resolver com `prefers-color-scheme`: a escolha aqui é do
+ * usuário, guardada em cookie, e não a do sistema operacional.
+ */
+export async function generateViewport(): Promise<Viewport> {
+  const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    themeColor: theme === 'dark' ? '#060B08' : '#F7F7F7',
+  };
+}
+
+/**
+ * Ler o cookie aqui normalmente forçaria a aplicação inteira a renderizar
+ * dinamicamente. Aqui não custa nada: as 14 rotas JÁ são `force-dynamic` — o
+ * hub em `app/page.tsx` e as 13 demos em `app/demo/layout.tsx`. Nenhuma rota
+ * perde otimização estática, porque nenhuma tinha.
+ *
+ * O tema sai já resolvido no HTML do servidor, e é por isso que não existe
+ * flash de tema errado no carregamento.
+ */
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
+
   return (
-    <html lang="pt-BR" className={fontVars}>
+    <html lang="pt-BR" className={fontVars} data-theme={theme}>
       <body>{children}</body>
     </html>
   );
