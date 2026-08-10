@@ -62,6 +62,7 @@ export function KenBurnsHero({ image }: { image: ImageRef }) {
             alt={image.alt}
             fill
             priority
+            quality={62}
             sizes="100vw"
             placeholder="blur"
             blurDataURL={BLUR.oniria}

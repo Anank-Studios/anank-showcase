@@ -46,6 +46,17 @@ const nextConfig: NextConfig = {
       Oniria saía com 353 kB em WebP a 1920.
     */
     deviceSizes: [640, 750, 828, 1080, 1200, 1600],
+    /*
+      62 é a qualidade dos HERÓIS; 75 (o padrão) vale para todo o resto.
+      Declarar aqui é obrigatório a partir do Next 15.3: valores fora desta
+      lista são recusados pelo otimizador.
+
+      Herói é foto em tela cheia e quase sempre o elemento de LCP — o da Oniria
+      saía com 353 kB. Menos qualidade corta bytes E tempo de codificação, o que
+      importa dobrado num container de 1 CPU, onde a otimização às vezes estoura
+      e o Next acaba servindo o arquivo original.
+    */
+    qualities: [62, 75],
     /* As fotos são fixas e fictícias; nunca mudam. */
     minimumCacheTTL: 31536000,
   },

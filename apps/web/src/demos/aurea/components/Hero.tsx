@@ -64,6 +64,7 @@ export function Hero({ demo }: { demo: Demo }) {
                 alt={hero.alt}
                 fill
                 priority
+                quality={62}
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 placeholder="blur"
                 blurDataURL={BLUR.aurea}
