@@ -94,7 +94,12 @@ export function Header({ demo }: { demo: Demo }) {
       className={cn(
         'sticky top-0 z-40 transition-[background-color,box-shadow,border-color] duration-250',
         scrolled
-          ? 'border-b border-line bg-[rgb(251_247_242_/_0.82)] shadow-[0_1px_0_0_rgb(42_33_28_/_0.04)] backdrop-blur-md'
+          /* Fundo OPACO, não 0.82. Com translucidez o título da seção passava
+             por trás do logo e a barra virava um borrão — a navegação sumia.
+             `backdrop-blur` não resolve: ele suaviza a foto, mas texto de alto
+             contraste atravessa do mesmo jeito. Mesma lição das pílulas da
+             Oniria. A separação agora vem da borda + sombra, não da opacidade. */
+          ? 'border-b border-line bg-bg shadow-[0_1px_0_0_rgb(42_33_28_/_0.04)]'
           : 'border-b border-transparent bg-transparent'
       )}
     >

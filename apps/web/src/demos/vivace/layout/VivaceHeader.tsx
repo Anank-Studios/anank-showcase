@@ -104,8 +104,11 @@ export function VivaceHeader() {
     setOpen(false);
   }, [pathname]);
 
+  /* `bg-bg` opaco, não `bg-bg/90`: a 90% o texto da página ainda atravessava a
+     barra e a navegação ficava ilegível ao rolar. A borda inferior já dá a
+     separação; a translucidez só custava legibilidade. */
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 md:px-10 lg:px-14">
         <Link href="/demo/vivace" className="flex flex-col leading-none">
           <span className="text-display text-[24px]">VIVACE</span>

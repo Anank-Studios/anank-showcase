@@ -133,7 +133,18 @@ export async function OniriaProtocoloDetalhe({ slug }: { slug: string }) {
         {protocol.faq?.length ? (
           <section className="px-5 pb-24 md:px-10 lg:px-14">
             <div className="mx-auto max-w-[860px]">
-              <p className="label-caps text-accent">Perguntas</p>
+              {/*
+                h2, não <p>: a página ia de h1 direto para os h3 do acordeão e
+                reprovava em `heading-order`. Este rótulo já ERA o título da
+                seção — só não estava marcado como tal, e agora o leitor de tela
+                consegue pular para o FAQ.
+
+                `font-body` é obrigatório: a regra base de h1..h3 troca a fonte
+                para a display (Bodoni), e sem isso o rótulo mudaria de cara.
+                O resto (tamanho, peso, caixa) vem do `label-caps`, que é
+                utility e ganha da base.
+              */}
+              <h2 className="label-caps font-body text-accent">Perguntas</h2>
               <div className="mt-8">
                 <Accordion items={protocol.faq} />
               </div>

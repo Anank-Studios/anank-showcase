@@ -34,30 +34,60 @@ export function ThemeToggle({ initial }: { initial: Theme }) {
          uma coisa e o estado dizer o contrário. */
       aria-label="Modo escuro"
       onClick={toggle}
-      className="group relative inline-flex h-9 w-[62px] shrink-0 cursor-pointer items-center rounded-full border border-line bg-surface transition-colors duration-300 hover:border-[color:var(--brand-accent)]"
-    >
-      {/* Os ícones ficam no trilho, atrás do botão — o que estiver sob o botão
-          apaga, dando a leitura de "o tema atual é este". */}
-      <span className="pointer-events-none absolute inset-0 flex items-center justify-between px-[9px]">
-        <SunIcon className={iconClass(!dark)} />
-        <MoonIcon className={iconClass(dark)} />
-      </span>
+      /*
+        O trilho precisa SER VISÍVEL — antes ele não era, e o controle lia como
+        uma bolinha verde solta no ar. `border-line` sobre o fundo da página dá
+        1.29:1 no escuro e 1.15:1 no claro; o mínimo para contorno de componente
+        é 3:1. O Lighthouse não reprova isso (ele não audita contraste de
+        elemento não-textual), então só se pega no olho.
 
+        Derivar do `--brand-muted`, que já é validado, resolve os dois temas com
+        um valor só: 80% dá 5.9:1 no escuro e 3.6:1 no claro. O preenchimento a
+        14% é só para o trilho ter corpo — quem garante o contorno é a borda.
+      */
+      style={
+        {
+          /* Vai numa VARIÁVEL, não em `borderColor` direto: estilo inline vence
+             classe, e o `hover:` deixaria de funcionar. */
+          '--track-line': 'color-mix(in srgb, var(--brand-muted) 80%, var(--brand-bg))',
+          background: 'color-mix(in srgb, var(--brand-muted) 14%, var(--brand-bg))',
+        } as React.CSSProperties
+      }
+      className="group relative inline-flex h-9 w-[62px] shrink-0 cursor-pointer items-center rounded-full border border-[color:var(--track-line)] transition-colors duration-300 hover:border-[color:var(--brand-accent)]"
+    >
+      {/*
+        Geometria em pixel, sem porcentagem. A versão anterior usava
+        `top-1/2` + `translateY(-50%)` e o botão saía 10px POR CIMA do trilho:
+        o `top: 50%` não pegava, o elemento caía na posição estática do flex
+        (3px) e ainda levava os -14px do translate. Medido, não suposto.
+
+        Trilho 62x36 com borda de 1px → caixa interna de 60x34.
+        Botão 28px, folga de 3px nos quatro lados; percurso = 60-28-3-3 = 26px.
+      */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-[3px] size-7 -translate-y-1/2 rounded-full bg-[color:var(--brand-accent)] shadow-[0_2px_10px_-2px_var(--accent-glow)] transition-transform duration-300 ease-out"
-        style={{ transform: `translateY(-50%) translateX(${dark ? 26 : 0}px)` }}
-      />
+        className="pointer-events-none absolute top-[3px] left-[3px] flex size-7 items-center justify-center rounded-full bg-[color:var(--brand-accent)] shadow-[0_2px_10px_-2px_var(--accent-glow)] transition-transform duration-300 ease-out"
+        style={{ transform: `translateX(${dark ? 26 : 0}px)` }}
+      >
+        {/*
+          O ícone mora DENTRO do botão, e por isso sempre mostra o tema ATUAL.
+          Antes ele ficava no trilho e o botão cobria um dos dois: no escuro
+          sobrava o sol à vista, o que se lê como "clique para clarear" — visual
+          de AÇÃO enquanto o `aria-checked` anuncia ESTADO. Metáfora misturada.
+
+          Pinho fixo (#1c3a2d, cor oficial) nos dois temas: o botão é sempre
+          verde Anank, então o ícone precisa de contraste contra o VERDE e não
+          contra o fundo da página — 4.5:1, acima dos 3:1 exigidos para gráfico.
+          Usar `--brand-ink` daria 2.6:1 no claro.
+        */}
+        {dark ? (
+          <MoonIcon className="size-[15px] text-[#1c3a2d]" />
+        ) : (
+          <SunIcon className="size-[15px] text-[#1c3a2d]" />
+        )}
+      </span>
     </button>
   );
-}
-
-/** O ícone sob o botão vira quase invisível; o outro fica em texto normal. */
-function iconClass(active: boolean): string {
-  return [
-    'size-[15px] transition-opacity duration-300',
-    active ? 'text-[color:var(--brand-bg)] opacity-90' : 'text-muted opacity-70',
-  ].join(' ');
 }
 
 function SunIcon({ className }: { className?: string }) {

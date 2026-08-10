@@ -168,19 +168,29 @@ export function BookingFlow({
         />
       </div>
 
+      {/*
+        Três níveis de brilho, TODOS acima de 4.5:1 sobre o preto da Oniria:
+          atual      #e5d9c3  11.7:1
+          concluído  ink 60%   6.4:1
+          futuro     muted     5.1:1
+
+        O `opacity-45` que existia no passo futuro compunha #85817a sobre o
+        fundo e derrubava para 1.9:1 — reprovava em WCAG AA. Opacidade é
+        justamente o jeito errado de esmaecer texto: ela não avisa quando cruza
+        o mínimo. O tom de "concluído" é derivado dos tokens da marca, não um
+        cinza cravado.
+      */}
       <ol className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
         {STEPS.map((label, index) => (
           <li
             key={label}
             aria-current={index === step ? 'step' : undefined}
-            className={cn(
-              'label-caps',
-              index === step
-                ? 'text-accent-2'
-                : index < step
-                  ? 'text-muted'
-                  : 'text-muted opacity-45'
-            )}
+            className={cn('label-caps', index === step ? 'text-accent-2' : 'text-muted')}
+            style={
+              index < step
+                ? { color: 'color-mix(in srgb, var(--brand-ink) 60%, var(--brand-bg))' }
+                : undefined
+            }
           >
             {String(index + 1).padStart(2, '0')} {label}
           </li>
@@ -325,7 +335,13 @@ function StepProtocol({
                   selected ? 'bg-accent' : 'bg-transparent'
                 )}
               />
-              <h3 className="font-display text-xl leading-tight md:text-2xl">{service.name}</h3>
+              {/*
+                h2, não h3: a página tem um h1 e nenhum h2, então um h3 aqui
+                pulava um nível e reprovava em `heading-order`. O tamanho não
+                muda — o preflight do Tailwind zera font-size de h1..h6 para
+                `inherit`, então quem manda é a classe.
+              */}
+              <h2 className="font-display text-xl leading-tight md:text-2xl">{service.name}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted">{service.summary}</p>
               <p className="label-caps mt-5 text-accent">
                 {service.durationMin} min · R$ {service.priceFrom.toLocaleString('pt-BR')}
@@ -380,7 +396,7 @@ function StepPractitioner({
                   className="object-cover"
                 />
               </div>
-              <h3 className="mt-5 font-display text-xl leading-tight">{practitioner.name}</h3>
+              <h2 className="mt-5 font-display text-xl leading-tight">{practitioner.name}</h2>
               <p className="label-caps mt-2 text-accent">{practitioner.title}</p>
               <p className="mt-3 text-[13px] leading-relaxed text-muted">
                 {practitioner.availabilityNote}
