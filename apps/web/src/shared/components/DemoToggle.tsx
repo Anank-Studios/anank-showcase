@@ -9,10 +9,19 @@ import { GridIcon } from './AnankMark';
 import { useDemoChrome } from './DemoChromeProvider';
 import { cn } from '@/shared/lib/cn';
 
-const SEGMENTS: { slug: DemoSlug; index: string; label: string }[] = [
-  { slug: 'aurea', index: '01', label: 'Aurea' },
-  { slug: 'vivace', index: '02', label: 'Vivace' },
-  { slug: 'oniria', index: '03', label: 'Oniria' },
+/*
+  Rótulos por NÍVEL, não por marca fictícia — o mesmo critério do hub. Quem
+  está navegando quer saber em que degrau está, e "Aurea" não dizia isso.
+
+  O numeral solto (01/02/03) saiu junto: com "Demo 1" escrito por extenso ele
+  virava repetição. Os três rótulos novos somam 18 caracteres contra os 26 do
+  arranjo anterior ("01 Aurea" + "02 Vivace" + "03 Oniria"), então cabem
+  sempre — o colapso para só-números no mobile deixou de ser necessário.
+*/
+const SEGMENTS: { slug: DemoSlug; label: string }[] = [
+  { slug: 'aurea', label: 'Demo 1' },
+  { slug: 'vivace', label: 'Demo 2' },
+  { slug: 'oniria', label: 'Demo 3' },
 ];
 
 const HINT_MS = 3500;
@@ -162,8 +171,6 @@ export function DemoToggle() {
         >
           {SEGMENTS.map((segment) => {
             const isActive = segment.slug === active;
-            /* Mobile: só os números, a menos que o usuário expanda. */
-            const showLabel = expanded || isActive;
 
             return (
               <button
@@ -190,24 +197,15 @@ export function DemoToggle() {
                   />
                 )}
                 {/*
-                Cores explícitas em vez de `opacity`. Opacidade sobre um fundo
-                translúcido deixa o contraste depender da página atrás — passava
-                na Oniria (escura) e reprovava na Aurea e na Vivace (claras).
-                #C9CFCC dá 12.4:1 e #54C99A dá 9.5:1 sobre o preto da pílula.
-              */}
+                  Cores explícitas em vez de `opacity`. Opacidade sobre um fundo
+                  translúcido deixa o contraste depender da página atrás — passava
+                  na Oniria (escura) e reprovava na Aurea e na Vivace (claras).
+                  #C9CFCC dá 12.4:1 e #F7F7F7 dá 15.8:1 sobre o preto da pílula.
+                */}
                 <span
                   className={cn(
-                    'relative font-[family-name:var(--font-jetbrains-mono)] font-bold',
-                    isActive ? 'text-[#54C99A]' : 'text-[#C9CFCC]'
-                  )}
-                >
-                  {segment.index}
-                </span>
-                <span
-                  className={cn(
-                    'relative overflow-hidden transition-[max-width,opacity] duration-300',
-                    isActive ? 'text-[#F7F7F7]' : 'text-[#C9CFCC]',
-                    showLabel ? 'max-w-24 opacity-100' : 'max-w-0 opacity-0 sm:max-w-24'
+                    'relative whitespace-nowrap',
+                    isActive ? 'text-[#F7F7F7]' : 'text-[#C9CFCC]'
                   )}
                 >
                   {segment.label}

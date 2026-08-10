@@ -1,100 +1,17 @@
 import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
-import {
-  Bodoni_Moda,
-  Bricolage_Grotesque,
-  Geist,
-  JetBrains_Mono,
-  Karla,
-  Manrope,
-  Newsreader,
-  Poppins,
-} from 'next/font/google';
+import { anankFonts } from './fonts';
 import { parseTheme, THEME_COOKIE } from '@/shared/lib/theme';
 import '@/styles/globals.css';
 
 /*
-  Uma única passada de fontes para as 4 marcas. Cada escopo [data-brand]
-  escolhe quais variáveis usar — ver src/styles/globals.css.
+  Só as duas fontes da Anank descem para todas as rotas — e elas descem porque
+  são realmente necessárias em todas: o hub usa Poppins e JetBrains Mono, e o
+  `DemoToggle`, que roda em TODA rota de demo, pede as duas explicitamente
+  (`font-[family-name:var(--font-poppins)]` e `--font-jetbrains-mono`).
 
-  As três demos usam CATEGORIAS TIPOGRÁFICAS DIFERENTES, não três serifas
-  parecidas. Antes eram Fraunces + DM Serif Display + Bodoni Moda: todas
-  serifas, e por isso as marcas pareciam parentes.
-
-    Aurea   → grotesca expressiva (Bricolage) + humanista (Karla)
-    Vivace  → serifa editorial de baixo contraste (Newsreader) + geométrica (Manrope)
-    Oniria  → didone de contraste extremo (Bodoni Moda) + neutra (Geist)
-
-  `Inter` foi removida do projeto: é a fonte-padrão de todo site gerado por IA
-  e entrega o jogo na primeira olhada.
+  As 6 fontes das marcas ficam nos layouts de cada demo. Ver `app/fonts.ts`.
 */
-
-/* ---- Anank Studios — tipografia oficial da marca (repo site-anank) ---- */
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  variable: '--font-poppins',
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-});
-
-/* ---- Aurea ---- */
-const bricolage = Bricolage_Grotesque({
-  subsets: ['latin'],
-  variable: '--font-bricolage',
-  display: 'swap',
-});
-
-const karla = Karla({
-  subsets: ['latin'],
-  variable: '--font-karla',
-  display: 'swap',
-});
-
-/* ---- Vivace ---- */
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  style: ['normal', 'italic'],
-  variable: '--font-newsreader',
-  display: 'swap',
-});
-
-const manrope = Manrope({
-  subsets: ['latin'],
-  variable: '--font-manrope',
-  display: 'swap',
-});
-
-/* ---- Oniria ---- */
-const bodoniModa = Bodoni_Moda({
-  subsets: ['latin'],
-  style: ['normal', 'italic'],
-  variable: '--font-bodoni-moda',
-  display: 'swap',
-});
-
-const geist = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist',
-  display: 'swap',
-});
-
-const fontVars = [
-  poppins.variable,
-  jetbrainsMono.variable,
-  bricolage.variable,
-  karla.variable,
-  newsreader.variable,
-  manrope.variable,
-  bodoniModa.variable,
-  geist.variable,
-].join(' ');
 
 export const metadata: Metadata = {
   title: 'Anank Studios',
@@ -133,7 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
 
   return (
-    <html lang="pt-BR" className={fontVars} data-theme={theme}>
+    <html lang="pt-BR" className={anankFonts} data-theme={theme}>
       <body>{children}</body>
     </html>
   );
