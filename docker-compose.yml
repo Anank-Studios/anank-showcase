@@ -68,6 +68,14 @@ services:
     environment:
       NODE_ENV: production
       API_INTERNAL_URL: http://api:3333
+    volumes:
+      # Cache de imagem otimizada, PERSISTIDO entre deploys.
+      #
+      # Sem ele, todo `docker compose up -d` recria o container com o cache
+      # vazio e as primeiras visitas pagam a conversão de cada foto para AVIF
+      # na hora. Foi exatamente o que distorceu a primeira medição: com cache
+      # frio a home da Oniria dava 62; com o cache quente, 88.
+      - web_image_cache:/repo/apps/web/.next/cache/images
     networks:
       - showcase_internal
       - traefik-public
@@ -83,6 +91,9 @@ services:
         limits:
           cpus: "1.0"
           memory: 768m
+
+volumes:
+  web_image_cache:
 
 networks:
   showcase_internal:

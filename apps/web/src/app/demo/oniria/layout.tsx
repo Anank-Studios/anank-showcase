@@ -1,5 +1,5 @@
 import { OniriaShell } from '@/demos/oniria/OniriaShell';
-import { oniriaFonts } from '@/app/fonts';
+import { oniriaFonts } from '@/app/fonts/oniria';
 
 /**
  * Só a Oniria carrega Bodoni Moda e Geist. A didone é cara — vem com itálico,

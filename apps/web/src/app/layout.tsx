@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
-import { anankFonts } from './fonts';
+import { anankFonts } from './fonts/anank';
 import { parseTheme, THEME_COOKIE } from '@/shared/lib/theme';
 import '@/styles/globals.css';
 
@@ -10,7 +10,10 @@ import '@/styles/globals.css';
   `DemoToggle`, que roda em TODA rota de demo, pede as duas explicitamente
   (`font-[family-name:var(--font-poppins)]` e `--font-jetbrains-mono`).
 
-  As 6 fontes das marcas ficam nos layouts de cada demo. Ver `app/fonts.ts`.
+  As 6 fontes das marcas ficam nos layouts de cada demo, em UM MÓDULO POR MARCA
+  (`app/fonts/aurea.ts` etc.). O módulo separado não é organização: com todas
+  num arquivo só, o build de produção juntava o CSS num chunk compartilhado e
+  baixava as 8 famílias em toda rota, mesmo funcionando no dev.
 */
 
 export const metadata: Metadata = {

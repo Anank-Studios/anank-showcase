@@ -1,4 +1,4 @@
-import { aureaFonts } from '@/app/fonts';
+import { aureaFonts } from '@/app/fonts/aurea';
 
 /**
  * Só a Aurea carrega Bricolage Grotesque e Karla. O wrapper existe porque as

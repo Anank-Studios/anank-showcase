@@ -41,6 +41,13 @@ COPY --from=build --chown=node:node /repo/apps/web/.next/standalone ./
 COPY --from=build --chown=node:node /repo/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build --chown=node:node /repo/apps/web/public ./apps/web/public
 
+# Cache de imagem otimizada. Criado AQUI, com dono `node`, de propósito: o
+# Docker copia o conteúdo e a permissão desta pasta para o volume nomeado na
+# primeira montagem. Sem isso o volume nasceria como root e o processo, que
+# roda como `node`, não conseguiria escrever — o cache ficaria sempre vazio,
+# em silêncio.
+RUN mkdir -p apps/web/.next/cache/images && chown -R node:node apps/web/.next/cache
+
 USER node
 EXPOSE 3000
 CMD ["node", "apps/web/server.js"]

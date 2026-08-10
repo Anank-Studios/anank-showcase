@@ -1,4 +1,4 @@
-import { vivaceFonts } from '@/app/fonts';
+import { vivaceFonts } from '@/app/fonts/vivace';
 
 /**
  * Cobre `/demo/vivace` e as três rotas filhas (serviços, sobre, contato):
