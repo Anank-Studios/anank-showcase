@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { IntentLink } from '@/shared/components/IntentLink';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { DemoSlug } from '@anank/contracts';
@@ -152,13 +152,13 @@ export function DemoToggle() {
           'font-[family-name:var(--font-poppins)]'
         )}
       >
-        <Link
+        <IntentLink
           href="/"
           aria-label="Voltar para o hub da Anank Studios"
           className="flex size-8 shrink-0 items-center justify-center rounded-full text-[#C9CFCC] transition-colors hover:bg-white/10 hover:text-[#F7F7F7]"
         >
           <GridIcon />
-        </Link>
+        </IntentLink>
 
         <span aria-hidden="true" className="mx-0.5 h-5 w-px bg-white/12" />
 

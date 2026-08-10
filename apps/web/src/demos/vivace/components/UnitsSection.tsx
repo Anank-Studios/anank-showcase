@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { IntentLink } from '@/shared/components/IntentLink';
 import type { ImageRef } from '@anank/contracts';
 import { BLUR } from '@/shared/lib/blur';
 import { VIVACE_UNITS } from '../lib/units';
@@ -39,12 +39,12 @@ export function UnitsSection({ images }: { images: Record<string, ImageRef> }) {
                 <p className="mt-2 text-sm leading-relaxed text-[#636e67]">{unit.address}</p>
                 <p className="mt-1 text-sm text-[#636e67]">{unit.phone}</p>
                 <p className="mt-1 text-sm text-[#636e67]">{unit.hours}</p>
-                <Link
+                <IntentLink
                   href="/demo/vivace/contato"
                   className="mt-4 inline-block text-sm font-medium text-accent hover:underline"
                 >
                   Como chegar →
-                </Link>
+                </IntentLink>
               </RevealItem>
             );
           })}

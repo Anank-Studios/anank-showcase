@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { IntentLink } from '@/shared/components/IntentLink';
 
 export function CtaBand() {
   return (
@@ -10,12 +10,12 @@ export function CtaBand() {
         <p className="mt-4 text-white">
           Conte o que você quer resolver. A gente diz o que é possível — e o que não é.
         </p>
-        <Link
+        <IntentLink
           href="/demo/vivace/contato"
           className="mt-8 inline-block rounded-brand bg-bg px-8 py-3.5 text-sm font-medium text-ink transition-opacity hover:opacity-90"
         >
           Agendar avaliação
-        </Link>
+        </IntentLink>
       </div>
     </section>
   );

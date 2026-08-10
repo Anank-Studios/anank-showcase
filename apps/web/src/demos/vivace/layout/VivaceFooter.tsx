@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { IntentLink } from '@/shared/components/IntentLink';
 import type { Demo } from '@anank/contracts';
 import { CredentialBadge } from '../components/CredentialBadge';
 import { NewsletterForm } from '../components/NewsletterForm';
@@ -32,33 +32,33 @@ export function VivaceFooter({ demo }: { demo: Demo }) {
           <p className="label-caps text-[#636e67]">Mapa do site</p>
           <ul className="mt-4 flex flex-col gap-3 text-sm">
             <li>
-              <Link href="/demo/vivace" className="hover:text-accent">
+              <IntentLink href="/demo/vivace" className="hover:text-accent">
                 Início
-              </Link>
+              </IntentLink>
             </li>
             <li>
-              <Link href="/demo/vivace/servicos" className="hover:text-accent">
+              <IntentLink href="/demo/vivace/servicos" className="hover:text-accent">
                 Serviços
-              </Link>
+              </IntentLink>
             </li>
             <li>
-              <Link href="/demo/vivace/sobre" className="hover:text-accent">
+              <IntentLink href="/demo/vivace/sobre" className="hover:text-accent">
                 Sobre
-              </Link>
+              </IntentLink>
             </li>
             <li>
-              <Link href="/demo/vivace/contato" className="hover:text-accent">
+              <IntentLink href="/demo/vivace/contato" className="hover:text-accent">
                 Contato
-              </Link>
+              </IntentLink>
             </li>
             {CATEGORY_ANCHORS.map((category) => (
               <li key={category.slug}>
-                <Link
+                <IntentLink
                   href={`/demo/vivace/servicos#${category.slug}`}
                   className="text-[#636e67] hover:text-accent"
                 >
                   Serviços · {category.label}
-                </Link>
+                </IntentLink>
               </li>
             ))}
           </ul>

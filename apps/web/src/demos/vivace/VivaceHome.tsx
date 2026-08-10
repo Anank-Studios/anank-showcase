@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { IntentLink } from '@/shared/components/IntentLink';
 import { getDemo, getServices, getTeam, getTestimonials } from '@/shared/lib/api';
 import { pickImage } from './lib/images';
 import { VivaceChrome } from './layout/VivaceChrome';
@@ -32,12 +32,12 @@ export async function VivaceHome() {
       <section className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 lg:px-14 lg:py-28">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
           <h2 className="text-display text-[32px]">Tratamentos</h2>
-          <Link
+          <IntentLink
             href="/demo/vivace/servicos"
             className="whitespace-nowrap text-sm font-medium text-accent hover:underline"
           >
             Ver todos os serviços →
-          </Link>
+          </IntentLink>
         </div>
         <div className="mt-10">
           <TreatmentsCarousel services={services.slice(0, 6)} />

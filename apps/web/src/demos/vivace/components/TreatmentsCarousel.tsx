@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { IntentLink } from '@/shared/components/IntentLink';
 import type { Service } from '@anank/contracts';
 import { BLUR } from '@/shared/lib/blur';
 import { ChevronLeftIcon, ChevronRightIcon } from './icons';
@@ -153,12 +153,12 @@ export function TreatmentsCarousel({ services }: { services: Service[] }) {
               <h3 className="text-display mt-4 text-[22px]">{service.name}</h3>
               <p className="label-caps mt-1 text-[#636e67]">{service.durationMin} min</p>
               <p className="mt-2 text-sm leading-relaxed text-[#636e67]">{service.summary}</p>
-              <Link
+              <IntentLink
                 href={`/demo/vivace/servicos#${service.slug}`}
                 className="mt-3 inline-block text-sm font-medium text-accent hover:underline"
               >
                 Saiba mais →
-              </Link>
+              </IntentLink>
             </article>
           ))}
         </div>

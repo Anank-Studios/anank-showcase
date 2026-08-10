@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { IntentLink } from './IntentLink';
 import { motion, useReducedMotion } from 'motion/react';
 import type { DemoSummary } from '@anank/contracts';
 import { AnankSymbol } from './AnankMark';
@@ -124,7 +124,7 @@ function TierCard({
           : { duration: 0.7, delay: T.cards + index * T.cardStagger, ease: EASE }
       }
     >
-      <Link
+      <IntentLink
         href={`/demo/${demo.slug}`}
         className="group block h-full transition-transform duration-300 motion-safe:hover:-translate-y-1.5"
         style={{ viewTransitionName: `demo-card-${demo.slug}` }}
@@ -194,7 +194,7 @@ function TierCard({
             </div>
           </div>
         </div>
-      </Link>
+      </IntentLink>
     </motion.div>
   );
 }

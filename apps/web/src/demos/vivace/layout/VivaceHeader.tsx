@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { IntentLink } from '@/shared/components/IntentLink';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn } from '@/shared/lib/cn';
@@ -31,7 +31,7 @@ function NavLink({
   className?: string;
 }) {
   return (
-    <Link
+    <IntentLink
       href={href}
       onClick={onNavigate}
       className={cn('group relative inline-block py-1', className)}
@@ -44,7 +44,7 @@ function NavLink({
           active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
         )}
       />
-    </Link>
+    </IntentLink>
   );
 }
 
@@ -110,12 +110,12 @@ export function VivaceHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 md:px-10 lg:px-14">
-        <Link href="/demo/vivace" className="flex flex-col leading-none">
+        <IntentLink href="/demo/vivace" className="flex flex-col leading-none">
           <span className="text-display text-[24px]">VIVACE</span>
           <span className="label-caps mt-0.5 text-[9px] tracking-[.2em] text-[#636e67]">
             ESTÉTICA AVANÇADA
           </span>
-        </Link>
+        </IntentLink>
 
         <nav className="hidden items-center gap-8 text-sm md:flex" aria-label="Navegação principal">
           {NAV_LINKS.map((link) => (
@@ -129,12 +129,12 @@ export function VivaceHeader() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Link
+          <IntentLink
             href="/demo/vivace/contato"
             className="hidden rounded-brand bg-accent px-5 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90 md:inline-block"
           >
             Agendar avaliação
-          </Link>
+          </IntentLink>
 
           <button
             ref={triggerRef}
@@ -189,7 +189,7 @@ export function VivaceHeader() {
 
               <nav className="flex flex-1 flex-col gap-6 px-6 py-8" aria-label="Navegação móvel">
                 {NAV_LINKS.map((link) => (
-                  <Link
+                  <IntentLink
                     key={link.href}
                     href={link.href}
                     onClick={close}
@@ -197,18 +197,18 @@ export function VivaceHeader() {
                     aria-current={isActive(link.href) ? 'page' : undefined}
                   >
                     {link.label}
-                  </Link>
+                  </IntentLink>
                 ))}
               </nav>
 
               <div className="border-t border-line p-6">
-                <Link
+                <IntentLink
                   href="/demo/vivace/contato"
                   onClick={close}
                   className="block rounded-brand bg-accent px-5 py-3 text-center text-sm font-medium text-bg"
                 >
                   Agendar avaliação
-                </Link>
+                </IntentLink>
               </div>
             </motion.div>
           </div>
