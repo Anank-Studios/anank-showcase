@@ -19,11 +19,23 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'images.pexels.com' },
     ],
-    /* AVIF antes de WebP: negociado pelo header `Accept`, então navegador que
-       não suporta cai no WebP sozinho. Numa vitrine que é quase toda fotografia
-       — 1.357 kB só na home da Oniria — é o corte de bytes mais barato que
-       existe, sem tocar em componente nenhum. */
-    formats: ['image/avif', 'image/webp'],
+    /*
+      SÓ WebP. O AVIF foi tentado e teve que sair — medido em produção:
+
+        Accept: image/avif,image/webp   ->  JPEG   395.798 bytes
+        Accept: image/webp              ->  WebP    25.482 bytes
+
+      Aqueles 395.798 bytes são, byte a byte, o arquivo original do Unsplash: a
+      codificação AVIF FALHA neste container (1 CPU e 768 MB, ver
+      docker-compose.yml) e o Next cai no passthrough, servindo a foto sem
+      otimização alguma. Como todo navegador moderno anuncia `image/avif`,
+      quase todo visitante recebia 15x mais bytes do que precisava.
+
+      Na máquina de desenvolvimento o AVIF funciona, e foi por isso que passou:
+      o defeito só existe sob o limite de CPU da VPS. Aumentar o limite para
+      recuperar o AVIF não compensa — o WebP já entrega 25 kB.
+    */
+    formats: ['image/webp'],
     /*
       O padrão do Next vai até 3840. As fotos do banco são servidas em `w=1600`,
       então pedir 3840 mandava o otimizador AMPLIAR a imagem: mais bytes para
