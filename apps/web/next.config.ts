@@ -37,12 +37,15 @@ const nextConfig: NextConfig = {
     */
     formats: ['image/webp'],
     /*
-      O padrão do Next vai até 3840. As fotos do banco são servidas em `w=1600`,
-      então pedir 3840 mandava o otimizador AMPLIAR a imagem: mais bytes para
-      entregar menos nitidez. Teto em 1920, acima da fonte e suficiente para
-      tela retina.
+      Teto em 1600 porque é EXATAMENTE a largura em que o banco de fotos serve
+      os originais (`...&w=1600&q=80`). Qualquer valor acima disso manda o
+      otimizador AMPLIAR: mais bytes para entregar menos nitidez.
+
+      O padrão do Next é 3840. Baixei para 1920 numa primeira passada e o erro
+      continuou, só menor — 1920 também é maior que 1600. Medido: o herói da
+      Oniria saía com 353 kB em WebP a 1920.
     */
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1600],
     /* As fotos são fixas e fictícias; nunca mudam. */
     minimumCacheTTL: 31536000,
   },
