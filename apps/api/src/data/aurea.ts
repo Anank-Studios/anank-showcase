@@ -129,7 +129,9 @@ const team: TeamMember[] = [];
 export const aurea: DemoData = {
   demo: {
     slug: 'aurea',
+    niche: 'estetica',
     index: '01',
+    tierLabel: 'Landing page simples',
     brandName: 'Aurea Beauty Studio',
     category: 'Landing Page',
     tagline: 'Uma página. Tudo que um salão de bairro precisa para lotar a agenda.',

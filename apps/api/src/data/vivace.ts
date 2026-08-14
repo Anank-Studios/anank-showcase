@@ -417,7 +417,10 @@ const testimonials: Testimonial[] = [
 export const vivace: DemoData = {
   demo: {
     slug: 'vivace',
+    niche: 'estetica',
     index: '02',
+    tierLabel: 'Site Institucional (multi-abas)',
+    popular: true,
     brandName: 'Vivace Estética Avançada',
     category: 'Site Institucional',
     tagline: 'Múltiplas páginas, carrosséis e credenciais. Para quem precisa provar autoridade.',

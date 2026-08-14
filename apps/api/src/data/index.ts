@@ -11,9 +11,10 @@ import type { DemoData } from './shared.js';
 import { aurea } from './aurea.js';
 import { vivace } from './vivace.js';
 import { oniria } from './oniria.js';
+import { forno } from './forno.js';
 
-export const DEMOS: Record<DemoSlug, DemoData> = { aurea, vivace, oniria };
+export const DEMOS: Record<DemoSlug, DemoData> = { aurea, vivace, oniria, forno };
 
-export { aurea, vivace, oniria };
+export { aurea, vivace, oniria, forno };
 export type { DemoData };
 export { unsplash, img } from './shared.js';

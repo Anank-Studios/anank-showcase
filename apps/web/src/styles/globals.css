@@ -170,6 +170,33 @@ html[data-theme='dark'] [data-brand='anank'] {
 }
 
 /* ------------------------------------------------------------------ */
+/* 4.4 FORNO — pizzaria napolitana, quente, aresta quase viva          */
+/* ------------------------------------------------------------------ */
+
+[data-brand='forno'] {
+  --brand-bg: #120c08;
+  --brand-surface: #1c1310;
+  --brand-ink: #f6ece0;
+  /* 6.9:1 sobre o fundo. O tom "terroso claro" natural aqui reprovaria. */
+  --brand-muted: #b39c8c;
+  --brand-accent: #e2652b; /* brasa */
+  --brand-accent-2: #f2c078; /* massa dourada */
+  --brand-line: #2e211a;
+  --brand-radius: 2px;
+  /* Serifa de display com muito contraste + geométrica no corpo: categoria
+     diferente das quatro marcas de estética, para não parecerem parentes. */
+  --brand-font-display: var(--font-instrument), 'Didot', Georgia, serif;
+  --brand-font-body: var(--font-sora), system-ui, sans-serif;
+
+  --display-size: clamp(2.5rem, 12vw, 8rem);
+  --display-leading: 0.95;
+  --display-tracking: -0.02em;
+  --display-weight: 400;
+
+  --shadow-brand: 0 24px 60px -30px rgb(0 0 0 / 0.8);
+}
+
+/* ------------------------------------------------------------------ */
 /* Base                                                                */
 /* ------------------------------------------------------------------ */
 

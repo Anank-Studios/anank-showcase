@@ -16,6 +16,7 @@ import type {
   Envelope,
   LeadRequest,
   LeadResponse,
+  Menu,
   MonthResponse,
   Practitioner,
   Service,
@@ -126,6 +127,9 @@ export const getTestimonials = (slug: DemoSlug) =>
   request<Testimonial[]>(`/api/demos/${slug}/testimonials`);
 export const getTeam = (slug: DemoSlug) => request<TeamMember[]>(`/api/demos/${slug}/team`);
 export const getArticles = (slug: DemoSlug) => request<Article[]>(`/api/demos/${slug}/articles`);
+
+/** Só o nicho alimentação tem cardápio; as demais devolvem 404. */
+export const getMenu = (slug: DemoSlug) => request<Menu>(`/api/demos/${slug}/menu`);
 
 /* ------------------------------------------------------------------ */
 /* Agendamento (Oniria)                                                */

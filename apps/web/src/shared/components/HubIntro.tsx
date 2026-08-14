@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { IntentLink } from './IntentLink';
-import { motion, useReducedMotion } from 'motion/react';
-import type { DemoSummary } from '@anank/contracts';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import type { DemoSummary, NicheSlug } from '@anank/contracts';
 import { AnankSymbol } from './AnankMark';
 import { ThemeToggle } from './ThemeToggle';
 import { EASE } from '@/shared/lib/motion';
@@ -24,22 +25,26 @@ const T = {
   symbol: 0.1,
   wordmark: 0.22,
   toggle: 0.34,
+  nichos: 0.42,
   cards: 0.5,
   cardStagger: 0.1,
 } as const;
 
 /**
- * Os níveis são da ANANK, não das marcas fictícias: descrevem a oferta
- * comercial, então vivem no componente e não na API.
+ * Os nichos. O nicho NÃO vive na URL — as rotas seguem `/demo/<slug>` como
+ * sempre, então nenhum link já entregue a cliente deixa de funcionar. Quem
+ * agrupa é o dado (`demo.niche`) e este alternador.
  */
-const TIERS = [
-  { name: 'Landing page simples', popular: false },
-  { name: 'Site Institucional (multi-abas)', popular: true },
-  { name: 'Site Premium', popular: false },
-] as const;
+const NICHOS = [
+  { slug: 'estetica' as const, label: 'Estética' },
+  { slug: 'alimentacao' as const, label: 'Alimentação' },
+];
 
 export function HubIntro({ demos, theme }: { demos: DemoSummary[]; theme: Theme }) {
   const reduced = useReducedMotion();
+  const [nicho, setNicho] = useState<NicheSlug>('estetica');
+
+  const visiveis = demos.filter((d) => d.niche === nicho);
 
   return (
     <main className="mx-auto flex min-h-[100dvh] w-full max-w-[1100px] flex-col px-6 py-16 md:px-10 md:py-24">
@@ -75,22 +80,59 @@ export function HubIntro({ demos, theme }: { demos: DemoSummary[]; theme: Theme 
         </motion.div>
       </header>
 
+      <motion.div
+        className="mt-12 md:mt-14"
+        initial={reduced ? { opacity: 0 } : { opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={reduced ? { duration: 0.2 } : { duration: 0.6, delay: T.nichos, ease: EASE }}
+      >
+        <NicheSwitch value={nicho} onChange={setNicho} />
+      </motion.div>
+
       {/*
         Alinhados horizontalmente: sem deslocamento vertical e com `items-stretch`,
-        os três cards terminam na mesma linha de base. Empilham em 390px — três
+        os cards terminam na mesma linha de base. Empilham em 390px — três
         colunas ali seriam ilegíveis, e o projeto é mobile-first.
-      */}
-      {/*
+
         Sem `flex-1`: com foto, esticar os cards até o fim da viewport se
         justificava — a imagem preenchia. Sem foto, o mesmo esticão dava 521px
         de altura e um vazio no meio de cada card. Agora eles têm a altura que
         o conteúdo pede, e é o rodapé que desce sozinho com `mt-auto`.
       */}
-      <div className="mt-14 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-3 sm:gap-5 md:mt-16 md:gap-6">
-        {demos.map((demo, index) => (
-          <TierCard key={demo.slug} demo={demo} index={index} reduced={reduced} />
-        ))}
-      </div>
+      {/*
+        O AnimatePresence recebe UM filho: a grade inteira, com a chave do
+        nicho. Foram duas tentativas erradas antes desta, e vale registrar:
+
+        `popLayout` posiciona quem sai de forma absoluta, e o card que entrava
+        era empurrado centenas de pixels para baixo — com um só card no nicho,
+        ele aparecia no meio da página.
+
+        `mode="wait"` com os cards soltos como filhos foi pior: esse modo só
+        lida com UM filho, e a grade simplesmente ficou vazia.
+
+        Trocando a grade inteira, a troca de nicho é uma saída e uma entrada de
+        um bloco só — que é o que a interface está de fato fazendo.
+      */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={nicho}
+          className="mt-8 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-3 sm:gap-5 md:mt-10 md:gap-6"
+          initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
+          transition={{ duration: reduced ? 0.15 : 0.32, ease: EASE }}
+        >
+          {visiveis.map((demo, index) => (
+            <TierCard key={demo.slug} demo={demo} index={index} reduced={reduced} />
+          ))}
+        </motion.div>
+      </AnimatePresence>
+
+      {visiveis.length < 3 ? (
+        <p className="mt-6 font-mono-brand text-[11px] tracking-[0.08em] text-muted">
+          Mais demonstrações deste nicho em breve.
+        </p>
+      ) : null}
 
       <footer className="mt-auto pt-16">
         <p className="font-mono-brand text-[10px] tracking-[0.08em] text-muted">
@@ -98,6 +140,73 @@ export function HubIntro({ demos, theme }: { demos: DemoSummary[]; theme: Theme 
         </p>
       </footer>
     </main>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+/**
+ * Alternador de nicho. `role="tablist"` porque é exatamente isto: abas que
+ * trocam o painel de cards abaixo, sem mudar de página.
+ *
+ * A pílula ativa é um `layoutId` do Motion — ela DESLIZA de uma aba para a
+ * outra em vez de sumir e reaparecer, que é o que dá a leitura de "mesmo
+ * objeto se movendo".
+ */
+function NicheSwitch({
+  value,
+  onChange,
+}: {
+  value: NicheSlug;
+  onChange: (n: NicheSlug) => void;
+}) {
+  const reduced = useReducedMotion();
+
+  return (
+    <div
+      role="tablist"
+      aria-label="Nicho das demonstrações"
+      className="inline-flex items-center gap-1 rounded-full border border-[color:var(--switch-line)] p-1"
+      style={
+        {
+          '--switch-line': 'color-mix(in srgb, var(--brand-muted) 45%, var(--brand-bg))',
+          background: 'color-mix(in srgb, var(--brand-muted) 8%, var(--brand-bg))',
+        } as React.CSSProperties
+      }
+    >
+      {NICHOS.map((n) => {
+        const ativo = n.slug === value;
+        return (
+          <button
+            key={n.slug}
+            type="button"
+            role="tab"
+            aria-selected={ativo}
+            onClick={() => onChange(n.slug)}
+            className="relative rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors"
+          >
+            {ativo && (
+              <motion.span
+                layoutId="nicho-pill"
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full bg-[color:var(--brand-accent)]"
+                transition={
+                  reduced ? { duration: 0.01 } : { type: 'spring', stiffness: 420, damping: 34 }
+                }
+              />
+            )}
+            {/* A tinta do FUNDO sobre o verde Anank: 6.8:1 no escuro, 8.4:1 no
+                claro. Usar `--brand-ink` daria 2.6:1 no tema claro. */}
+            <span
+              className="relative"
+              style={{ color: ativo ? 'var(--brand-bg)' : undefined }}
+            >
+              {n.label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -112,12 +221,17 @@ function TierCard({
   index: number;
   reduced: boolean | null;
 }) {
-  const tier = TIERS[index] ?? TIERS[0];
+  /* Nível e selo vêm do DADO, não de uma tabela no componente. Com dois nichos
+     o índice deixou de identificar o nível: a demo 03 da estética e a 03 da
+     alimentação são as duas premium, mas cada nicho tem a sua sequência. */
 
   return (
     <motion.div
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
+      /* Sem `exit` o AnimatePresence não tem o que animar na troca de nicho:
+         os cards antigos sumiriam de um quadro para o outro. */
+      exit={reduced ? { opacity: 0 } : { opacity: 0, y: -12 }}
       transition={
         reduced
           ? { duration: 0.2 }
@@ -157,7 +271,7 @@ function TierCard({
                 Demo {index + 1}
               </p>
 
-              {tier.popular ? (
+              {demo.popular ? (
                 <span
                   className="font-mono-brand shrink-0 rounded-full px-2 py-[3px] text-[9px] font-bold tracking-[0.12em] uppercase"
                   /* Verde Anank preenchido com a tinta do fundo por cima:
@@ -176,7 +290,7 @@ function TierCard({
                 em três linhas tortas dentro do card.
               */}
               <p className="font-display text-[clamp(1.125rem,2.4vw,1.5rem)] leading-[1.15] font-medium tracking-[-0.01em] text-balance">
-                {tier.name}
+                {demo.tierLabel}
               </p>
 
               <div className="mt-4 flex items-baseline justify-between gap-3">

@@ -519,7 +519,9 @@ const articles: Article[] = [
 export const oniria: DemoData = {
   demo: {
     slug: 'oniria',
+    niche: 'estetica',
     index: '03',
+    tierLabel: 'Site Premium',
     brandName: 'Oniria Clinic',
     category: 'Experiência Premium',
     tagline: 'Transições cinematográficas e agendamento próprio. O site vira parte do produto.',
