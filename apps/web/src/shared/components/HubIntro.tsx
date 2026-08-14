@@ -268,7 +268,10 @@ function TierCard({
           <div className="flex flex-1 flex-col justify-between p-5 md:p-6">
             <div className="flex items-start justify-between gap-3">
               <p className="font-mono-brand text-[10px] tracking-[0.16em] text-muted uppercase">
-                Demo {index + 1}
+                {/* `demo.index`, nao a posicao no array: a pizzaria e a 3 do
+                    nicho mesmo estando sozinha hoje. Com a posicao, ela dizia
+                    "Demo 1" enquanto o numeral ao lado dizia "03". */}
+                Demo {Number(demo.index)}
               </p>
 
               {demo.popular ? (
