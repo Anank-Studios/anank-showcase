@@ -69,7 +69,41 @@ export async function FornoHome() {
       </section>
 
       {/* ---- a montagem, com scroll-telling --------------------------- */}
-      <MontagemPizza foto={demo.images.inteira!.url} alt={demo.images.inteira!.alt} />
+      {/*
+        As cinco etapas são FOTOS reais, não desenho. A ordem foi escolhida para
+        o dissolve não saltar: começa e termina em enquadramento de cima, com a
+        do forno no meio, e fecha na fumaça — que é a única com a câmera baixa,
+        e por isso vem por último.
+      */}
+      <MontagemPizza
+        etapas={[
+          {
+            titulo: 'A massa',
+            texto: '48 horas de fermentação lenta, farinha tipo 00.',
+            foto: demo.images.tabua!,
+          },
+          {
+            titulo: 'O molho',
+            texto: 'San Marzano triturado à mão, sal e nada mais.',
+            foto: demo.images.vegetariana!,
+          },
+          {
+            titulo: 'O queijo',
+            texto: 'Fior di latte rasgado, nunca ralado.',
+            foto: demo.images.tabuaEscura!,
+          },
+          {
+            titulo: '90 segundos',
+            texto: 'A 480 graus, até a borda pintar de fogo.',
+            foto: demo.images.hero!,
+          },
+          {
+            titulo: 'Na mesa',
+            texto: 'Sai do forno e vai direto — pizza napolitana não espera.',
+            foto: demo.images.fumaca!,
+          },
+        ]}
+      />
 
       {/* ---- destaques do cardápio ------------------------------------ */}
       <section className="border-t border-line px-5 py-20 md:px-10 md:py-28 lg:px-14">

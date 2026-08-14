@@ -2,69 +2,47 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { cn } from '@/shared/lib/cn';
+import type { ImageRef } from '@anank/contracts';
 
 /**
- * SCROLL-TELLING: a pizza é montada conforme a página rola.
+ * SCROLL-TELLING: o caminho do balcão ao forno, contado em FOTOGRAFIA.
  *
- * Por que NÃO são cinco fotos trocando
- * ------------------------------------
- * A ideia óbvia seria uma foto por etapa — massa, molho, queijo, pepperoni,
- * assada. Não existe banco de imagem com as cinco etapas da MESMA pizza, no
- * mesmo ângulo e na mesma luz; trocar entre fotos diferentes lê como corte de
- * vídeo mal feito, não como montagem.
+ * Por que a versão anterior foi jogada fora
+ * -----------------------------------------
+ * A primeira tentativa desenhava a pizza em CSS: círculos para massa, molho e
+ * queijo, e discos para a calabresa. Funcionava tecnicamente e não enganava
+ * ninguém — de perto era desenho, não comida. Num site que vende apetite, isso
+ * é o oposto do que se quer.
  *
- * Aqui há UMA foto real da pizza pronta, e as camadas são construídas por cima
- * com CSS: a massa entra por escala, o molho se espalha por um `clip-path`
- * circular que cresce, o queijo aparece por opacidade, as fatias de calabresa
- * entram uma a uma em posições fixas, e no fim a pizza "assa" — a foto real
- * revela por cima das camadas, com o brilho e o contraste subindo.
+ * Agora toda etapa é uma FOTO real, e o efeito é o encadeamento delas: as
+ * imagens se sobrepõem dentro de um recorte circular fixo e trocam por
+ * dissolve, com uma deriva lenta de escala em cada uma. O olho lê continuidade
+ * porque o enquadramento nunca muda — é a câmera que percorre o processo.
  *
- * O resultado é uma montagem contínua do mesmo objeto, que é o que o efeito
- * promete.
+ * Não existe banco com as cinco etapas da MESMA pizza no mesmo ângulo e luz.
+ * Tentar montar isso com fotos avulsas daria um corte de vídeo mal feito. O
+ * dissolve dentro do círculo é o que sustenta a ilusão de um só objeto.
  *
- * Custo
- * -----
- * O GSAP + ScrollTrigger só é baixado quando este bloco entra em cena — quem
- * abre a página e não rola até aqui não paga por ele. Ver `dynamic()` em
- * `FornoHome`.
- *
- * Acessibilidade
- * --------------
- * Com `prefers-reduced-motion` a seção não é fixada nem animada: mostra a
- * pizza pronta e a lista de etapas em texto. O conteúdo é o mesmo.
+ * Custo e acessibilidade
+ * ----------------------
+ * O GSAP entra por import dinâmico, só quando o bloco se aproxima. Com
+ * `prefers-reduced-motion` não há pin nem timeline: mostra a última foto e as
+ * etapas em texto, todas legíveis. O conteúdo é o mesmo nos dois casos.
  */
 
-/** Posições das fatias de calabresa, em % do círculo. Fixas de propósito —
- *  aleatório a cada carregamento faria a montagem parecer diferente toda vez. */
-const CALABRESA = [
-  { x: 32, y: 28 },
-  { x: 62, y: 24 },
-  { x: 74, y: 52 },
-  { x: 58, y: 74 },
-  { x: 28, y: 66 },
-  { x: 46, y: 48 },
-  { x: 22, y: 46 },
-  { x: 68, y: 38 },
-];
+export interface Etapa {
+  titulo: string;
+  texto: string;
+  foto: ImageRef;
+}
 
-const ETAPAS = [
-  { titulo: 'A massa', texto: '48 horas de fermentação lenta, farinha tipo 00.' },
-  { titulo: 'O molho', texto: 'San Marzano triturado à mão, sal e nada mais.' },
-  { titulo: 'O queijo', texto: 'Fior di latte rasgado, nunca ralado.' },
-  { titulo: 'A cobertura', texto: "'Nduja, distribuída para haver em toda fatia." },
-  { titulo: '90 segundos', texto: 'A 480 graus, até a borda pintar de fogo.' },
-];
-
-export function MontagemPizza({ foto, alt }: { foto: string; alt: string }) {
+export function MontagemPizza({ etapas }: { etapas: Etapa[] }) {
   const raizRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const raiz = raizRef.current;
     if (!raiz) return;
 
-    /* Respeita a preferência do sistema: sem pin, sem timeline. A seção fica
-       legível e estática, com todas as camadas visíveis. */
     const reduz = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (reduz.matches) {
       raiz.dataset.estado = 'estatico';
@@ -74,7 +52,6 @@ export function MontagemPizza({ foto, alt }: { foto: string; alt: string }) {
     let matar: (() => void) | undefined;
     let vivo = true;
 
-    /* Import dinâmico: o GSAP entra no bundle DESTE bloco, não no da página. */
     void (async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import('gsap'),
@@ -83,77 +60,57 @@ export function MontagemPizza({ foto, alt }: { foto: string; alt: string }) {
       if (!vivo) return;
 
       gsap.registerPlugin(ScrollTrigger);
-
       const mm = gsap.matchMedia();
 
-      /* O pin só existe a partir de 1024px. Em tela pequena, fixar uma seção
-         alta rouba o scroll do visitante e o efeito vira armadilha. */
+      /* Pin só a partir de 1024px: fixar uma seção alta em tela pequena rouba
+         o scroll do visitante e o efeito vira armadilha. */
       mm.add('(min-width: 1024px)', () => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: raiz,
-            start: 'top top',
-            end: '+=2600',
-            scrub: 0.6,
-            pin: true,
-            /* `anticipatePin` evita o salto de um quadro ao fixar. */
-            anticipatePin: 1,
-          },
-        });
+        const ctx = gsap.context(() => {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: raiz,
+              start: 'top top',
+              end: `+=${etapas.length * 620}`,
+              scrub: 0.7,
+              pin: true,
+              anticipatePin: 1,
+            },
+          });
 
-        tl.fromTo(
-          '[data-camada="massa"]',
-          { scale: 0.72, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 1, ease: 'power2.out' }
-        )
-          .fromTo(
-            '[data-camada="molho"]',
-            { clipPath: 'circle(0% at 50% 50%)' },
-            { clipPath: 'circle(50% at 50% 50%)', duration: 1, ease: 'power1.inOut' },
-            '>-0.2'
-          )
-          .fromTo(
-            '[data-camada="queijo"]',
-            { opacity: 0, scale: 0.94 },
-            { opacity: 1, scale: 1, duration: 1, ease: 'power1.out' },
-            '>-0.1'
-          )
-          .fromTo(
-            '[data-camada="calabresa"] > span',
-            { scale: 0, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'back.out(2)' },
-            '>-0.1'
-          )
-          /* O "forno": a foto real revela por cima e o conjunto ganha calor. */
-          .fromTo(
-            '[data-camada="assada"]',
-            { opacity: 0, filter: 'brightness(0.7) saturate(0.6)' },
-            { opacity: 1, filter: 'brightness(1) saturate(1)', duration: 1.2, ease: 'power2.inOut' },
-            '>0.1'
-          )
-          .fromTo(
-            '[data-brilho]',
-            { opacity: 0 },
-            { opacity: 1, duration: 0.6, ease: 'power1.out' },
-            '<0.3'
-          );
+          etapas.forEach((_, i) => {
+            const foto = `[data-foto="${i}"]`;
+            const texto = `[data-etapa="${i}"]`;
 
-        /* Os textos das etapas acompanham a timeline. */
-        ETAPAS.forEach((_, i) => {
-          tl.to(
-            `[data-etapa="${i}"]`,
-            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
-            i * 1.05
-          );
-          if (i < ETAPAS.length - 1) {
-            tl.to(`[data-etapa="${i}"]`, { opacity: 0.25, duration: 0.4 }, (i + 1) * 1.05 - 0.1);
-          }
-        });
+            if (i === 0) {
+              /* A primeira já entra visível; só ganha a deriva de escala. */
+              tl.set(foto, { opacity: 1 });
+            } else {
+              /* Dissolve: a nova sobe enquanto a anterior desce. Sem `zIndex`
+                 explícito o navegador empilha pela ordem do DOM e a troca fica
+                 dura — a de cima aparece de uma vez em cima da de baixo. */
+              tl.to(foto, { opacity: 1, duration: 0.8, ease: 'power1.inOut' }, i * 1.2);
+              tl.to(`[data-foto="${i - 1}"]`, { opacity: 0, duration: 0.8 }, i * 1.2);
+            }
 
-        return () => {
-          tl.scrollTrigger?.kill();
-          tl.kill();
-        };
+            /* Deriva de câmera: cada foto cresce devagar enquanto está em cena.
+               É o que impede a imagem de parecer parada entre uma troca e a
+               seguinte. */
+            tl.fromTo(
+              `${foto} > *`,
+              { scale: 1.06 },
+              { scale: 1.14, duration: 1.2, ease: 'none' },
+              i * 1.2
+            );
+
+            /* Texto da etapa acompanha a foto. */
+            tl.to(texto, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, i * 1.2);
+            if (i < etapas.length - 1) {
+              tl.to(texto, { opacity: 0.22, duration: 0.35 }, (i + 1) * 1.2 - 0.1);
+            }
+          });
+        }, raiz);
+
+        return () => ctx.revert();
       });
 
       matar = () => mm.revert();
@@ -163,85 +120,67 @@ export function MontagemPizza({ foto, alt }: { foto: string; alt: string }) {
       vivo = false;
       matar?.();
     };
-  }, []);
+  }, [etapas]);
 
   return (
     <section
       ref={raizRef}
       data-estado="animado"
-      aria-label="Como a pizza é montada"
-      className="group/mont relative overflow-hidden bg-[color:var(--brand-bg)] px-5 py-20 md:px-10 lg:px-14 lg:py-0 [&[data-estado='estatico']_[data-camada]]:!opacity-100 [&[data-estado='estatico']_[data-etapa]]:!translate-y-0 [&[data-estado='estatico']_[data-etapa]]:!opacity-100"
+      aria-label="Do balcão ao forno"
+      className="relative overflow-hidden bg-[color:var(--brand-bg)] px-5 py-20 md:px-10 lg:px-14 lg:py-0 [&[data-estado='estatico']_[data-etapa]]:!translate-y-0 [&[data-estado='estatico']_[data-etapa]]:!opacity-100 [&[data-estado='estatico']_[data-foto]]:!opacity-100"
     >
-      <div className="mx-auto flex min-h-[auto] max-w-[1400px] flex-col items-center gap-12 lg:min-h-svh lg:flex-row lg:gap-20">
-        {/* ---- a pizza ------------------------------------------------- */}
-        <div className="relative aspect-square w-full max-w-[520px] shrink-0 lg:w-[46%]">
-          {/* massa */}
-          <div
-            data-camada="massa"
-            className="absolute inset-[6%] rounded-full bg-[radial-gradient(circle_at_50%_45%,#e8c187_0%,#d8a45f_55%,#b87b3c_100%)] shadow-[0_30px_80px_-30px_rgb(0_0_0_/_0.8)]"
-          />
-          {/* molho */}
-          <div
-            data-camada="molho"
-            className="absolute inset-[11%] rounded-full bg-[radial-gradient(circle_at_50%_50%,#c0341c_0%,#9d2515_100%)]"
-          />
-          {/*
-            Queijo. SEM `mix-blend-screen`: com ele a camada clareava tudo o que
-            estava embaixo e o conjunto virava um disco pálido só — o molho
-            sumia e a leitura de "pizza" ia junto. Aqui ele cobre o molho
-            deixando uma borda vermelha à mostra, que é como fica de verdade.
-          */}
-          <div
-            data-camada="queijo"
-            className="absolute inset-[16%] rounded-full bg-[radial-gradient(circle_at_38%_36%,#f7e6b8_0%,#eed695_58%,#dcbb70_100%)] opacity-95"
-          />
-          {/* cobertura */}
-          <div data-camada="calabresa" className="absolute inset-0">
-            {CALABRESA.map((p, i) => (
-              <span
-                key={i}
-                className="absolute size-[9%] rounded-full bg-[radial-gradient(circle_at_38%_35%,#c9432c_0%,#93231a_100%)] shadow-[inset_0_-2px_4px_rgb(0_0_0_/_0.35)]"
-                style={{ left: `${p.x}%`, top: `${p.y}%` }}
-              />
+      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-12 lg:min-h-svh lg:flex-row lg:gap-20">
+        {/* ---- o círculo: todas as fotos empilhadas -------------------- */}
+        <div className="relative aspect-square w-full max-w-[540px] shrink-0 lg:w-[47%]">
+          <div className="absolute inset-0 overflow-hidden rounded-full ring-1 ring-[color:var(--brand-line)]">
+            {etapas.map((e, i) => (
+              <div
+                key={e.titulo}
+                data-foto={i}
+                className="absolute inset-0 opacity-0"
+                /* Empilhamento explícito: sem ele o dissolve fica duro. */
+                style={{ zIndex: i + 1 }}
+              >
+                <div className="relative size-full will-change-transform">
+                  <Image
+                    src={e.foto.url}
+                    alt={e.foto.alt}
+                    fill
+                    sizes="(max-width: 1024px) 90vw, 47vw"
+                    quality={62}
+                    className="object-cover"
+                  />
+                </div>
+              </div>
             ))}
-          </div>
-          {/* a foto real, revelada por último */}
-          <div data-camada="assada" className="absolute inset-[4%] overflow-hidden rounded-full">
-            <Image
-              src={foto}
-              alt={alt}
-              fill
-              sizes="(max-width: 1024px) 90vw, 46vw"
-              quality={62}
-              className="object-cover"
+            {/* Vinheta: segura a borda do círculo contra o fundo e dá o ar de
+                fotografia de restaurante, não de recorte. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-20 rounded-full shadow-[inset_0_0_80px_28px_rgb(18_12_8_/_0.75)]"
             />
           </div>
-          {/* calor do forno */}
+
+          {/* Calor do forno, atrás do círculo. */}
           <div
-            data-brilho
             aria-hidden="true"
-            className="pointer-events-none absolute -inset-6 rounded-full bg-[radial-gradient(circle,rgb(226_101_43_/_0.34)_0%,transparent_65%)] blur-2xl"
+            className="pointer-events-none absolute -inset-8 -z-10 rounded-full bg-[radial-gradient(circle,rgb(226_101_43_/_0.22)_0%,transparent_68%)] blur-2xl"
           />
         </div>
 
-        {/* ---- as etapas ----------------------------------------------- */}
-        <div className="w-full lg:w-[54%]">
+        {/* ---- as etapas ---------------------------------------------- */}
+        <div className="w-full lg:w-[53%]">
           <p className="label-caps text-[color:var(--brand-accent)]">Do balcão ao forno</p>
           <h2 className="mt-5 font-display text-[clamp(2rem,5.5vw,4rem)] leading-[1.02]">
             Cinco etapas. Nenhuma delas com pressa.
           </h2>
 
           <ol className="mt-10 space-y-7">
-            {ETAPAS.map((e, i) => (
+            {etapas.map((e, i) => (
               <li
                 key={e.titulo}
                 data-etapa={i}
-                className={cn(
-                  'flex gap-5 opacity-25 lg:translate-y-3',
-                  /* Sem JS a lista aparece inteira: o conteúdo não pode
-                     depender da animação para existir. */
-                  'motion-reduce:translate-y-0 motion-reduce:opacity-100'
-                )}
+                className="flex gap-5 opacity-22 lg:translate-y-3 motion-reduce:translate-y-0 motion-reduce:opacity-100"
               >
                 <span className="font-mono-brand pt-1 text-[11px] text-[color:var(--brand-accent)]">
                   {String(i + 1).padStart(2, '0')}

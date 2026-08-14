@@ -18,7 +18,13 @@ import type { DemoData } from './shared.js';
    1541745537411  fatia erguida, queijo puxando, fundo escuro
    1628840042765  pizza inteira de cima, madeira escura
    1513104890138  pizza na tábua com tomate e alecrim
-   1552539618     pizza vegetariana de cima             */
+   1552539618     pizza vegetariana de cima
+   1571066811602  pizza de cima sobre tábua, fundo escuro
+   1593504049359  fatia com fumaça e queijo puxando
+
+   REJEITADOS por inspeção: 1590005354167 (maçãs verdes), 1509440159596 (pães
+   rústicos), 1571407970349 (garrafa de Coca-Cola à vista), 1548369937
+   (cardápio impresso com marca real no enquadramento). */
 
 const demo: Demo = {
   slug: 'forno',
@@ -68,6 +74,9 @@ const demo: Demo = {
     inteira: img('1628840042765-356cda07504e', 'Pizza inteira vista de cima sobre madeira escura'),
     tabua: img('1513104890138-7c749659a591', 'Pizza na tábua de madeira ao lado de tomates-cereja e alecrim'),
     vegetariana: img('1552539618-7eec9b4d1796', 'Pizza vegetariana vista de cima, coberta de legumes'),
+    /* Etapas do scroll-telling. Conferidas visualmente, como as demais. */
+    tabuaEscura: img('1571066811602-716837d681de', 'Pizza vista de cima sobre tábua clara, fundo escuro'),
+    fumaca: img('1593504049359-74330189a345', 'Fatia sendo erguida com fumaça subindo e o queijo escorrendo'),
   },
   stats: [
     { value: '48h', label: 'de fermentação na massa' },
