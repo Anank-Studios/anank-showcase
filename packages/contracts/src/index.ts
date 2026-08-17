@@ -4,13 +4,14 @@
  */
 
 /*
-  `brasa` (hamburgueria) e `kaiseki` (japonesa) entram quando os bancos de foto
-  delas estiverem conferidos UMA A UMA. Não basta o Unsplash devolver 200: no
-  primeiro lote testado aqui, um "candidato a massa de pizza" eram maçãs verdes
-  e outro tinha uma garrafa de Coca-Cola à vista — marca real não entra em
-  material de estabelecimento fictício.
+  `kaiseki` (japonesa) entra quando o banco de foto dela estiver conferido UMA A
+  UMA. Não basta o Unsplash devolver 200: entre as candidatas já reprovadas aqui
+  havia maçãs verdes no lugar de massa de pizza, um par de fones de ouvido, uma
+  formatura, e três fotos com marca real à vista (Coca-Cola, um copo escrito
+  "Gourmet Burger Kitchen" e um milkshake coberto de Oreo). Marca real não entra
+  em material de estabelecimento fictício.
 */
-export const DEMO_SLUGS = ['aurea', 'vivace', 'oniria', 'forno'] as const;
+export const DEMO_SLUGS = ['aurea', 'vivace', 'oniria', 'brasa', 'forno'] as const;
 export type DemoSlug = (typeof DEMO_SLUGS)[number];
 
 export function isDemoSlug(value: string): value is DemoSlug {

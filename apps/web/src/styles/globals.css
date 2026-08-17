@@ -170,7 +170,45 @@ html[data-theme='dark'] [data-brand='anank'] {
 }
 
 /* ------------------------------------------------------------------ */
-/* 4.4 FORNO — pizzaria napolitana, quente, aresta quase viva          */
+/* 4.4 BRASA — hamburgueria de chapa, creme e carvão, aresta reta      */
+/* ------------------------------------------------------------------ */
+
+/*
+  A única demo CLARA do nicho alimentação, de propósito. A Oniria e o Forno já
+  são escuras; uma terceira faria o nicho inteiro parecer a mesma casa com as
+  fotos trocadas. Aqui a fotografia é que fornece o preto — o papel fica creme.
+
+  Contrastes medidos sobre `--brand-bg` (#f4f1ea):
+    ink #17130f    16.6:1
+    muted #6b6259   5.4:1
+    accent #c1361f  4.8:1   — passa nos 4.5:1 de texto
+  Para borda de componente (mínimo 3:1) use `--brand-muted`, não `--brand-line`:
+  a linha é fio de divisória e fica em 1.3:1, que é o certo para o papel dela.
+*/
+[data-brand='brasa'] {
+  --brand-bg: #f4f1ea;
+  --brand-surface: #ffffff;
+  --brand-ink: #17130f;
+  --brand-muted: #6b6259;
+  --brand-accent: #c1361f; /* brasa viva */
+  --brand-accent-2: #8c4a13; /* madeira queimada */
+  --brand-line: #ddd6c8;
+  --brand-radius: 0px;
+  /* Grotesca pesada: o oposto da serifa do Forno, no mesmo nicho. */
+  --brand-font-display: var(--font-archivo-black), 'Arial Black', sans-serif;
+  --brand-font-body: var(--font-archivo), system-ui, sans-serif;
+
+  --display-size: clamp(2.5rem, 13vw, 9rem);
+  --display-leading: 0.86;
+  --display-tracking: -0.035em;
+  /* A Archivo Black só existe em 400 — pedir 700 forçaria falso-negrito. */
+  --display-weight: 400;
+
+  --shadow-brand: 0 20px 50px -28px rgb(23 19 15 / 0.32);
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.5 FORNO — pizzaria napolitana, quente, aresta quase viva          */
 /* ------------------------------------------------------------------ */
 
 [data-brand='forno'] {
