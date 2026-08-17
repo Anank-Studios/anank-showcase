@@ -61,7 +61,11 @@ const pegar = (nome, padrao) => {
   return i >= 0 && args[i + 1] ? args[i + 1] : padrao;
 };
 
-const modelo = MODELOS[pegar('modelo', 'fast')] ?? MODELOS.fast;
+/* Padrão no LITE, não no fast: para descobrir se o modelo respeita "câmera
+   travada, plano único" — que é o que faz ou quebra a sequência — 720p barato
+   basta. Só se sobe de modelo depois que o MOVIMENTO estiver certo; pagar
+   qualidade antes disso é jogar dinheiro fora. */
+const modelo = MODELOS[pegar('modelo', 'lite')] ?? MODELOS.lite;
 const saida = path.join(RAIZ, '.tmp', pegar('saida', 'pizza.mp4'));
 const K = chave();
 
@@ -80,7 +84,10 @@ const inicio = await fetch(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       instances: [{ prompt: PROMPT }],
-      parameters: { aspectRatio: '16:9', personGeneration: 'allow_adult' },
+      /* Sem `personGeneration`: o valor `allow_adult` e recusado por este
+         modelo (400 INVALID_ARGUMENT). O padrao serve, e o prompt evita
+         depender de pessoa em quadro de qualquer forma. */
+      parameters: { aspectRatio: '16:9' },
     }),
   }
 );

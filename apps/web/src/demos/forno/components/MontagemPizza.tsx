@@ -1,58 +1,108 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Image from 'next/image';
-import type { ImageRef } from '@anank/contracts';
 
 /**
- * SCROLL-TELLING: o caminho do balcão ao forno, contado em FOTOGRAFIA.
+ * SCROLL-TELLING por SEQUÊNCIA DE QUADROS — a técnica que Apple usa nas páginas
+ * de produto, e a terceira tentativa aqui. As duas primeiras foram jogadas fora
+ * com razão:
  *
- * Por que a versão anterior foi jogada fora
- * -----------------------------------------
- * A primeira tentativa desenhava a pizza em CSS: círculos para massa, molho e
- * queijo, e discos para a calabresa. Funcionava tecnicamente e não enganava
- * ninguém — de perto era desenho, não comida. Num site que vende apetite, isso
- * é o oposto do que se quer.
+ *   1. Camadas em CSS (círculos para massa, molho, queijo). Funcionava e não
+ *      enganava ninguém: de perto era desenho, não comida.
+ *   2. Dissolve entre fotos avulsas do banco. Cada troca era outra pizza, então
+ *      o objeto não tinha continuidade — lia como corte de vídeo mal feito.
  *
- * Agora toda etapa é uma FOTO real, e o efeito é o encadeamento delas: as
- * imagens se sobrepõem dentro de um recorte circular fixo e trocam por
- * dissolve, com uma deriva lenta de escala em cada uma. O olho lê continuidade
- * porque o enquadramento nunca muda — é a câmera que percorre o processo.
+ * O que faz esta funcionar é o que respondia à pergunta certa: COERÊNCIA vem da
+ * fonte, não da transição. Aqui os 96 quadros saem de um único plano contínuo,
+ * com câmera travada — mesma tábua, mesma luz, mesmas mãos, do começo ao fim.
+ * Não há nada para "casar" entre um quadro e o próximo porque eles nunca foram
+ * separados.
  *
- * Não existe banco com as cinco etapas da MESMA pizza no mesmo ângulo e luz.
- * Tentar montar isso com fotos avulsas daria um corte de vídeo mal feito. O
- * dissolve dentro do círculo é o que sustenta a ilusão de um só objeto.
+ * O desenho é num <canvas>, não em <img>: trocar `src` 96 vezes durante o
+ * scroll faz o navegador decodificar a imagem no meio do gesto e engasgar. Com
+ * canvas, os quadros são decodificados UMA vez no pré-carregamento e depois só
+ * copiados — `drawImage` é operação de GPU.
  *
- * Custo e acessibilidade
- * ----------------------
- * O GSAP entra por import dinâmico, só quando o bloco se aproxima. Com
- * `prefers-reduced-motion` não há pin nem timeline: mostra a última foto e as
- * etapas em texto, todas legíveis. O conteúdo é o mesmo nos dois casos.
+ * Custo: os quadros são arquivos estáticos em /public, servidos com extensão.
+ * Isso os torna cacheáveis pela Cloudflare, ao contrário de `/_next/image`, que
+ * medimos vindo `DYNAMIC` justamente por não ter extensão na URL.
  */
+
+const TOTAL = 96;
+const CAMINHO = (i: number) => `/forno/montagem/q${String(i + 1).padStart(3, '0')}.webp`;
+
+/** Proporção do vídeo de origem. Fixa aqui para o canvas nunca distorcer. */
+const LARGURA = 880;
+const ALTURA = 495;
 
 export interface Etapa {
   titulo: string;
   texto: string;
-  foto: ImageRef;
 }
 
 export function MontagemPizza({ etapas }: { etapas: Etapa[] }) {
   const raizRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const raiz = raizRef.current;
-    if (!raiz) return;
+    const canvas = canvasRef.current;
+    if (!raiz || !canvas) return;
 
-    const reduz = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (reduz.matches) {
-      raiz.dataset.estado = 'estatico';
-      return;
-    }
+    const ctx2d = canvas.getContext('2d');
+    if (!ctx2d) return;
 
-    let matar: (() => void) | undefined;
+    const quadros: HTMLImageElement[] = [];
+    let atual = -1;
     let vivo = true;
+    let matar: (() => void) | undefined;
+
+    const desenhar = (i: number) => {
+      const img = quadros[i];
+      /* Quadro ainda não carregado: mantém o anterior em vez de piscar branco.
+         Com carregamento progressivo isso acontece nos primeiros segundos. */
+      if (!img?.complete || i === atual) return;
+      ctx2d.drawImage(img, 0, 0, LARGURA, ALTURA);
+      atual = i;
+    };
+
+    /*
+      Carregamento em DUAS PASSADAS. Baixar 96 arquivos de uma vez atrasa tudo
+      o mais da página; baixar sob demanda faz o scroll mostrar buracos.
+
+      Passada grossa: 1 a cada 6 quadros (16 arquivos) — já dá para percorrer a
+      sequência inteira, com salto. Passada fina: o resto, em ordem.
+    */
+    const carregar = (i: number) =>
+      new Promise<void>((resolve) => {
+        const img = new Image();
+        img.decoding = 'async';
+        img.onload = () => {
+          if (i === 0) desenhar(0);
+          resolve();
+        };
+        img.onerror = () => resolve();
+        img.src = CAMINHO(i);
+        quadros[i] = img;
+      });
 
     void (async () => {
+      const grossos = Array.from({ length: TOTAL }, (_, i) => i).filter((i) => i % 6 === 0);
+      await Promise.all(grossos.map(carregar));
+      if (!vivo) return;
+
+      const finos = Array.from({ length: TOTAL }, (_, i) => i).filter((i) => i % 6 !== 0);
+      void Promise.all(finos.map(carregar));
+
+      /* Sem movimento: mostra o último quadro, que é a pizza pronta. */
+      const reduz = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (reduz.matches) {
+        raiz.dataset.estado = 'estatico';
+        await carregar(TOTAL - 1);
+        desenhar(TOTAL - 1);
+        return;
+      }
+
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import('gsap'),
         import('gsap/ScrollTrigger'),
@@ -62,52 +112,52 @@ export function MontagemPizza({ etapas }: { etapas: Etapa[] }) {
       gsap.registerPlugin(ScrollTrigger);
       const mm = gsap.matchMedia();
 
-      /* Pin só a partir de 1024px: fixar uma seção alta em tela pequena rouba
-         o scroll do visitante e o efeito vira armadilha. */
+      /* Pin só a partir de 1024px: fixar uma seção alta em tela pequena rouba o
+         scroll do visitante e o efeito vira armadilha. */
       mm.add('(min-width: 1024px)', () => {
         const ctx = gsap.context(() => {
-          const tl = gsap.timeline({
+          const cursor = { i: 0 };
+          let etapaAtual = -1;
+
+          gsap.to(cursor, {
+            i: TOTAL - 1,
+            ease: 'none',
+            /* `snap` para o índice cair em inteiro: sem isso `drawImage`
+               receberia 43.7 e o quadro ficaria oscilando entre dois. */
+            snap: { i: 1 },
             scrollTrigger: {
               trigger: raiz,
               start: 'top top',
-              end: `+=${etapas.length * 620}`,
-              scrub: 0.7,
+              end: `+=${TOTAL * 26}`,
+              scrub: 0.5,
               pin: true,
               anticipatePin: 1,
             },
+            onUpdate: () => {
+              desenhar(cursor.i);
+              /* O texto sai do MESMO indice de quadro, nao de um ScrollTrigger
+                 paralelo. A primeira versao criava um trigger por etapa com
+                 deslocamento calculado a mao, e nenhum disparava — as cinco
+                 ficavam apagadas. Com fonte unica, imagem e texto nao tem como
+                 sair de sincronia. */
+              const etapa = Math.min(
+                etapas.length - 1,
+                Math.floor((cursor.i / (TOTAL - 1)) * etapas.length)
+              );
+              if (etapa !== etapaAtual) {
+                etapaAtual = etapa;
+                etapas.forEach((_, k) => {
+                  gsap.to(`[data-etapa="${k}"]`, {
+                    opacity: k === etapa ? 1 : 0.22,
+                    y: k === etapa ? 0 : 12,
+                    duration: 0.3,
+                    ease: 'power2.out',
+                  });
+                });
+              }
+            },
           });
 
-          etapas.forEach((_, i) => {
-            const foto = `[data-foto="${i}"]`;
-            const texto = `[data-etapa="${i}"]`;
-
-            if (i === 0) {
-              /* A primeira já entra visível; só ganha a deriva de escala. */
-              tl.set(foto, { opacity: 1 });
-            } else {
-              /* Dissolve: a nova sobe enquanto a anterior desce. Sem `zIndex`
-                 explícito o navegador empilha pela ordem do DOM e a troca fica
-                 dura — a de cima aparece de uma vez em cima da de baixo. */
-              tl.to(foto, { opacity: 1, duration: 0.8, ease: 'power1.inOut' }, i * 1.2);
-              tl.to(`[data-foto="${i - 1}"]`, { opacity: 0, duration: 0.8 }, i * 1.2);
-            }
-
-            /* Deriva de câmera: cada foto cresce devagar enquanto está em cena.
-               É o que impede a imagem de parecer parada entre uma troca e a
-               seguinte. */
-            tl.fromTo(
-              `${foto} > *`,
-              { scale: 1.06 },
-              { scale: 1.14, duration: 1.2, ease: 'none' },
-              i * 1.2
-            );
-
-            /* Texto da etapa acompanha a foto. */
-            tl.to(texto, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, i * 1.2);
-            if (i < etapas.length - 1) {
-              tl.to(texto, { opacity: 0.22, duration: 0.35 }, (i + 1) * 1.2 - 0.1);
-            }
-          });
         }, raiz);
 
         return () => ctx.revert();
@@ -127,55 +177,34 @@ export function MontagemPizza({ etapas }: { etapas: Etapa[] }) {
       ref={raizRef}
       data-estado="animado"
       aria-label="Do balcão ao forno"
-      className="relative overflow-hidden bg-[color:var(--brand-bg)] px-5 py-20 md:px-10 lg:px-14 lg:py-0 [&[data-estado='estatico']_[data-etapa]]:!translate-y-0 [&[data-estado='estatico']_[data-etapa]]:!opacity-100 [&[data-estado='estatico']_[data-foto]]:!opacity-100"
+      className="relative overflow-hidden bg-[color:var(--brand-bg)] px-5 py-20 md:px-10 lg:px-14 lg:py-0 [&[data-estado='estatico']_[data-etapa]]:!translate-y-0 [&[data-estado='estatico']_[data-etapa]]:!opacity-100"
     >
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-12 lg:min-h-svh lg:flex-row lg:gap-20">
-        {/* ---- o círculo: todas as fotos empilhadas -------------------- */}
-        <div className="relative aspect-square w-full max-w-[540px] shrink-0 lg:w-[47%]">
-          <div className="absolute inset-0 overflow-hidden rounded-full ring-1 ring-[color:var(--brand-line)]">
-            {etapas.map((e, i) => (
-              <div
-                key={e.titulo}
-                data-foto={i}
-                className="absolute inset-0 opacity-0"
-                /* Empilhamento explícito: sem ele o dissolve fica duro. */
-                style={{ zIndex: i + 1 }}
-              >
-                <div className="relative size-full will-change-transform">
-                  <Image
-                    src={e.foto.url}
-                    alt={e.foto.alt}
-                    fill
-                    sizes="(max-width: 1024px) 90vw, 47vw"
-                    quality={62}
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            ))}
-            {/* Vinheta: segura a borda do círculo contra o fundo e dá o ar de
-                fotografia de restaurante, não de recorte. */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-20 rounded-full shadow-[inset_0_0_80px_28px_rgb(18_12_8_/_0.75)]"
+      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-12 lg:min-h-svh lg:flex-row lg:gap-16">
+        <div className="w-full shrink-0 lg:w-[56%]">
+          <div className="relative overflow-hidden rounded-[3px] ring-1 ring-[color:var(--brand-line)]">
+            <canvas
+              ref={canvasRef}
+              width={LARGURA}
+              height={ALTURA}
+              /* O `alt` de um canvas é o `aria-label`: sem ele, leitor de tela
+                 anuncia "canvas" e o visitante não sabe o que perdeu. */
+              role="img"
+              aria-label="Pizza sendo montada: massa, molho de tomate, muçarela rasgada, manjericão e azeite"
+              className="block h-auto w-full bg-[color:var(--brand-surface)]"
             />
           </div>
-
-          {/* Calor do forno, atrás do círculo. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -inset-8 -z-10 rounded-full bg-[radial-gradient(circle,rgb(226_101_43_/_0.22)_0%,transparent_68%)] blur-2xl"
-          />
+          <p className="mt-4 font-mono-brand text-[10px] tracking-[0.08em] text-muted">
+            96 quadros · role para montar
+          </p>
         </div>
 
-        {/* ---- as etapas ---------------------------------------------- */}
-        <div className="w-full lg:w-[53%]">
+        <div className="w-full lg:w-[44%]">
           <p className="label-caps text-[color:var(--brand-accent)]">Do balcão ao forno</p>
-          <h2 className="mt-5 font-display text-[clamp(2rem,5.5vw,4rem)] leading-[1.02]">
+          <h2 className="mt-5 font-display text-[clamp(1.875rem,4.5vw,3.25rem)] leading-[1.04]">
             Cinco etapas. Nenhuma delas com pressa.
           </h2>
 
-          <ol className="mt-10 space-y-7">
+          <ol className="mt-9 space-y-6">
             {etapas.map((e, i) => (
               <li
                 key={e.titulo}
@@ -187,7 +216,7 @@ export function MontagemPizza({ etapas }: { etapas: Etapa[] }) {
                 </span>
                 <div>
                   <p className="font-display text-xl leading-tight">{e.titulo}</p>
-                  <p className="mt-1.5 max-w-[46ch] text-[15px] leading-relaxed text-muted">
+                  <p className="mt-1.5 max-w-[42ch] text-[15px] leading-relaxed text-muted">
                     {e.texto}
                   </p>
                 </div>
