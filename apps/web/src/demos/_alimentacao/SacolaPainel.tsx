@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import { useId, useState } from 'react';
-import type { Order, OrderMode } from '@anank/contracts';
+import type { DemoSlug, Order, OrderMode } from '@anank/contracts';
 import { ApiError, createOrder } from '@/shared/lib/api';
 import { IntentLink } from '@/shared/components/IntentLink';
-import { precoUnitario, useSacola } from '../lib/sacola';
+import { precoUnitario, useSacola } from './sacola';
 
 /**
  * Sacola e fechamento.
@@ -18,11 +18,16 @@ import { precoUnitario, useSacola } from '../lib/sacola';
  * é renderizado sem condicional, para não existir caminho em que ele suma.
  */
 
-/* A taxa vive no servidor (`DemoData.deliveryFee`) e não é exposta pela API de
-   demo. Repetida aqui só para a estimativa; o recibo manda. */
-const TAXA_ENTREGA = 12;
+export interface SacolaPainelProps {
+  slug: DemoSlug;
+  /** Só para a ESTIMATIVA de tela. O valor que vale é o do recibo, calculado
+   *  pelo servidor a partir de `DemoData.deliveryFee`. */
+  taxaEntrega: number;
+  /** Rota do cardápio desta marca, para os dois links de volta. */
+  rotaCardapio: string;
+}
 
-export function SacolaPainel() {
+export function SacolaPainel({ slug, taxaEntrega, rotaCardapio }: SacolaPainelProps) {
   const id = useId();
   const { linhas, subtotal, pecas, alterar, remover, limpar } = useSacola();
 
@@ -41,8 +46,8 @@ export function SacolaPainel() {
     setErroGeral(null);
 
     try {
-      const pedido = await createOrder('kaiseki', {
-        demo: 'kaiseki',
+      const pedido = await createOrder(slug, {
+        demo: slug,
         mode: modo,
         lines: linhas.map((l) => ({
           itemId: l.itemId,
@@ -125,7 +130,7 @@ export function SacolaPainel() {
         </p>
 
         <IntentLink
-          href="/demo/kaiseki/cardapio"
+          href={rotaCardapio}
           className="mt-8 inline-flex items-center gap-2 border-b border-accent pb-1 text-[14px] font-medium"
         >
           Fazer outro pedido
@@ -148,7 +153,7 @@ export function SacolaPainel() {
           quem visita — nem sessão, nem conta, nem carrinho salvo.
         </p>
         <IntentLink
-          href="/demo/kaiseki/cardapio"
+          href={rotaCardapio}
           className="mt-8 inline-block bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[color:var(--brand-bg)]"
         >
           Ver o cardápio
@@ -159,7 +164,7 @@ export function SacolaPainel() {
 
   /* ---- sacola com itens ------------------------------------------ */
 
-  const estimado = subtotal + (modo === 'entrega' ? TAXA_ENTREGA : 0);
+  const estimado = subtotal + (modo === 'entrega' ? taxaEntrega : 0);
 
   return (
     <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
@@ -332,7 +337,7 @@ export function SacolaPainel() {
           <Linha rotulo="Subtotal" valor={`R$ ${subtotal}`} />
           <Linha
             rotulo="Entrega"
-            valor={modo === 'entrega' ? `R$ ${TAXA_ENTREGA}` : 'Grátis na retirada'}
+            valor={modo === 'entrega' ? `R$ ${taxaEntrega}` : 'Grátis na retirada'}
           />
           <div className="flex justify-between border-t border-line pt-3 text-[17px]">
             <dt className="font-display">Total</dt>

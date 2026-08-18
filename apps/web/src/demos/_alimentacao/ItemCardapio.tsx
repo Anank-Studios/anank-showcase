@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useId, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { MenuItem } from '@anank/contracts';
-import { useSacola, type EscolhaSacola } from '../lib/sacola';
+import { useSacola, type EscolhaSacola } from './sacola';
 
 /**
  * Um item do cardápio, com as escolhas dele.

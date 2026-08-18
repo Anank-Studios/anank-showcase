@@ -1,6 +1,6 @@
 import { getDemo } from '@/shared/lib/api';
 import { KaisekiFooter } from './layout/KaisekiFooter';
-import { SacolaPainel } from './components/SacolaPainel';
+import { SacolaPainel } from '@/demos/_alimentacao/SacolaPainel';
 
 export async function KaisekiSacola() {
   const demo = await getDemo('kaiseki');
@@ -17,7 +17,7 @@ export async function KaisekiSacola() {
           </h1>
 
           <div className="mt-14">
-            <SacolaPainel />
+            <SacolaPainel slug="kaiseki" taxaEntrega={12} rotaCardapio="/demo/kaiseki/cardapio" />
           </div>
         </div>
       </section>

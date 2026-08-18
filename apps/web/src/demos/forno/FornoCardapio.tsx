@@ -1,10 +1,10 @@
 import { getDemo, getMenu } from '@/shared/lib/api';
-import { KaisekiFooter } from './layout/KaisekiFooter';
+import { FornoFooter } from './layout/FornoFooter';
 import { ItemCardapio } from '@/demos/_alimentacao/ItemCardapio';
 import { Reveal } from './components/Reveal';
 
-export async function KaisekiCardapio() {
-  const [demo, menu] = await Promise.all([getDemo('kaiseki'), getMenu('kaiseki')]);
+export async function FornoCardapio() {
+  const [demo, menu] = await Promise.all([getDemo('forno'), getMenu('forno')]);
 
   return (
     <>
@@ -13,12 +13,12 @@ export async function KaisekiCardapio() {
           <p className="font-mono-brand text-[10px] tracking-[0.2em] text-accent uppercase">
             Cardápio
           </p>
-          <h1 className="mt-4 max-w-[16ch] font-display text-[clamp(2.25rem,7vw,5rem)] leading-[1.02]">
-            Monte o pedido.
+          <h1 className="mt-4 max-w-[16ch] font-display text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.98]">
+            Escolha a sua.
           </h1>
           <p className="mt-7 max-w-[52ch] text-[15px] leading-relaxed text-muted">
-            Entrega e retirada nos Jardins e arredores. O omakase é o único que não sai da casa — ele
-            depende do itamae servindo peça por peça, e isso não cabe numa embalagem.
+            Entrega na Vila Madalena e arredores, ou retirada no balcão. Toda pizza sai do forno a
+            lenha na hora do pedido — não existe pizza pronta esperando na estufa.
           </p>
         </div>
       </section>
@@ -80,7 +80,7 @@ export async function KaisekiCardapio() {
         );
       })}
 
-      <KaisekiFooter demo={demo} />
+      <FornoFooter demo={demo} />
     </>
   );
 }

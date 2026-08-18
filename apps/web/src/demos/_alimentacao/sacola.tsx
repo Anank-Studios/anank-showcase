@@ -3,7 +3,12 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 /**
- * Sacola do Kaiseki.
+ * Sacola do nicho ALIMENTACAO — compartilhada pelas casas que vendem.
+ *
+ * Mora em `_alimentacao/` e nao dentro de uma marca porque duas demos usam a
+ * mesma mecanica de carrinho. O visual nao precisa ser compartilhado junto: os
+ * componentes leem `var(--brand-*)`, entao o mesmo codigo sai vermelho na
+ * pizzaria e indigo na japonesa sem uma linha de condicional.
  *
  * O estado vive em MEMÓRIA, num Context montado no layout da demo. Não é
  * atalho: `localStorage` e `sessionStorage` são proibidos no projeto, e o

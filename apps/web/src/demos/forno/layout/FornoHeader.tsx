@@ -8,22 +8,22 @@ import { cn } from '@/shared/lib/cn';
 import { useSacola } from '@/demos/_alimentacao/sacola';
 
 const LINKS = [
-  { href: '/demo/kaiseki/cardapio', label: 'Cardápio' },
-  { href: '/demo/kaiseki/visite', label: 'A casa' },
+  { href: '/demo/forno/cardapio', label: 'Cardápio' },
+  { href: '/demo/forno/a-casa', label: 'A casa' },
 ];
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
 /**
- * Barra opaca, como nas outras demos. A versão translúcida já foi testada e
- * reprovada duas vezes aqui: sobre foto, o texto da página atravessa a barra e
- * a navegação some conforme a rolagem troca o que passa por trás.
+ * Barra opaca. A translúcida foi testada e reprovada duas vezes no projeto:
+ * sobre o herói fotográfico, o texto da página atravessa a barra e a navegação
+ * some conforme a rolagem troca o que passa por trás.
  *
- * O contador da sacola vive no cabeçalho porque é o único lugar presente em
- * todas as abas — sem ele, quem adiciona um item no cardápio e vai para outra
- * página não tem sinal nenhum de que a sacola existe.
+ * O contador da sacola mora aqui porque o cabeçalho é o único lugar presente
+ * nas quatro abas — sem ele, quem adiciona um item no cardápio e sai da página
+ * perde qualquer sinal de que a sacola existe.
  */
-export function KaisekiHeader() {
+export function FornoHeader() {
   const pathname = usePathname();
   const { pecas } = useSacola();
   const [aberto, setAberto] = useState(false);
@@ -72,10 +72,10 @@ export function KaisekiHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <div className="mx-auto flex h-[68px] max-w-[1400px] items-center justify-between px-5 md:px-10 lg:px-14">
-        <IntentLink href="/demo/kaiseki" className="flex items-baseline gap-3">
-          <span className="font-display text-[24px] leading-none tracking-[0.01em]">Kaiseki</span>
+        <IntentLink href="/demo/forno" className="flex items-baseline gap-3">
+          <span className="font-display text-[27px] leading-none">Forno</span>
           <span className="font-mono-brand hidden text-[9px] tracking-[0.22em] text-muted uppercase sm:inline">
-            Jardins
+            Vila Madalena
           </span>
         </IntentLink>
 
@@ -100,19 +100,42 @@ export function KaisekiHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <SacolaLink pecas={pecas} />
+          <IntentLink
+            href="/demo/forno/sacola"
+            className="relative inline-flex items-center gap-2 rounded-brand border border-[color:var(--brand-muted)] px-3.5 py-2 text-[13px] transition-colors hover:border-[color:var(--brand-accent)]"
+          >
+            <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" aria-hidden="true">
+              <path
+                d="M4 6h12l-1 11H5L4 6zM7.5 6V4.5a2.5 2.5 0 015 0V6"
+                stroke="currentColor"
+                strokeWidth="1.4"
+              />
+            </svg>
+            <span className="hidden sm:inline">Sacola</span>
+            {/* O número entra no NOME ACESSÍVEL do link: assim o leitor de tela
+                anuncia "Sacola, 3 itens" de uma vez. Um badge só visual deixaria
+                quem não vê a tela sem a informação. */}
+            <span className="sr-only">{pecas === 1 ? ', 1 item' : `, ${pecas} itens`}</span>
+            {pecas > 0 ? (
+              <span
+                aria-hidden="true"
+                className="font-mono-brand min-w-[1.25rem] bg-accent px-1 text-center text-[11px] font-bold text-[color:var(--brand-bg)]"
+              >
+                {pecas}
+              </span>
+            ) : null}
+          </IntentLink>
 
           <button
             ref={gatilhoRef}
             type="button"
             aria-expanded={aberto}
-            aria-controls="kaiseki-menu"
+            aria-controls="forno-menu"
             aria-label={aberto ? 'Fechar menu' : 'Abrir menu'}
             onClick={() => setAberto((v) => !v)}
-            /* Borda em `--brand-muted` (7.3:1), não em `--brand-line` (1.3:1):
-               é o único limite visível do botão, e limite de componente precisa
-               de 3:1. O Lighthouse não audita isso. */
-            className="border border-[color:var(--brand-muted)] p-2 md:hidden"
+            /* Borda em `--brand-muted` (6.9:1), não em `--brand-line`: é o único
+               limite visível do botão, e limite de componente precisa de 3:1. */
+            className="rounded-brand border border-[color:var(--brand-muted)] p-2 md:hidden"
           >
             <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none" aria-hidden="true">
               {aberto ? (
@@ -139,7 +162,7 @@ export function KaisekiHeader() {
               onClick={() => setAberto(false)}
             />
             <motion.div
-              id="kaiseki-menu"
+              id="forno-menu"
               ref={painelRef}
               role="dialog"
               aria-modal="true"
@@ -151,12 +174,12 @@ export function KaisekiHeader() {
               transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="flex items-center justify-between border-b border-line px-6 py-5">
-                <span className="font-display text-[21px]">Kaiseki</span>
+                <span className="font-display text-[23px]">Forno</span>
                 <button
                   type="button"
                   aria-label="Fechar menu"
                   onClick={() => setAberto(false)}
-                  className="border border-[color:var(--brand-muted)] p-2"
+                  className="rounded-brand border border-[color:var(--brand-muted)] p-2"
                 >
                   <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none" aria-hidden="true">
                     <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.6" />
@@ -165,13 +188,13 @@ export function KaisekiHeader() {
               </div>
 
               <nav className="flex flex-1 flex-col gap-7 px-6 py-9" aria-label="Navegação móvel">
-                {[...LINKS, { href: '/demo/kaiseki/sacola', label: 'Sacola' }].map((l) => (
+                {[...LINKS, { href: '/demo/forno/sacola', label: 'Sacola' }].map((l) => (
                   <IntentLink
                     key={l.href}
                     href={l.href}
                     onClick={() => setAberto(false)}
                     aria-current={ativo(l.href) ? 'page' : undefined}
-                    className="font-display text-[28px] leading-none"
+                    className="font-display text-[30px] leading-none"
                   >
                     {l.label}
                   </IntentLink>
@@ -182,39 +205,5 @@ export function KaisekiHeader() {
         ) : null}
       </AnimatePresence>
     </header>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-
-function SacolaLink({ pecas }: { pecas: number }) {
-  return (
-    <IntentLink
-      href="/demo/kaiseki/sacola"
-      className="relative inline-flex items-center gap-2 border border-[color:var(--brand-muted)] px-3.5 py-2 text-[13px] transition-colors hover:border-[color:var(--brand-accent)]"
-    >
-      <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" aria-hidden="true">
-        <path
-          d="M4 6h12l-1 11H5L4 6zM7.5 6V4.5a2.5 2.5 0 015 0V6"
-          stroke="currentColor"
-          strokeWidth="1.4"
-        />
-      </svg>
-      <span className="hidden sm:inline">Sacola</span>
-      {/*
-        O número entra no nome acessível do link, não num `aria-label` separado:
-        assim o leitor de tela anuncia "Sacola, 3 itens" numa coisa só. Um badge
-        puramente visual deixaria quem não vê a tela sem a informação.
-      */}
-      <span className="sr-only">{pecas === 1 ? ', 1 item' : `, ${pecas} itens`}</span>
-      {pecas > 0 ? (
-        <span
-          aria-hidden="true"
-          className="font-mono-brand min-w-[1.25rem] bg-accent px-1 text-center text-[11px] font-bold text-[color:var(--brand-bg)]"
-        >
-          {pecas}
-        </span>
-      ) : null}
-    </IntentLink>
   );
 }

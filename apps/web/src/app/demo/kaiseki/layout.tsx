@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { kaisekiFonts } from '@/app/fonts/kaiseki';
 import { KaisekiHeader } from '@/demos/kaiseki/layout/KaisekiHeader';
-import { SacolaProvider } from '@/demos/kaiseki/lib/sacola';
+import { SacolaProvider } from '@/demos/_alimentacao/sacola';
 
 export const metadata: Metadata = {
   title: {

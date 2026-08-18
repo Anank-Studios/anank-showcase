@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { getDemo, getMenu } from '@/shared/lib/api';
+import { IntentLink } from '@/shared/components/IntentLink';
+import { FornoFooter } from './layout/FornoFooter';
 
 /**
  * O bloco de scroll-telling carrega o GSAP. Adiado com `dynamic` para que quem
@@ -20,9 +22,11 @@ export async function FornoHome() {
   const destaques = menu.items.filter((i) => i.categoryId === 'classicas').slice(0, 3);
 
   return (
-    <div data-brand="forno" className="min-h-svh">
+    <>
       {/* ---- herói ---------------------------------------------------- */}
-      <section className="relative flex min-h-svh items-end overflow-hidden">
+      {/* `100svh - 68` e nao `100svh`: com o cabecalho fixo, a altura cheia
+          empurrava 68px do heroi para fora da primeira tela. */}
+      <section className="relative flex min-h-[calc(100svh-68px)] items-end overflow-hidden">
         <Image
           src={demo.images.hero!.url}
           alt={demo.images.hero!.alt}
@@ -44,9 +48,24 @@ export async function FornoHome() {
             <h1 className="mt-5 max-w-[13ch] font-display text-[clamp(2.75rem,11vw,8rem)] leading-[0.92]">
               {demo.brandName}
             </h1>
-            <p className="mt-6 max-w-[44ch] text-[clamp(1rem,2.2vw,1.25rem)] leading-relaxed text-muted">
+            <p className="mt-6 max-w-[44ch] text-[clamp(1rem,2.2vw,1.25rem)] leading-relaxed text-[#e6d8c8]">
               {demo.tagline}
             </p>
+
+            <div className="mt-9 flex flex-wrap items-center gap-4">
+              <IntentLink
+                href="/demo/forno/cardapio"
+                className="rounded-brand bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[#160d07] transition-transform duration-300 hover:-translate-y-0.5"
+              >
+                Pedir pelo site
+              </IntentLink>
+              <IntentLink
+                href="/demo/forno/a-casa"
+                className="rounded-brand border border-[#f6ece0]/60 px-7 py-3.5 text-[14px] font-medium text-[#f6ece0] transition-colors hover:bg-[#f6ece0]/10"
+              >
+                Conhecer a casa
+              </IntentLink>
+            </div>
           </div>
         </div>
       </section>
@@ -118,20 +137,7 @@ export async function FornoHome() {
         </div>
       </section>
 
-      {/* ---- rodapé --------------------------------------------------- */}
-      <footer className="border-t border-line px-5 py-14 md:px-10 lg:px-14">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
-          <p className="font-display text-3xl">{demo.brandName}</p>
-          <p className="max-w-[54ch] text-[11px] leading-relaxed text-muted">
-            {demo.legalName} · CNPJ {demo.cnpj}
-            <br />
-            {demo.address}
-            <br />
-            Estabelecimento, endereço, CNPJ, equipe e depoimentos são fictícios. Demonstração criada
-            pela Anank Studios.
-          </p>
-        </div>
-      </footer>
-    </div>
+      <FornoFooter demo={demo} />
+    </>
   );
 }
