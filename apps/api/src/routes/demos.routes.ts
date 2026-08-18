@@ -8,7 +8,7 @@ import { fail, ok } from '../lib/envelope.js';
  * A ordem importa: é a ordem dos cards no hub, agrupada por nicho. O front
  * filtra por `niche` e preserva esta sequência dentro de cada grupo.
  */
-const ORDER = ['aurea', 'vivace', 'oniria', 'brasa', 'forno'] as const;
+const ORDER = ['aurea', 'vivace', 'oniria', 'brasa', 'kaiseki', 'forno'] as const;
 
 export async function demosRoutes(app: FastifyInstance): Promise<void> {
   app.get('/api/demos', async () => {

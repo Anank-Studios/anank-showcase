@@ -4,14 +4,15 @@
  */
 
 /*
-  `kaiseki` (japonesa) entra quando o banco de foto dela estiver conferido UMA A
-  UMA. Não basta o Unsplash devolver 200: entre as candidatas já reprovadas aqui
-  havia maçãs verdes no lugar de massa de pizza, um par de fones de ouvido, uma
-  formatura, e três fotos com marca real à vista (Coca-Cola, um copo escrito
-  "Gourmet Burger Kitchen" e um milkshake coberto de Oreo). Marca real não entra
-  em material de estabelecimento fictício.
+  Toda foto usada aqui foi conferida UMA A UMA, e nas finalistas também em
+  TAMANHO DE USO. Não basta o Unsplash devolver 200: entre as reprovadas havia
+  maçãs verdes no lugar de massa de pizza, um par de fones de ouvido, uma
+  formatura, uma criança desenhando, e fotos com marca real à vista (Coca-Cola,
+  um copo escrito "Gourmet Burger Kitchen", um milkshake coberto de Oreo). E o
+  herói da Brasa só se revelou empanado — numa marca de carne moída — quando
+  foi visto a 1440px, depois de ter passado na folha de contato a 420px.
 */
-export const DEMO_SLUGS = ['aurea', 'vivace', 'oniria', 'brasa', 'forno'] as const;
+export const DEMO_SLUGS = ['aurea', 'vivace', 'oniria', 'brasa', 'kaiseki', 'forno'] as const;
 export type DemoSlug = (typeof DEMO_SLUGS)[number];
 
 export function isDemoSlug(value: string): value is DemoSlug {

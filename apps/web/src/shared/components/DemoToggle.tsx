@@ -34,6 +34,7 @@ const ESCADAS: Segmento[][] = [
   ],
   [
     { slug: 'brasa', label: 'Demo 1' },
+    { slug: 'kaiseki', label: 'Demo 2' },
     { slug: 'forno', label: 'Demo 3' },
   ],
 ];
