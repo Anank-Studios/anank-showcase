@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { buildServer } from '../src/server.js';
+import { LEAD_TIME_DAYS } from '../src/services/calendar.mock.js';
 
 let app: FastifyInstance;
 
@@ -14,14 +15,31 @@ afterAll(async () => {
 });
 
 describe('rotas de demos', () => {
-  it('GET /api/demos devolve 3 itens na ordem aurea, vivace, oniria', async () => {
+  it('GET /api/demos devolve os 6 itens agrupados por nicho, na ordem do hub', async () => {
     const response = await app.inject({ method: 'GET', url: '/api/demos' });
     expect(response.statusCode).toBe(200);
 
     const body = response.json();
     expect(body.error).toBeNull();
-    expect(body.data).toHaveLength(3);
-    expect(body.data.map((d: { slug: string }) => d.slug)).toEqual(['aurea', 'vivace', 'oniria']);
+    expect(body.data).toHaveLength(6);
+    /* A ordem importa: e a sequencia dos cards no hub. Estetica primeiro, do
+       nivel 01 ao 03; alimentacao depois, na mesma escada. */
+    expect(body.data.map((d: { slug: string }) => d.slug)).toEqual([
+      'aurea',
+      'vivace',
+      'oniria',
+      'brasa',
+      'kaiseki',
+      'forno',
+    ]);
+    expect(body.data.map((d: { niche: string }) => d.niche)).toEqual([
+      'estetica',
+      'estetica',
+      'estetica',
+      'alimentacao',
+      'alimentacao',
+      'alimentacao',
+    ]);
   });
 
   it('slug desconhecido devolve 404 NOT_FOUND em português', async () => {
@@ -86,21 +104,44 @@ describe('POST /api/leads', () => {
 });
 
 describe('POST /api/booking', () => {
-  /** Encontra um horário realmente livre, para o teste não depender de sorte. */
-  async function findFreeSlot() {
-    for (let day = 10; day <= 28; day++) {
-      const date = `2026-08-${String(day).padStart(2, '0')}`;
-      const response = await app.inject({
-        method: 'GET',
-        url: `/api/booking/availability?date=${date}&practitionerId=marina-aveline&protocolId=aurora`,
-      });
-      const slot = response
-        .json()
-        .data.slots.find((s: { available: boolean }) => s.available);
+  /*
+    As datas sao RELATIVAS A HOJE, nunca fixas.
+
+    A versao anterior varria de 2026-08-10 a 2026-08-28 e passou meses sem
+    reclamar — ate a propria data alcancar a janela. Com `LEAD_TIME_DAYS = 3`,
+    todo dia dentro da antecedencia minima devolve zero horario, entao a busca
+    queimava ~11 requisicoes invalidas, cada uma com a latencia artificial do
+    mock, e estourava os 5s do vitest. O teste do horario ocupado quebrava pelo
+    mesmo motivo: 2026-08-20 tinha virado "lead-time".
+
+    Comecar em hoje + LEAD_TIME_DAYS acerta na primeira tentativa e nao vence.
+  */
+  function dataEm(diasAFrente: number): string {
+    const d = new Date();
+    d.setDate(d.getDate() + diasAFrente);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  async function horariosDe(date: string) {
+    const response = await app.inject({
+      method: 'GET',
+      url: `/api/booking/availability?date=${date}&practitionerId=marina-aveline&protocolId=aurora`,
+    });
+    return response.json().data.slots as { time: string; available: boolean }[];
+  }
+
+  /** Primeira data valida a partir da antecedencia minima que satisfaca `quer`. */
+  async function acharDia(quer: (s: { available: boolean }) => boolean) {
+    for (let i = LEAD_TIME_DAYS; i <= LEAD_TIME_DAYS + 20; i++) {
+      const date = dataEm(i);
+      const slot = (await horariosDe(date)).find(quer);
       if (slot) return { date, time: slot.time };
     }
-    throw new Error('nenhum horário livre encontrado no período de teste');
+    throw new Error('nenhum horário encontrado na janela de teste');
   }
+
+  /** Encontra um horário realmente livre, para o teste não depender de sorte. */
+  const findFreeSlot = () => acharDia((s) => s.available);
 
   it('payload inválido devolve 422 com details em português', async () => {
     const response = await app.inject({
@@ -109,7 +150,7 @@ describe('POST /api/booking', () => {
       payload: {
         protocolId: 'aurora',
         practitionerId: 'marina-aveline',
-        date: '2026-08-20',
+        date: dataEm(LEAD_TIME_DAYS + 1),
         time: '14:30',
         name: 'A',
         email: 'nao-e-email',
@@ -162,13 +203,7 @@ describe('POST /api/booking', () => {
   });
 
   it('horário ocupado é recusado na revalidação do servidor', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/api/booking/availability?date=2026-08-20&practitionerId=marina-aveline&protocolId=aurora',
-    });
-    const taken = response
-      .json()
-      .data.slots.find((s: { available: boolean }) => !s.available);
+    const taken = await acharDia((s) => !s.available);
     expect(taken, 'o mock deveria ter ao menos um horário ocupado').toBeDefined();
 
     const booking = await app.inject({
@@ -177,7 +212,7 @@ describe('POST /api/booking', () => {
       payload: {
         protocolId: 'aurora',
         practitionerId: 'marina-aveline',
-        date: '2026-08-20',
+        date: taken.date,
         time: taken.time,
         name: 'Vera Lucchesi',
         email: 'vera@exemplo.com.br',

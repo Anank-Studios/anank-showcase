@@ -157,7 +157,6 @@ export function MontagemPizza({ etapas }: { etapas: Etapa[] }) {
               }
             },
           });
-
         }, raiz);
 
         return () => ctx.revert();
@@ -173,58 +172,79 @@ export function MontagemPizza({ etapas }: { etapas: Etapa[] }) {
   }, [etapas]);
 
   return (
-    <section
-      ref={raizRef}
-      data-estado="animado"
-      aria-label="Do balcão ao forno"
-      className="relative overflow-hidden bg-[color:var(--brand-bg)] px-5 py-20 md:px-10 lg:px-14 lg:py-0 [&[data-estado='estatico']_[data-etapa]]:!translate-y-0 [&[data-estado='estatico']_[data-etapa]]:!opacity-100"
-    >
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-12 lg:min-h-svh lg:flex-row lg:gap-16">
-        <div className="w-full shrink-0 lg:w-[56%]">
-          <div className="relative overflow-hidden rounded-[3px] ring-1 ring-[color:var(--brand-line)]">
-            <canvas
-              ref={canvasRef}
-              width={LARGURA}
-              height={ALTURA}
-              /* O `alt` de um canvas é o `aria-label`: sem ele, leitor de tela
+    /*
+      ESTA <div> NAO E DECORATIVA — sem ela a aplicacao quebra ao sair da pagina.
+
+      Com `pin: true`, o GSAP EMBRULHA a secao num `pin-spacer` que ele mesmo
+      cria, trocando o pai dela no DOM. O React continua achando que o pai e o
+      original, e ao desmontar chama `parent.removeChild(secao)` num no que
+      deixou de ser filho daquele pai:
+
+        NotFoundError: Failed to execute 'removeChild' on 'Node'
+
+      ...e a pagina inteira vira "Application error: a client-side exception has
+      occurred". O bug existia desde o inicio, mas era inalcancavel: o Forno era
+      pagina unica e nao havia para onde navegar. As abas o expuseram.
+
+      Com o embrulho, o `pin-spacer` nasce DENTRO deste div. O React desmonta
+      removendo este no do pai dele — que o GSAP nunca tocou — e leva o spacer
+      junto. O `mm.revert()` da limpeza continua existindo e e o caminho feliz;
+      isto e a rede que sustenta quando os dois competem pela mesma arvore.
+    */
+    <div>
+      <section
+        ref={raizRef}
+        data-estado="animado"
+        aria-label="Do balcão ao forno"
+        className="relative overflow-hidden bg-[color:var(--brand-bg)] px-5 py-20 md:px-10 lg:px-14 lg:py-0 [&[data-estado='estatico']_[data-etapa]]:!translate-y-0 [&[data-estado='estatico']_[data-etapa]]:!opacity-100"
+      >
+        <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-12 lg:min-h-svh lg:flex-row lg:gap-16">
+          <div className="w-full shrink-0 lg:w-[56%]">
+            <div className="relative overflow-hidden rounded-[3px] ring-1 ring-[color:var(--brand-line)]">
+              <canvas
+                ref={canvasRef}
+                width={LARGURA}
+                height={ALTURA}
+                /* O `alt` de um canvas é o `aria-label`: sem ele, leitor de tela
                  anuncia "canvas" e o visitante não sabe o que perdeu. */
-              role="img"
-              aria-label="Pizza sendo montada: massa, molho de tomate, muçarela rasgada, manjericão e azeite"
-              className="block h-auto w-full bg-[color:var(--brand-surface)]"
-            />
+                role="img"
+                aria-label="Pizza sendo montada: massa, molho de tomate, muçarela rasgada, manjericão e azeite"
+                className="block h-auto w-full bg-[color:var(--brand-surface)]"
+              />
+            </div>
+            <p className="mt-4 font-mono-brand text-[10px] tracking-[0.08em] text-muted">
+              96 quadros · role para montar
+            </p>
           </div>
-          <p className="mt-4 font-mono-brand text-[10px] tracking-[0.08em] text-muted">
-            96 quadros · role para montar
-          </p>
-        </div>
 
-        <div className="w-full lg:w-[44%]">
-          <p className="label-caps text-[color:var(--brand-accent)]">Do balcão ao forno</p>
-          <h2 className="mt-5 font-display text-[clamp(1.875rem,4.5vw,3.25rem)] leading-[1.04]">
-            Cinco etapas. Nenhuma delas com pressa.
-          </h2>
+          <div className="w-full lg:w-[44%]">
+            <p className="label-caps text-[color:var(--brand-accent)]">Do balcão ao forno</p>
+            <h2 className="mt-5 font-display text-[clamp(1.875rem,4.5vw,3.25rem)] leading-[1.04]">
+              Cinco etapas. Nenhuma delas com pressa.
+            </h2>
 
-          <ol className="mt-9 space-y-6">
-            {etapas.map((e, i) => (
-              <li
-                key={e.titulo}
-                data-etapa={i}
-                className="flex gap-5 opacity-22 lg:translate-y-3 motion-reduce:translate-y-0 motion-reduce:opacity-100"
-              >
-                <span className="font-mono-brand pt-1 text-[11px] text-[color:var(--brand-accent)]">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div>
-                  <p className="font-display text-xl leading-tight">{e.titulo}</p>
-                  <p className="mt-1.5 max-w-[42ch] text-[15px] leading-relaxed text-muted">
-                    {e.texto}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
+            <ol className="mt-9 space-y-6">
+              {etapas.map((e, i) => (
+                <li
+                  key={e.titulo}
+                  data-etapa={i}
+                  className="flex gap-5 opacity-22 lg:translate-y-3 motion-reduce:translate-y-0 motion-reduce:opacity-100"
+                >
+                  <span className="font-mono-brand pt-1 text-[11px] text-[color:var(--brand-accent)]">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <p className="font-display text-xl leading-tight">{e.titulo}</p>
+                    <p className="mt-1.5 max-w-[42ch] text-[15px] leading-relaxed text-muted">
+                      {e.texto}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
