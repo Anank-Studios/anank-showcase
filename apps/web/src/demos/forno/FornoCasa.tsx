@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { getDemo, getTeam, getTestimonials } from '@/shared/lib/api';
 import { FornoFooter } from './layout/FornoFooter';
 import { Reveal } from './components/Reveal';
+import { Cascata, CascataItem } from '@/demos/_alimentacao/motion/Cascata';
 
 export async function FornoCasa() {
   const [demo, equipe, depoimentos] = await Promise.all([
@@ -112,7 +113,9 @@ export async function FornoCasa() {
                   <h3 className="mt-6 font-display text-[clamp(1.5rem,3vw,2rem)] leading-tight">
                     {pessoa.name}
                   </h3>
-                  <p className="label-caps mt-2 text-[color:var(--brand-accent-2)]">{pessoa.role}</p>
+                  <p className="label-caps mt-2 text-[color:var(--brand-accent-2)]">
+                    {pessoa.role}
+                  </p>
                   <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-muted">
                     {pessoa.bio}
                   </p>
@@ -130,23 +133,44 @@ export async function FornoCasa() {
             <p className="label-caps text-[color:var(--brand-accent)]">Quem volta</p>
           </Reveal>
 
-          {/* Sem retrato: depoimento fictício com foto de rosto de banco é a
-              combinação mais fácil de confundir com pessoa real. */}
-          <div className="mt-12 grid gap-px bg-line md:grid-cols-3">
-            {depoimentos.map((d, i) => (
-              <Reveal key={d.id} delay={i * 0.07} className="bg-[color:var(--brand-bg)]">
-                <figure className="flex h-full flex-col justify-between p-7 md:p-8">
-                  <blockquote className="font-display text-[1.125rem] leading-[1.45]">
-                    “{d.quote}”
+          {/*
+            ASSIMETRICO: um grande, dois menores ao lado. Tres caixas do mesmo
+            tamanho nao dizem qual vale mais, e por isso nenhuma vale.
+
+            Sem retrato: depoimento ficticio com foto de rosto de banco e a
+            combinacao mais facil de confundir com pessoa real.
+          */}
+          <Cascata className="mt-12 grid gap-px bg-line md:grid-cols-[1.7fr_1fr]">
+            {depoimentos.slice(0, 1).map((d) => (
+              <CascataItem key={d.id} className="bg-[color:var(--brand-bg)]">
+                <figure className="flex h-full flex-col justify-between p-8 md:p-12">
+                  <blockquote className="max-w-[28ch] font-display text-[clamp(1.25rem,2.9vw,1.875rem)] leading-[1.28]">
+                    &ldquo;{d.quote}&rdquo;
                   </blockquote>
-                  <figcaption className="mt-8">
-                    <span className="block text-[14px]">{d.name}</span>
+                  <figcaption className="mt-10">
+                    <span className="block text-[15px]">{d.name}</span>
                     <span className="block text-[12px] text-muted">{d.service}</span>
                   </figcaption>
                 </figure>
-              </Reveal>
+              </CascataItem>
             ))}
-          </div>
+
+            <div className="grid gap-px bg-line">
+              {depoimentos.slice(1, 3).map((d) => (
+                <CascataItem key={d.id} className="bg-[color:var(--brand-bg)]">
+                  <figure className="flex h-full flex-col justify-between p-7 md:p-8">
+                    <blockquote className="text-[14px] leading-relaxed text-muted">
+                      &ldquo;{d.quote}&rdquo;
+                    </blockquote>
+                    <figcaption className="mt-6">
+                      <span className="block text-[14px]">{d.name}</span>
+                      <span className="block text-[12px] text-muted">{d.service}</span>
+                    </figcaption>
+                  </figure>
+                </CascataItem>
+              ))}
+            </div>
+          </Cascata>
         </div>
       </section>
 

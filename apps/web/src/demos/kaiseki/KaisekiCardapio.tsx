@@ -2,6 +2,7 @@ import { getDemo, getMenu } from '@/shared/lib/api';
 import { KaisekiFooter } from './layout/KaisekiFooter';
 import { ItemCardapio } from '@/demos/_alimentacao/ItemCardapio';
 import { Reveal } from './components/Reveal';
+import { Cascata, CascataItem } from '@/demos/_alimentacao/motion/Cascata';
 
 export async function KaisekiCardapio() {
   const [demo, menu] = await Promise.all([getDemo('kaiseki'), getMenu('kaiseki')]);
@@ -66,16 +67,25 @@ export async function KaisekiCardapio() {
                 </p>
               </Reveal>
 
-              <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {/*
+                ZIG-ZAG de duas colunas, nao fileira de tres. A grade 3x1 de
+                cards identicos e a assinatura mais reconhecivel de template —
+                com duas colunas e a coluna par descendo um degrau, o olho
+                percorre em S em vez de varrer linha por linha.
+
+                O degrau so existe a partir de `md`. Abaixo disso e coluna
+                unica: deslocar cartao em 390px so produz buraco.
+              */}
+              <Cascata className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-8 md:gap-y-10">
                 {itens.map((item, i) => (
-                  /* `h-full` no Reveal, e o card tambem: a grade estica as
-                     celulas, mas o wrapper de animacao no meio quebrava a
-                     cadeia e os cards terminavam em alturas diferentes. */
-                  <Reveal key={item.id} delay={Math.min(i, 3) * 0.06} className="h-full">
+                  <CascataItem
+                    key={item.id}
+                    className={['h-full', i % 2 === 1 ? 'md:mt-14' : ''].join(' ')}
+                  >
                     <ItemCardapio item={item} />
-                  </Reveal>
+                  </CascataItem>
                 ))}
-              </div>
+              </Cascata>
             </div>
           </section>
         );

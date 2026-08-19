@@ -4,6 +4,7 @@ import { IntentLink } from '@/shared/components/IntentLink';
 import { KaisekiFooter } from './layout/KaisekiFooter';
 import { HeroFoto } from './components/HeroFoto';
 import { Reveal } from './components/Reveal';
+import { Cascata, CascataItem } from '@/demos/_alimentacao/motion/Cascata';
 
 export async function KaisekiHome() {
   const [demo, menu, depoimentos] = await Promise.all([
@@ -104,9 +105,17 @@ export async function KaisekiHome() {
             </h2>
           </Reveal>
 
-          <div className="mt-14 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {destaques.map((item, i) => (
-              <Reveal key={item.id} delay={(i % 3) * 0.08}>
+          {/*
+            Um GRANDE e dois menores empilhados, nao tres iguais lado a lado.
+            Com pesos diferentes a secao diz qual e o carro-chefe; com tres
+            cartoes identicos ela nao diz nada, e e o que fazia esta pagina
+            parecer catalogo.
+
+            Em `< 768px` volta a coluna unica — assimetria em 390px so espreme.
+          */}
+          <Cascata className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-[1.45fr_1fr] md:gap-10">
+            {destaques.slice(0, 1).map((item) => (
+              <CascataItem key={item.id}>
                 <article className="group">
                   <div className="relative aspect-[4/5] overflow-hidden bg-[color:var(--brand-surface)]">
                     <Image
@@ -114,7 +123,7 @@ export async function KaisekiHome() {
                       alt={item.image.alt}
                       fill
                       quality={62}
-                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 31vw"
+                      sizes="(max-width: 768px) 92vw, 52vw"
                       className="object-cover transition-transform duration-[1100ms] ease-out group-hover:scale-[1.05]"
                     />
                     {item.badges?.[0] ? (
@@ -123,20 +132,56 @@ export async function KaisekiHome() {
                       </span>
                     ) : null}
                   </div>
-
-                  <div className="mt-5 flex items-baseline justify-between gap-4">
-                    <h3 className="font-display text-[1.375rem] leading-tight">{item.name}</h3>
-                    <span className="font-mono-brand shrink-0 text-[13px] text-accent">
+                  <div className="mt-6 flex items-baseline justify-between gap-4">
+                    <h3 className="font-display text-[clamp(1.5rem,3vw,2.125rem)] leading-tight">
+                      {item.name}
+                    </h3>
+                    <span className="font-mono-brand shrink-0 text-[14px] text-accent">
                       R$ {item.price}
                     </span>
                   </div>
-                  <p className="mt-3 max-w-[42ch] text-[14px] leading-relaxed text-muted">
+                  <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-muted">
                     {item.description}
                   </p>
                 </article>
-              </Reveal>
+              </CascataItem>
             ))}
-          </div>
+
+            {/* Os dois menores, empilhados e com foto em proporcao diferente da
+                do grande — mesma razao de sempre: proporcao repetida vira grade. */}
+            <div className="flex flex-col gap-8 md:pt-16">
+              {destaques.slice(1, 3).map((item) => (
+                <CascataItem key={item.id}>
+                  <article className="group">
+                    <div className="relative aspect-[3/2] overflow-hidden bg-[color:var(--brand-surface)]">
+                      <Image
+                        src={item.image.url}
+                        alt={item.image.alt}
+                        fill
+                        quality={62}
+                        sizes="(max-width: 768px) 92vw, 36vw"
+                        className="object-cover transition-transform duration-[1100ms] ease-out group-hover:scale-[1.05]"
+                      />
+                      {item.badges?.[0] ? (
+                        <span className="font-mono-brand absolute top-3 left-3 bg-[color:var(--brand-accent-2)] px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] text-[#f6f4f0] uppercase">
+                          {item.badges[0]}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="mt-4 flex items-baseline justify-between gap-4">
+                      <h3 className="font-display text-[1.25rem] leading-tight">{item.name}</h3>
+                      <span className="font-mono-brand shrink-0 text-[13px] text-accent">
+                        R$ {item.price}
+                      </span>
+                    </div>
+                    <p className="mt-2.5 max-w-[42ch] text-[14px] leading-relaxed text-muted">
+                      {item.description}
+                    </p>
+                  </article>
+                </CascataItem>
+              ))}
+            </div>
+          </Cascata>
 
           <Reveal delay={0.1}>
             <IntentLink
@@ -205,23 +250,44 @@ export async function KaisekiHome() {
             </p>
           </Reveal>
 
-          {/* Sem retrato: depoimento fictício com foto de rosto de banco é a
-              combinação mais fácil de confundir com pessoa real. */}
-          <div className="mt-12 grid gap-px bg-line md:grid-cols-3">
-            {depoimentos.map((d, i) => (
-              <Reveal key={d.id} delay={i * 0.08} className="bg-[color:var(--brand-bg)]">
-                <figure className="flex h-full flex-col justify-between p-7 md:p-8">
-                  <blockquote className="font-display text-[1.0625rem] leading-[1.5]">
-                    “{d.quote}”
+          {/*
+            ASSIMETRICO: um grande, dois menores ao lado. Tres caixas do mesmo
+            tamanho nao dizem qual vale mais, e por isso nenhuma vale.
+
+            Sem retrato: depoimento ficticio com foto de rosto de banco e a
+            combinacao mais facil de confundir com pessoa real.
+          */}
+          <Cascata className="mt-12 grid gap-px bg-line md:grid-cols-[1.7fr_1fr]">
+            {depoimentos.slice(0, 1).map((d) => (
+              <CascataItem key={d.id} className="bg-[color:var(--brand-bg)]">
+                <figure className="flex h-full flex-col justify-between p-8 md:p-12">
+                  <blockquote className="max-w-[28ch] font-display text-[clamp(1.25rem,2.9vw,1.875rem)] leading-[1.28]">
+                    &ldquo;{d.quote}&rdquo;
                   </blockquote>
-                  <figcaption className="mt-8">
-                    <span className="block text-[14px]">{d.name}</span>
+                  <figcaption className="mt-10">
+                    <span className="block text-[15px]">{d.name}</span>
                     <span className="block text-[12px] text-muted">{d.service}</span>
                   </figcaption>
                 </figure>
-              </Reveal>
+              </CascataItem>
             ))}
-          </div>
+
+            <div className="grid gap-px bg-line">
+              {depoimentos.slice(1, 3).map((d) => (
+                <CascataItem key={d.id} className="bg-[color:var(--brand-bg)]">
+                  <figure className="flex h-full flex-col justify-between p-7 md:p-8">
+                    <blockquote className="text-[14px] leading-relaxed text-muted">
+                      &ldquo;{d.quote}&rdquo;
+                    </blockquote>
+                    <figcaption className="mt-6">
+                      <span className="block text-[14px]">{d.name}</span>
+                      <span className="block text-[12px] text-muted">{d.service}</span>
+                    </figcaption>
+                  </figure>
+                </CascataItem>
+              ))}
+            </div>
+          </Cascata>
         </div>
       </section>
 

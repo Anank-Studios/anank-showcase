@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { getDemo, getMenu } from '@/shared/lib/api';
 import { IntentLink } from '@/shared/components/IntentLink';
 import { FornoFooter } from './layout/FornoFooter';
+import { Cascata, CascataItem } from '@/demos/_alimentacao/motion/Cascata';
 
 /**
  * O bloco de scroll-telling carrega o GSAP. Adiado com `dynamic` para que quem
@@ -112,28 +113,70 @@ export async function FornoHome() {
             Quatro pizzas que não mudam desde 2017.
           </h2>
 
-          <div className="mt-14 grid grid-cols-1 gap-px bg-line md:grid-cols-3">
-            {destaques.map((item) => (
-              <article key={item.id} className="bg-[color:var(--brand-bg)] p-6 md:p-8">
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={item.image.url}
-                    alt={item.image.alt}
-                    fill
-                    sizes="(max-width: 768px) 90vw, 33vw"
-                    className="object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                </div>
-                <div className="mt-6 flex items-baseline justify-between gap-4">
-                  <h3 className="font-display text-2xl leading-tight">{item.name}</h3>
-                  <span className="font-mono-brand shrink-0 text-[13px] text-[color:var(--brand-accent-2)]">
-                    R$ {item.price}
-                  </span>
-                </div>
-                <p className="mt-3 text-[15px] leading-relaxed text-muted">{item.description}</p>
-              </article>
+          {/*
+            Uma grande e duas menores, nao tres iguais. Com pesos diferentes a
+            secao diz qual e a carro-chefe da casa; com tres cartoes identicos
+            ela nao diz nada — e era o que restava de catalogo nesta pagina.
+
+            Coluna unica abaixo de `md`: assimetria em 390px so espreme.
+          */}
+          <Cascata className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-[1.5fr_1fr] md:gap-10">
+            {destaques.slice(0, 1).map((item) => (
+              <CascataItem key={item.id}>
+                <article className="group">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-brand">
+                    <Image
+                      src={item.image.url}
+                      alt={item.image.alt}
+                      fill
+                      quality={62}
+                      sizes="(max-width: 768px) 92vw, 54vw"
+                      className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+                    />
+                  </div>
+                  <div className="mt-6 flex items-baseline justify-between gap-4">
+                    <h3 className="font-display text-[clamp(1.75rem,3.4vw,2.5rem)] leading-tight">
+                      {item.name}
+                    </h3>
+                    <span className="font-mono-brand shrink-0 text-[14px] text-[color:var(--brand-accent-2)]">
+                      R$ {item.price}
+                    </span>
+                  </div>
+                  <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-muted">
+                    {item.description}
+                  </p>
+                </article>
+              </CascataItem>
             ))}
-          </div>
+
+            <div className="flex flex-col gap-8 md:pt-20">
+              {destaques.slice(1, 3).map((item) => (
+                <CascataItem key={item.id}>
+                  <article className="group">
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-brand">
+                      <Image
+                        src={item.image.url}
+                        alt={item.image.alt}
+                        fill
+                        quality={62}
+                        sizes="(max-width: 768px) 92vw, 34vw"
+                        className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+                      />
+                    </div>
+                    <div className="mt-4 flex items-baseline justify-between gap-4">
+                      <h3 className="font-display text-[1.375rem] leading-tight">{item.name}</h3>
+                      <span className="font-mono-brand shrink-0 text-[13px] text-[color:var(--brand-accent-2)]">
+                        R$ {item.price}
+                      </span>
+                    </div>
+                    <p className="mt-2.5 max-w-[42ch] text-[14px] leading-relaxed text-muted">
+                      {item.description}
+                    </p>
+                  </article>
+                </CascataItem>
+              ))}
+            </div>
+          </Cascata>
         </div>
       </section>
 
