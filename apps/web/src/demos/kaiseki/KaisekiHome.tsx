@@ -5,6 +5,7 @@ import { KaisekiFooter } from './layout/KaisekiFooter';
 import { HeroFoto } from './components/HeroFoto';
 import { Reveal } from './components/Reveal';
 import { Cascata, CascataItem } from '@/demos/_alimentacao/motion/Cascata';
+import { Magnetico } from '@/demos/_alimentacao/motion/Magnetico';
 
 export async function KaisekiHome() {
   const [demo, menu, depoimentos] = await Promise.all([
@@ -42,12 +43,14 @@ export async function KaisekiHome() {
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <IntentLink
-                href="/demo/kaiseki/cardapio"
-                className="bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[#0d0f14] transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                Pedir pelo site
-              </IntentLink>
+              <Magnetico className="inline-block">
+                <IntentLink
+                  href="/demo/kaiseki/cardapio"
+                  className="bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[#0d0f14] transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Pedir pelo site
+                </IntentLink>
+              </Magnetico>
               <IntentLink
                 href="/demo/kaiseki/visite"
                 className="border border-[#f6f4f0]/60 px-7 py-3.5 text-[14px] font-medium text-[#f6f4f0] transition-colors hover:bg-[#f6f4f0]/10"
@@ -324,12 +327,14 @@ export async function KaisekiHome() {
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
-              <IntentLink
-                href="/demo/kaiseki/cardapio"
-                className="bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[#0d0f14] transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                Montar meu pedido
-              </IntentLink>
+              <Magnetico className="inline-block">
+                <IntentLink
+                  href="/demo/kaiseki/cardapio"
+                  className="bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[#0d0f14] transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Montar meu pedido
+                </IntentLink>
+              </Magnetico>
               <IntentLink
                 href="/demo/kaiseki/visite"
                 className="border border-[#f6f4f0]/60 px-7 py-3.5 text-[14px] font-medium text-[#f6f4f0] transition-colors hover:bg-[#f6f4f0]/10"

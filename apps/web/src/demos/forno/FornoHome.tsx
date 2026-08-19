@@ -4,6 +4,7 @@ import { getDemo, getMenu } from '@/shared/lib/api';
 import { IntentLink } from '@/shared/components/IntentLink';
 import { FornoFooter } from './layout/FornoFooter';
 import { Cascata, CascataItem } from '@/demos/_alimentacao/motion/Cascata';
+import { Magnetico } from '@/demos/_alimentacao/motion/Magnetico';
 
 /**
  * O bloco de scroll-telling carrega o GSAP. Adiado com `dynamic` para que quem
@@ -54,12 +55,14 @@ export async function FornoHome() {
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <IntentLink
-                href="/demo/forno/cardapio"
-                className="rounded-brand bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[#160d07] transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                Pedir pelo site
-              </IntentLink>
+              <Magnetico className="inline-block">
+                <IntentLink
+                  href="/demo/forno/cardapio"
+                  className="rounded-brand bg-[color:var(--brand-accent)] px-7 py-3.5 text-[14px] font-medium text-[#160d07] transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Pedir pelo site
+                </IntentLink>
+              </Magnetico>
               <IntentLink
                 href="/demo/forno/a-casa"
                 className="rounded-brand border border-[#f6ece0]/60 px-7 py-3.5 text-[14px] font-medium text-[#f6ece0] transition-colors hover:bg-[#f6ece0]/10"

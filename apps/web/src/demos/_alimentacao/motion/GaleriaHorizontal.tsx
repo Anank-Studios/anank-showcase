@@ -99,10 +99,7 @@ export function GaleriaHorizontal({
 
       {/* Barra de progresso: numa faixa horizontal, sem ela o visitante não
           tem como saber quanto conteúdo ainda existe à direita. */}
-      <div
-        aria-hidden="true"
-        className="mt-8 h-px w-full bg-[color:var(--brand-line)]"
-      >
+      <div aria-hidden="true" className="mt-8 h-px w-full bg-[color:var(--brand-line)]">
         <div
           className="h-px origin-left bg-[color:var(--brand-accent)] transition-transform duration-150 ease-out"
           style={{ transform: `scaleX(${Math.max(0.06, progresso)})`, width: '100%' }}

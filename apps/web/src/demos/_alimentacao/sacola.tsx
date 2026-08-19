@@ -84,9 +84,7 @@ export function SacolaProvider({ children }: { children: React.ReactNode }) {
   const alterar = useCallback<Sacola['alterar']>((key, delta) => {
     setLinhas((atuais) =>
       atuais
-        .map((l) =>
-          l.key === key ? { ...l, quantidade: Math.min(20, l.quantidade + delta) } : l
-        )
+        .map((l) => (l.key === key ? { ...l, quantidade: Math.min(20, l.quantidade + delta) } : l))
         /* Chegou a zero: sai da sacola. Deixar uma linha de quantidade 0 na
            tela obriga o visitante a um segundo gesto para se livrar dela. */
         .filter((l) => l.quantidade > 0)

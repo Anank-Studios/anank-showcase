@@ -172,11 +172,7 @@ export function ItemCardapio({ item }: { item: MenuItem }) {
           disabled={item.soldOut}
           className="mt-4 w-full bg-[color:var(--brand-accent)] px-4 py-3 text-[13px] font-medium text-[color:var(--brand-bg)] transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          {item.soldOut
-            ? 'Acabou hoje'
-            : confirmado
-              ? 'Adicionado ✓'
-              : `Adicionar · R$ ${preco}`}
+          {item.soldOut ? 'Acabou hoje' : confirmado ? 'Adicionado ✓' : `Adicionar · R$ ${preco}`}
         </button>
 
         {/* O leitor de tela precisa da confirmação, e ela não pode depender de

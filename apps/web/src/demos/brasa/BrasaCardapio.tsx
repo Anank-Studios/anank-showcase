@@ -145,7 +145,7 @@ export async function BrasaCardapio() {
                 href="https://wa.me/5511900000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-7 inline-block bg-accent px-7 py-3.5 text-[14px] font-semibold text-[color:var(--brand-surface)] transition-transform duration-300 hover:-translate-y-0.5"
+                className="mt-7 inline-block bg-accent px-7 py-4 text-[14px] font-semibold text-[color:var(--brand-surface)] transition-transform duration-300 hover:-translate-y-0.5"
               >
                 Chamar no WhatsApp
               </a>

@@ -18,8 +18,8 @@ export async function KaisekiCardapio() {
             Monte o pedido.
           </h1>
           <p className="mt-7 max-w-[52ch] text-[15px] leading-relaxed text-muted">
-            Entrega e retirada nos Jardins e arredores. O omakase é o único que não sai da casa — ele
-            depende do itamae servindo peça por peça, e isso não cabe numa embalagem.
+            Entrega e retirada nos Jardins e arredores. O omakase é o único que não sai da casa —
+            ele depende do itamae servindo peça por peça, e isso não cabe numa embalagem.
           </p>
         </div>
       </section>

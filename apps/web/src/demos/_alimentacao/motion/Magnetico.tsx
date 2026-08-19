@@ -17,6 +17,12 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
  *
  * Sem ponteiro fino (celular) e com `prefers-reduced-motion`, o componente não
  * escuta nada — vira um wrapper inerte.
+ *
+ * O wrapper NÃO pode encolher o alvo de toque. Ele é `inline-block` e não tem
+ * padding próprio: quem define a área clicável continua sendo o botão dentro.
+ * Ao medir depois de aplicar, o CTA da Brasa apareceu com 43px de altura — 1px
+ * abaixo do mínimo de 44px — e isso era defeito ANTERIOR ao magnético, que só
+ * apareceu porque desta vez a altura foi medida.
  */
 export function Magnetico({
   children,

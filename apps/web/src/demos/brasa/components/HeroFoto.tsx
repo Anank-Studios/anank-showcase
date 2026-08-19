@@ -27,10 +27,7 @@ export function HeroFoto({ src, alt }: { src: string; alt: string }) {
 
   return (
     <div ref={ref} className="absolute inset-0 overflow-hidden">
-      <motion.div
-        className="absolute inset-0"
-        style={reduced ? undefined : { y, scale: 1.12 }}
-      >
+      <motion.div className="absolute inset-0" style={reduced ? undefined : { y, scale: 1.12 }}>
         <Image
           src={src}
           alt={alt}

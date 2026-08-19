@@ -105,7 +105,10 @@ export function ReservaBalcao() {
           className="mt-2 w-full border border-[color:var(--brand-muted)] bg-[color:var(--brand-surface)] px-3.5 py-2.5 text-[15px] outline-none focus:border-[color:var(--brand-accent)]"
         />
         {erros.message ? (
-          <p id={`${id}-mensagem-erro`} className="mt-1.5 text-[12px] text-[color:var(--brand-accent-2)]">
+          <p
+            id={`${id}-mensagem-erro`}
+            className="mt-1.5 text-[12px] text-[color:var(--brand-accent-2)]"
+          >
             {erros.message}
           </p>
         ) : null}

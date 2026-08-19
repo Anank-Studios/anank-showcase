@@ -80,7 +80,12 @@ export function Services({ services }: { services: Service[] }) {
           {rest.map((service, index) => {
             const Icon = SERVICE_ICONS[service.icon ?? ''] ?? ScissorsIcon;
             return (
-              <Reveal as="li" key={service.id} delay={index * 0.06} className="border-b border-line">
+              <Reveal
+                as="li"
+                key={service.id}
+                delay={index * 0.06}
+                className="border-b border-line"
+              >
                 <div className="group flex flex-col gap-2 py-6 transition-colors duration-250 sm:flex-row sm:items-center sm:gap-6">
                   <span className="font-display shrink-0 text-sm text-[#75685e] tabular-nums sm:w-9">
                     0{index + 2}

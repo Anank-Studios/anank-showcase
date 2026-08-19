@@ -64,7 +64,12 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
 
           <ul className="divide-y divide-line border-t border-line lg:border-t-0 lg:border-l lg:pl-12">
             {rest.map((testimonial, index) => (
-              <Reveal as="li" key={testimonial.id} delay={index * 0.06} className="py-6 first:pt-0 lg:first:pt-0">
+              <Reveal
+                as="li"
+                key={testimonial.id}
+                delay={index * 0.06}
+                className="py-6 first:pt-0 lg:first:pt-0"
+              >
                 <div className="flex items-start gap-3">
                   <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
                     <Image

@@ -5,6 +5,8 @@ import { BrasaFooter } from './layout/BrasaFooter';
 import { HeroFoto } from './components/HeroFoto';
 import { Reveal } from './components/Reveal';
 import { Cascata, CascataItem } from '@/demos/_alimentacao/motion/Cascata';
+import { Magnetico } from '@/demos/_alimentacao/motion/Magnetico';
+import { FaixaCinetica } from '@/demos/_alimentacao/motion/FaixaCinetica';
 import { GaleriaHorizontal } from '@/demos/_alimentacao/motion/GaleriaHorizontal';
 
 export async function BrasaHome() {
@@ -44,15 +46,17 @@ export async function BrasaHome() {
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <IntentLink
-                href="/demo/brasa/cardapio"
-                className="bg-[#fbf7ef] px-7 py-3.5 text-[14px] font-semibold text-[#17130f] transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                Ver o cardápio
-              </IntentLink>
+              <Magnetico className="inline-block">
+                <IntentLink
+                  href="/demo/brasa/cardapio"
+                  className="bg-[#fbf7ef] px-7 py-4 text-[14px] font-semibold text-[#17130f] transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Ver o cardápio
+                </IntentLink>
+              </Magnetico>
               <IntentLink
                 href="/demo/brasa/visite"
-                className="border border-[#fbf7ef]/70 px-7 py-3.5 text-[14px] font-semibold text-[#fbf7ef] transition-colors hover:bg-[#fbf7ef]/10"
+                className="border border-[#fbf7ef]/70 px-7 py-4 text-[14px] font-semibold text-[#fbf7ef] transition-colors hover:bg-[#fbf7ef]/10"
               >
                 Como chegar
               </IntentLink>
@@ -78,6 +82,25 @@ export async function BrasaHome() {
             </p>
           </Reveal>
         </div>
+      </section>
+
+      {/*
+        Faixa cinetica entre o manifesto e os numeros. Anda sozinha devagar e
+        acelera com a rolagem, invertendo se o visitante sobe.
+
+        Fica ENTRE duas secoes de texto de proposito: e onde a pagina teria uma
+        emenda seca, e a faixa transforma a costura em transicao. Em escala
+        grande a Archivo Black da Brasa vira textura, que e o unico lugar onde
+        uma grotesca desse peso cabe em corpo continuo.
+      */}
+      <section
+        aria-label="A casa em uma linha"
+        className="overflow-hidden border-t border-line py-8 md:py-10"
+      >
+        <FaixaCinetica
+          texto="Carne moída duas vezes ao dia · Chapa a 250 graus · Nada congelado · "
+          className="font-display text-[clamp(1.75rem,5vw,3.5rem)] leading-none tracking-[-0.03em] text-[color:var(--brand-accent)]"
+        />
       </section>
 
       {/* ---- números ---------------------------------------------------- */}
@@ -325,17 +348,19 @@ export async function BrasaHome() {
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
-              <a
-                href="https://wa.me/5511900000000"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-accent px-7 py-3.5 text-[14px] font-semibold text-[#fbf7ef] transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                Chamar no WhatsApp
-              </a>
+              <Magnetico className="inline-block">
+                <a
+                  href="https://wa.me/5511900000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-accent px-7 py-4 text-[14px] font-semibold text-[#fbf7ef] transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Chamar no WhatsApp
+                </a>
+              </Magnetico>
               <IntentLink
                 href="/demo/brasa/visite"
-                className="border border-[#fbf7ef]/70 px-7 py-3.5 text-[14px] font-semibold text-[#fbf7ef] transition-colors hover:bg-[#fbf7ef]/10"
+                className="border border-[#fbf7ef]/70 px-7 py-4 text-[14px] font-semibold text-[#fbf7ef] transition-colors hover:bg-[#fbf7ef]/10"
               >
                 Endereço e horários
               </IntentLink>
