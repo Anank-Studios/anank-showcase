@@ -28,6 +28,18 @@
 /* a MESMA marca em modo claro: Off-white de fundo, Black de tinta.    */
 /* ------------------------------------------------------------------ */
 
+/*
+  Altura do cabecalho fixo das demos, publicada aqui e SOBRESCRITA em tempo de
+  execucao por `useOcultarAoRolar` (0px quando a barra recolhe).
+
+  O padrao mora no CSS, e nao num fallback `var(--nav-h, 68px)`, porque valor
+  arbitrario do Tailwind NAO aceita virgula: `top-[var(--nav-h,68px)]` nao gera
+  regra nenhuma, o `top` fica `auto` e o `position: sticky` deixa de grudar.
+*/
+:root {
+  --nav-h: 68px;
+}
+
 :root,
 [data-brand='anank'] {
   --brand-bg: #f7f7f7; /* Off-white oficial */

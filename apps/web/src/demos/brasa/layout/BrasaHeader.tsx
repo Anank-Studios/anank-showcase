@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
 import { IntentLink } from '@/shared/components/IntentLink';
 import { cn } from '@/shared/lib/cn';
+import { useOcultarAoRolar } from '@/demos/_alimentacao/motion/useOcultarAoRolar';
 
 const LINKS = [
   { href: '/demo/brasa/cardapio', label: 'Cardápio' },
@@ -26,6 +27,7 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
  */
 export function BrasaHeader() {
   const pathname = usePathname();
+  const oculto = useOcultarAoRolar();
   const [aberto, setAberto] = useState(false);
   const painelRef = useRef<HTMLDivElement>(null);
   const gatilhoRef = useRef<HTMLButtonElement>(null);
@@ -72,7 +74,21 @@ export function BrasaHeader() {
   useEffect(() => setAberto(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg">
+    <header
+      /*
+        Retrai ao rolar para baixo e volta ao subir. `translate` e nao
+        `display`/`height`: transformar nao dispara layout, entao a barra
+        desliza a 60fps e o conteudo da pagina nao pula junto.
+
+        Fica presa aberta com o menu movel ABERTO — recolher a barra que
+        contem o botao de fechar deixaria o painel sem saida visivel.
+      */
+      className={cn(
+        'sticky top-0 z-40 border-b border-line bg-bg',
+        'transition-transform duration-300 ease-out motion-reduce:transition-none',
+        oculto && !aberto ? '-translate-y-full' : 'translate-y-0'
+      )}
+    >
       <div className="mx-auto flex h-[68px] max-w-[1400px] items-center justify-between px-5 md:px-10 lg:px-14">
         <IntentLink href="/demo/brasa" className="flex items-baseline gap-2.5">
           <span className="font-display text-[26px] leading-none tracking-[-0.04em]">BRASA</span>

@@ -24,14 +24,15 @@ export async function FornoCardapio() {
       </section>
 
       {/*
-        Âncoras sem JavaScript. `top-[68px]` gruda logo abaixo do cabeçalho, que
-        tem exatamente essa altura; o `scroll-mt` das seções compensa os dois
+        Âncoras sem JavaScript. `--nav-h` e publicada pelo cabecalho e vale 68px
+        aberto, 0 recolhido — assim esta barra SOBE JUNTO com ele em vez de
+        deixar uma faixa de pagina aparecendo por cima; o `scroll-mt` das seções compensa os dois
         para o título não ficar atrás da barra ao pular. Rolagem horizontal no
         celular: três categorias em 390px não cabem numa linha.
       */}
       <nav
         aria-label="Categorias do cardápio"
-        className="no-scrollbar sticky top-[68px] z-30 overflow-x-auto border-b border-line bg-bg"
+        className="no-scrollbar sticky top-[var(--nav-h)] z-30 overflow-x-auto border-b border-line bg-bg transition-[top] duration-300 ease-out motion-reduce:transition-none"
       >
         <div className="mx-auto flex max-w-[1400px] gap-7 px-5 py-4 md:px-10 lg:px-14">
           {menu.categories.map((c) => (
