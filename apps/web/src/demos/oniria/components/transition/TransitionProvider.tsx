@@ -39,6 +39,29 @@ export function useOniriaNavigate(): (href: string) => void {
 }
 
 const PANEL_COUNT = 4;
+
+/*
+  TEMPOS — medidos, nao escolhidos no olho.
+
+  A versao anterior levava 2,75s do clique ate a tela liberar, e a conta era:
+  1,08s cobrindo + 0,87s buscando a rota + 0,82s descobrindo. O erro nao era a
+  duracao das animacoes: era a ORDEM. O `router.push` so disparava quando a
+  cobertura terminava, entao a pessoa passava quase um segundo encarando uma
+  tela opaca e PARADA enquanto o servidor respondia.
+
+  Agora a navegacao comeca junto com a cobertura, no instante em que os paineis
+  ja escondem o suficiente para a troca nao piscar. A busca corre POR BAIXO da
+  cortina em vez de depois dela.
+
+  A saida e mais curta que a entrada (~65%) porque sair tem que parecer
+  responsivo, nao cerimonioso.
+*/
+const COVER_S = 0.42;
+const COVER_STAGGER_S = 0.045;
+const UNCOVER_S = 0.34;
+const UNCOVER_STAGGER_S = 0.03;
+/** Quando disparar a rota, em fracao da cobertura. */
+const PUSH_AT_S = 0.26;
 /** Tempo máximo esperando o App Router commitar a nova rota. */
 const ROUTE_TIMEOUT_MS = 2500;
 /** Rede de segurança: destrava a tela mesmo se tudo der errado. */
@@ -112,37 +135,57 @@ export function OniriaTransitionProvider({ children }: { children: React.ReactNo
       const panels = panelsRef.current?.children;
       if (overlay) overlay.style.pointerEvents = 'auto';
 
+      /*
+        O OUVINTE E REGISTRADO ANTES DO DISPARO, e a ordem aqui e o bug inteiro.
+
+        Registrando dentro do `onComplete` (0,42s) enquanto a rota dispara em
+        0,26s, uma rota rapida commitava no meio: o efeito de `pathname` corria
+        com `resolvePendingRef` ainda nulo, nao resolvia nada, e a promessa
+        criada depois esperava ate o timeout. Media: 8,2s de tela travada.
+      */
+      const rotaPronta = waitForRouteChange();
+
       const inTl = gsap.timeline({
         onComplete: () => {
-          /* Painéis cobrindo a tela: agora sim a rota pode trocar sem que o
-             usuário veja o DOM sendo remontado. */
-          void waitForRouteChange().then(() => {
+          void rotaPronta.then(() => {
             const outTl = gsap.timeline({ onComplete: finish });
             outTl.set(pageRef.current, { scale: 1.04, filter: 'blur(0px)' });
             if (panels?.length) {
               outTl.to(
                 panels,
-                { yPercent: -100, duration: 0.7, ease: 'power4.inOut', stagger: 0.04 },
+                {
+                  yPercent: -100,
+                  duration: UNCOVER_S,
+                  ease: 'power3.inOut',
+                  stagger: UNCOVER_STAGGER_S,
+                },
                 0
               );
             }
-            outTl.to(pageRef.current, { scale: 1, duration: 0.7, ease: 'power4.inOut' }, 0);
+            outTl.to(pageRef.current, { scale: 1, duration: UNCOVER_S, ease: 'power3.inOut' }, 0);
           });
-
-          router.push(href);
         },
       });
 
       inTl.set(pageRef.current, { willChange: 'transform, filter' });
       if (panels?.length) {
         inTl.set(panels, { yPercent: 100 });
-        inTl.to(panels, { yPercent: 0, duration: 0.9, ease: 'power4.inOut', stagger: 0.06 }, 0);
+        inTl.to(
+          panels,
+          { yPercent: 0, duration: COVER_S, ease: 'power3.inOut', stagger: COVER_STAGGER_S },
+          0
+        );
       }
       inTl.to(
         pageRef.current,
-        { scale: 0.96, filter: 'blur(8px)', duration: 0.5, ease: 'power2.out' },
+        { scale: 0.96, filter: 'blur(8px)', duration: COVER_S * 0.9, ease: 'power2.out' },
         0
       );
+
+      /* O disparo da rota. Em PUSH_AT_S os paineis ja cobrem o bastante para a
+         troca acontecer sem piscar, e a busca no servidor passa a correr em
+         paralelo com o resto da cortina — que era o segundo perdido. */
+      inTl.call(() => router.push(href), undefined, PUSH_AT_S);
     },
     [pathname, reduced, router, waitForRouteChange, finish]
   );

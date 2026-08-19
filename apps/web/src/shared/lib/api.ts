@@ -68,13 +68,36 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+/**
+ * Quanto tempo o conteudo ESTATICO das demos pode ficar no Data Cache.
+ *
+ * Uma hora, e poderia ser mais: sao restaurantes e clinicas ficticios cujo
+ * cardapio, equipe e depoimentos nao mudam entre um deploy e outro. O que
+ * mudava era o custo — com `no-store` em tudo, cada navegacao entre abas
+ * refazia a ida a API, e a transicao de rota media 3,7s a 7,2s em producao.
+ */
+const CACHE_ESTATICO_S = 3600;
+
+interface Opcoes extends RequestInit {
+  /** Segundos no Data Cache. Ausente = `no-store`, para dado sensivel a tempo. */
+  revalidate?: number;
+}
+
+async function request<T>(path: string, init?: Opcoes): Promise<T> {
   let response: Response;
+  const { revalidate, ...resto } = init ?? {};
 
   try {
     response = await fetch(`${baseUrl()}${path}`, {
-      ...init,
-      cache: 'no-store',
+      ...resto,
+      /*
+        `no-store` continua sendo o PADRAO — quem quiser cache pede. Horario
+        livre de agendamento e recibo de pedido nao podem vir de cache, e o
+        default seguro evita que um endpoint novo herde cache por descuido.
+      */
+      ...(revalidate === undefined
+        ? { cache: 'no-store' as const }
+        : { next: { revalidate } }),
       headers: {
         'Content-Type': 'application/json',
         ...init?.headers,
@@ -122,16 +145,22 @@ function query(params: Record<string, string | undefined>): string {
 /* Demos                                                               */
 /* ------------------------------------------------------------------ */
 
-export const getDemos = () => request<DemoSummary[]>('/api/demos');
-export const getDemo = (slug: DemoSlug) => request<Demo>(`/api/demos/${slug}`);
-export const getServices = (slug: DemoSlug) => request<Service[]>(`/api/demos/${slug}/services`);
+export const getDemos = () =>
+  request<DemoSummary[]>('/api/demos', { revalidate: CACHE_ESTATICO_S });
+export const getDemo = (slug: DemoSlug) =>
+  request<Demo>(`/api/demos/${slug}`, { revalidate: CACHE_ESTATICO_S });
+export const getServices = (slug: DemoSlug) =>
+  request<Service[]>(`/api/demos/${slug}/services`, { revalidate: CACHE_ESTATICO_S });
 export const getTestimonials = (slug: DemoSlug) =>
-  request<Testimonial[]>(`/api/demos/${slug}/testimonials`);
-export const getTeam = (slug: DemoSlug) => request<TeamMember[]>(`/api/demos/${slug}/team`);
-export const getArticles = (slug: DemoSlug) => request<Article[]>(`/api/demos/${slug}/articles`);
+  request<Testimonial[]>(`/api/demos/${slug}/testimonials`, { revalidate: CACHE_ESTATICO_S });
+export const getTeam = (slug: DemoSlug) =>
+  request<TeamMember[]>(`/api/demos/${slug}/team`, { revalidate: CACHE_ESTATICO_S });
+export const getArticles = (slug: DemoSlug) =>
+  request<Article[]>(`/api/demos/${slug}/articles`, { revalidate: CACHE_ESTATICO_S });
 
 /** Só o nicho alimentação tem cardápio; as demais devolvem 404. */
-export const getMenu = (slug: DemoSlug) => request<Menu>(`/api/demos/${slug}/menu`);
+export const getMenu = (slug: DemoSlug) =>
+  request<Menu>(`/api/demos/${slug}/menu`, { revalidate: CACHE_ESTATICO_S });
 
 /**
  * Envia o pedido. O corpo NAO leva preco: item, acrescimo, taxa e total sao
@@ -145,7 +174,8 @@ export const createOrder = (slug: DemoSlug, body: OrderRequest) =>
 /* Agendamento (Oniria)                                                */
 /* ------------------------------------------------------------------ */
 
-export const getPractitioners = () => request<Practitioner[]>('/api/booking/practitioners');
+export const getPractitioners = () =>
+  request<Practitioner[]>('/api/booking/practitioners', { revalidate: CACHE_ESTATICO_S });
 
 export const getMonth = (params: { month: string; practitionerId?: string; protocolId?: string }) =>
   request<MonthResponse>(`/api/booking/month${query(params)}`);
