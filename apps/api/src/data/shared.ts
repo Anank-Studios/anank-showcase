@@ -7,6 +7,7 @@ import type {
   Article,
   Demo,
   ImageRef,
+  Menu,
   Practitioner,
   Service,
   TeamMember,
@@ -22,6 +23,12 @@ export interface DemoData {
   practitioners?: Practitioner[];
   /** Somente a Oniria usa (o diário). */
   articles?: Article[];
+  /** Nicho alimentação: cardápio. A hamburgueria tem cardápio mas não vende. */
+  menu?: Menu;
+  /** `false` na hamburgueria, que é apenas informativa. */
+  acceptsOrders?: boolean;
+  /** Taxa de entrega em reais. Ausente quando a casa não entrega. */
+  deliveryFee?: number;
 }
 
 /**

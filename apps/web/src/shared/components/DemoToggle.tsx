@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IntentLink } from '@/shared/components/IntentLink';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -18,10 +18,25 @@ import { cn } from '@/shared/lib/cn';
   arranjo anterior ("01 Aurea" + "02 Vivace" + "03 Oniria"), então cabem
   sempre — o colapso para só-números no mobile deixou de ser necessário.
 */
-const SEGMENTS: { slug: DemoSlug; label: string }[] = [
-  { slug: 'aurea', label: 'Demo 1' },
-  { slug: 'vivace', label: 'Demo 2' },
-  { slug: 'oniria', label: 'Demo 3' },
+type Segmento = { slug: DemoSlug; label: string };
+
+/*
+  UMA ESCADA POR NICHO. Antes havia só a da estética, e com o nicho alimentação
+  no ar o resultado era um defeito silencioso: dentro do Forno nenhum segmento
+  ficava marcado, e clicar em qualquer um deles jogava o visitante para outro
+  nicho sem aviso. A pílula existe para comparar NÍVEIS da mesma categoria.
+*/
+const ESCADAS: Segmento[][] = [
+  [
+    { slug: 'aurea', label: 'Demo 1' },
+    { slug: 'vivace', label: 'Demo 2' },
+    { slug: 'oniria', label: 'Demo 3' },
+  ],
+  [
+    { slug: 'brasa', label: 'Demo 1' },
+    { slug: 'kaiseki', label: 'Demo 2' },
+    { slug: 'forno', label: 'Demo 3' },
+  ],
 ];
 
 const HINT_MS = 3500;
@@ -37,7 +52,23 @@ export function DemoToggle() {
   const reduced = useReducedMotion();
   const { hintSeen, markHintSeen } = useDemoChrome();
 
-  const active = SEGMENTS.find((segment) => pathname.startsWith(`/demo/${segment.slug}`))?.slug;
+  /* A escada mostrada é a do nicho em que o visitante está. Fora de qualquer
+     demo conhecida, cai na primeira — é o que a pílula sempre mostrou.
+
+     Em `useMemo` porque o resultado entra nas dependências do `useCallback`
+     das setas: sem isso o array nasceria novo a cada render e o callback seria
+     recriado junto, todas as vezes. */
+  const segments = useMemo(
+    () =>
+      ESCADAS.find((escada) =>
+        escada.some((segment) => pathname.startsWith(`/demo/${segment.slug}`))
+      ) ??
+      ESCADAS[0] ??
+      [],
+    [pathname]
+  );
+
+  const active = segments.find((segment) => pathname.startsWith(`/demo/${segment.slug}`))?.slug;
 
   const [visible, setVisible] = useState(true);
   const [expanded, setExpanded] = useState(false);
@@ -88,17 +119,18 @@ export function DemoToggle() {
       if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
       event.preventDefault();
 
-      const currentIndex = SEGMENTS.findIndex((segment) => segment.slug === active);
+      if (segments.length === 0) return;
+      const currentIndex = segments.findIndex((segment) => segment.slug === active);
       const offset = event.key === 'ArrowRight' ? 1 : -1;
-      const nextIndex = (currentIndex + offset + SEGMENTS.length) % SEGMENTS.length;
-      const next = SEGMENTS[nextIndex];
+      const nextIndex = (currentIndex + offset + segments.length) % segments.length;
+      const next = segments[nextIndex];
       if (!next) return;
 
       const buttons = listRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
       buttons?.[nextIndex]?.focus();
       router.push(`/demo/${next.slug}`);
     },
-    [active, router]
+    [active, router, segments]
   );
 
   return (
@@ -169,7 +201,7 @@ export function DemoToggle() {
           onKeyDown={onKeyDown}
           className="flex items-center gap-1"
         >
-          {SEGMENTS.map((segment) => {
+          {segments.map((segment) => {
             const isActive = segment.slug === active;
 
             return (

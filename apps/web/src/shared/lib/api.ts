@@ -16,7 +16,10 @@ import type {
   Envelope,
   LeadRequest,
   LeadResponse,
+  Menu,
   MonthResponse,
+  Order,
+  OrderRequest,
   Practitioner,
   Service,
   TeamMember,
@@ -126,6 +129,17 @@ export const getTestimonials = (slug: DemoSlug) =>
   request<Testimonial[]>(`/api/demos/${slug}/testimonials`);
 export const getTeam = (slug: DemoSlug) => request<TeamMember[]>(`/api/demos/${slug}/team`);
 export const getArticles = (slug: DemoSlug) => request<Article[]>(`/api/demos/${slug}/articles`);
+
+/** Só o nicho alimentação tem cardápio; as demais devolvem 404. */
+export const getMenu = (slug: DemoSlug) => request<Menu>(`/api/demos/${slug}/menu`);
+
+/**
+ * Envia o pedido. O corpo NAO leva preco: item, acrescimo, taxa e total sao
+ * recalculados no servidor a partir do cardapio. A casa que nao vende pelo
+ * site (a Brasa) devolve 404 aqui, e isso e proposital.
+ */
+export const createOrder = (slug: DemoSlug, body: OrderRequest) =>
+  request<Order>(`/api/demos/${slug}/order`, { method: 'POST', body: JSON.stringify(body) });
 
 /* ------------------------------------------------------------------ */
 /* Agendamento (Oniria)                                                */

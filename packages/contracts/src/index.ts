@@ -3,11 +3,43 @@
  * Espelha specs/02-api-contract.md. Nenhuma dependência de runtime.
  */
 
-export const DEMO_SLUGS = ['aurea', 'vivace', 'oniria'] as const;
+/*
+  Toda foto usada aqui foi conferida UMA A UMA, e nas finalistas também em
+  TAMANHO DE USO. Não basta o Unsplash devolver 200: entre as reprovadas havia
+  maçãs verdes no lugar de massa de pizza, um par de fones de ouvido, uma
+  formatura, uma criança desenhando, e fotos com marca real à vista (Coca-Cola,
+  um copo escrito "Gourmet Burger Kitchen", um milkshake coberto de Oreo). E o
+  herói da Brasa só se revelou empanado — numa marca de carne moída — quando
+  foi visto a 1440px, depois de ter passado na folha de contato a 420px.
+*/
+export const DEMO_SLUGS = ['aurea', 'vivace', 'oniria', 'brasa', 'kaiseki', 'forno'] as const;
 export type DemoSlug = (typeof DEMO_SLUGS)[number];
 
 export function isDemoSlug(value: string): value is DemoSlug {
   return (DEMO_SLUGS as readonly string[]).includes(value);
+}
+
+/* ------------------------------------------------------------------ */
+/* Nichos                                                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * O hub agrupa as demos por NICHO. O nicho vive no dado, não na URL: as rotas
+ * seguem `/demo/<slug>` como sempre, então nenhum link já entregue a cliente
+ * deixa de funcionar.
+ */
+export const NICHE_SLUGS = ['estetica', 'alimentacao'] as const;
+export type NicheSlug = (typeof NICHE_SLUGS)[number];
+
+export interface Niche {
+  slug: NicheSlug;
+  label: string;
+  /** Frase curta mostrada sob o alternador do hub. */
+  tagline: string;
+}
+
+export function isNicheSlug(value: string): value is NicheSlug {
+  return (NICHE_SLUGS as readonly string[]).includes(value);
 }
 
 /* ------------------------------------------------------------------ */
@@ -47,10 +79,16 @@ export interface ImageRef {
 
 export interface DemoSummary {
   slug: DemoSlug;
+  /** Nicho ao qual a demo pertence. O hub agrupa por ele. */
+  niche: NicheSlug;
   index: '01' | '02' | '03';
   brandName: string;
   category: string;
   tagline: string;
+  /** Rótulo de nível mostrado no card do hub, ex.: "Site Premium". */
+  tierLabel: string;
+  /** Marca o card com o selo "Popular". Um por nicho. */
+  popular?: boolean;
   priceRange: string;
   tokens: BrandTokens;
   thumbnail: ImageRef;
@@ -266,8 +304,107 @@ export interface LeadResponse {
 }
 
 /* ------------------------------------------------------------------ */
+/* Cardápio e pedido (nicho alimentação)                               */
+/* ------------------------------------------------------------------ */
+
+export interface MenuOptionChoice {
+  id: string;
+  label: string;
+  /** Acréscimo em reais. 0 quando não altera o preço. */
+  priceDelta: number;
+}
+
+/** Grupo de escolhas de um item: tamanho, ponto da carne, borda, etc. */
+export interface MenuOptionGroup {
+  id: string;
+  label: string;
+  /** `single` = radio (obrigatório); `multi` = checkbox (opcional). */
+  kind: 'single' | 'multi';
+  choices: MenuOptionChoice[];
+}
+
+export interface MenuItem {
+  id: string;
+  slug: string;
+  name: string;
+  categoryId: string;
+  description: string;
+  /** Em reais inteiros. É o preço base, antes dos acréscimos. */
+  price: number;
+  image: ImageRef;
+  /** Selos curtos: "vegano", "picante", "mais pedido". */
+  badges?: string[];
+  /** Ingredientes, para o scroll-telling da montagem. */
+  ingredients?: string[];
+  options?: MenuOptionGroup[];
+  /** Fora do ar hoje: aparece no cardápio, mas não entra no carrinho. */
+  soldOut?: boolean;
+}
+
+export interface MenuCategory {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+}
+
+export interface Menu {
+  categories: MenuCategory[];
+  items: MenuItem[];
+}
+
+export interface OrderLineRequest {
+  itemId: string;
+  quantity: number;
+  /** IDs das escolhas selecionadas, de qualquer grupo. */
+  choiceIds?: string[];
+  note?: string;
+}
+
+export type OrderMode = 'entrega' | 'retirada';
+
+export interface OrderRequest {
+  demo: DemoSlug;
+  mode: OrderMode;
+  lines: OrderLineRequest[];
+  customerName: string;
+  phone: string;
+  /** Obrigatório quando `mode` é `entrega`. */
+  address?: string;
+  payment: 'pix' | 'credito' | 'dinheiro';
+  note?: string;
+}
+
+export interface OrderLine {
+  itemId: string;
+  name: string;
+  quantity: number;
+  /** Rótulos legíveis das escolhas, já resolvidos pelo servidor. */
+  choices: string[];
+  /** Preço unitário já com os acréscimos. */
+  unitPrice: number;
+  lineTotal: number;
+}
+
+export interface Order {
+  /** Número curto mostrado ao cliente, ex.: "4821". */
+  code: string;
+  demo: DemoSlug;
+  mode: OrderMode;
+  lines: OrderLine[];
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  /** Minutos estimados, calculados a partir do modo e do tamanho do pedido. */
+  etaMin: number;
+  placedAt: string;
+  demoNotice: string;
+}
+
+/* ------------------------------------------------------------------ */
 /* Avisos de demonstração — texto único, usado por API e front          */
 /* ------------------------------------------------------------------ */
 
 export const DEMO_NOTICE_BOOKING = 'Demonstração. Nenhum agendamento foi criado de fato.';
 export const DEMO_NOTICE_LEAD = 'Demonstração. Nenhum lead foi armazenado.';
+export const DEMO_NOTICE_ORDER = 'Demonstração. Nenhum pedido foi feito nem cobrado de fato.';

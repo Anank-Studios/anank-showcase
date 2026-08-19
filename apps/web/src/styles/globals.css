@@ -170,6 +170,113 @@ html[data-theme='dark'] [data-brand='anank'] {
 }
 
 /* ------------------------------------------------------------------ */
+/* 4.4 BRASA — hamburgueria de chapa, creme e carvão, aresta reta      */
+/* ------------------------------------------------------------------ */
+
+/*
+  A única demo CLARA do nicho alimentação, de propósito. A Oniria e o Forno já
+  são escuras; uma terceira faria o nicho inteiro parecer a mesma casa com as
+  fotos trocadas. Aqui a fotografia é que fornece o preto — o papel fica creme.
+
+  Contrastes medidos sobre `--brand-bg` (#f4f1ea):
+    ink #17130f    16.6:1
+    muted #6b6259   5.4:1
+    accent #c1361f  4.8:1   — passa nos 4.5:1 de texto
+  Para borda de componente (mínimo 3:1) use `--brand-muted`, não `--brand-line`:
+  a linha é fio de divisória e fica em 1.3:1, que é o certo para o papel dela.
+*/
+[data-brand='brasa'] {
+  --brand-bg: #f4f1ea;
+  --brand-surface: #ffffff;
+  --brand-ink: #17130f;
+  --brand-muted: #6b6259;
+  --brand-accent: #c1361f; /* brasa viva */
+  --brand-accent-2: #8c4a13; /* madeira queimada */
+  --brand-line: #ddd6c8;
+  --brand-radius: 0px;
+  /* Grotesca pesada: o oposto da serifa do Forno, no mesmo nicho. */
+  --brand-font-display: var(--font-archivo-black), 'Arial Black', sans-serif;
+  --brand-font-body: var(--font-archivo), system-ui, sans-serif;
+
+  --display-size: clamp(2.5rem, 13vw, 9rem);
+  --display-leading: 0.86;
+  --display-tracking: -0.035em;
+  /* A Archivo Black só existe em 400 — pedir 700 forçaria falso-negrito. */
+  --display-weight: 400;
+
+  --shadow-brand: 0 20px 50px -28px rgb(23 19 15 / 0.32);
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.5 KAISEKI — japonesa, azul-tinta sobre quase-preto, aresta reta   */
+/* ------------------------------------------------------------------ */
+
+/*
+  O unico acento FRIO do projeto. As outras cinco marcas variam entre ambar,
+  dourado, verde e vermelho, e no hub isso as fazia parecer parentes; um indigo
+  separa esta de todas de relance, sem depender de foto.
+
+  Contrastes medidos sobre `--brand-bg` (#0d0f14):
+    ink #f2f0ec      17.1:1
+    muted #98a0ae     7.3:1
+    accent #7aa5d2    7.4:1
+    accent-2 #d9563c  4.9:1   — vermelhao de selo, so em texto curto
+  Para borda de componente (minimo 3:1) use `--brand-muted`, nao
+  `--brand-line`: a linha e fio de divisoria e fica em 1.3:1, que e o papel
+  dela.
+*/
+[data-brand='kaiseki'] {
+  --brand-bg: #0d0f14;
+  --brand-surface: #151922;
+  --brand-ink: #f2f0ec;
+  --brand-muted: #98a0ae;
+  --brand-accent: #7aa5d2; /* ai, o indigo */
+  --brand-accent-2: #d9563c; /* shu, o vermelhao do selo */
+  --brand-line: #232936;
+  --brand-radius: 0px;
+  /* Mincho JAPONESA, nao didone europeia: separa da Bodoni da Oniria e da
+     Instrument do Forno sem depender da cor. */
+  --brand-font-display: var(--font-mincho), 'Hiragino Mincho ProN', Georgia, serif;
+  --brand-font-body: var(--font-zen), system-ui, sans-serif;
+
+  --display-size: clamp(2.25rem, 10vw, 7rem);
+  --display-leading: 1.02;
+  /* Mincho respira: tracking negativo fecha os contraformas e ela perde o
+     desenho. E o oposto do que a Archivo Black da Brasa pede. */
+  --display-tracking: 0.005em;
+  --display-weight: 400;
+
+  --shadow-brand: 0 26px 64px -34px rgb(0 0 0 / 0.85);
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.6 FORNO — pizzaria napolitana, quente, aresta quase viva          */
+/* ------------------------------------------------------------------ */
+
+[data-brand='forno'] {
+  --brand-bg: #120c08;
+  --brand-surface: #1c1310;
+  --brand-ink: #f6ece0;
+  /* 6.9:1 sobre o fundo. O tom "terroso claro" natural aqui reprovaria. */
+  --brand-muted: #b39c8c;
+  --brand-accent: #e2652b; /* brasa */
+  --brand-accent-2: #f2c078; /* massa dourada */
+  --brand-line: #2e211a;
+  --brand-radius: 2px;
+  /* Serifa de display com muito contraste + geométrica no corpo: categoria
+     diferente das quatro marcas de estética, para não parecerem parentes. */
+  --brand-font-display: var(--font-instrument), 'Didot', Georgia, serif;
+  --brand-font-body: var(--font-sora), system-ui, sans-serif;
+
+  --display-size: clamp(2.5rem, 12vw, 8rem);
+  --display-leading: 0.95;
+  --display-tracking: -0.02em;
+  --display-weight: 400;
+
+  --shadow-brand: 0 24px 60px -30px rgb(0 0 0 / 0.8);
+}
+
+/* ------------------------------------------------------------------ */
 /* Base                                                                */
 /* ------------------------------------------------------------------ */
 

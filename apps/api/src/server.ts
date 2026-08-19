@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import { demosRoutes } from './routes/demos.routes.js';
 import { bookingRoutes } from './routes/booking.routes.js';
 import { leadsRoutes } from './routes/leads.routes.js';
+import { ordersRoutes } from './routes/orders.routes.js';
 import { fail, ok } from './lib/envelope.js';
 
 const PORT = Number(process.env.PORT ?? 3333);
@@ -23,6 +24,7 @@ export async function buildServer() {
   await app.register(demosRoutes);
   await app.register(bookingRoutes);
   await app.register(leadsRoutes);
+  await app.register(ordersRoutes);
 
   app.setNotFoundHandler((_request, reply) => {
     reply.code(404).send(fail('NOT_FOUND', 'Rota não encontrada.'));
